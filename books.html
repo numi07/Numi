@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>আমার ডিজিটাল লাইব্রেরি</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { --primary: #4361ee; --accent: #f72585; --bg: #f8f9fd; --shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 90px; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation Icons Fix */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #8d99ae; text-decoration: none; font-size: 11px; flex: 1; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+
+        /* Book & Search Cards with Hover */
+        .book-card { background: white; border-radius: 15px; padding: 12px; margin-bottom: 15px; display: flex; gap: 15px; box-shadow: var(--shadow); cursor: pointer; border: 1px solid #f1f1f1; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .book-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 12px 30px rgba(67, 97, 238, 0.1); }
+        .book-card img { width: 75px; height: 105px; border-radius: 10px; object-fit: cover; background: #eee; }
+
+        /* Admin Profile UI */
+        .admin-profile { background: white; padding: 25px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; margin-bottom: 20px; border: 1px solid #eef2ff; }
+        .admin-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 15px; }
+        
+        /* Slider & Detail View */
+        .slider { width: 100%; height: 280px; border-radius: 20px; overflow: hidden; background: #000; margin-bottom: 15px; position: relative; }
+        .slider img { width: 100%; height: 100%; object-fit: contain; position: absolute; opacity: 0; transition: 0.6s; }
+        .slider img.active { opacity: 1; }
+        
+        #fab { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: white; width: 56px; height: 56px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 8px 15px rgba(247, 37, 133, 0.3); border: none; z-index: 999; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; }
+        
+        .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="loader" class="loader"><div class="spinner"></div><p id="lMsg" style="margin-top:15px; font-weight:bold">লোড হচ্ছে...</p></div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="navigate('home')"><i class="fas fa-home"></i>হোম</div>
+    <div class="nav-item" onclick="navigate('search')"><i class="fas fa-search"></i>সার্চ</div>
+    <div class="nav-item" onclick="navigate('authors')"><i class="fas fa-feather"></i>লেখক</div>
+    <div class="nav-item" onclick="navigate('books')"><i class="fas fa-book"></i>সব বই</div>
+    <div class="nav-item" onclick="navigate('profile')"><i class="fas fa-user-shield"></i>প্রোফাইল</div>
+</nav>
+
+<button id="fab" onclick="openM()"><i class="fas fa-plus"></i></button>
+
+<div class="container">
+    <div id="home" class="page active">
+        <div style="background:linear-gradient(135deg, #4361ee, #3f37c9); padding:40px 20px; border-radius:0 0 30px 30px; color:white; text-align:center; margin-bottom:25px">
+            <h1 style="margin:0">আমার লাইব্রেরি</h1>
+            <p style="opacity:0.9">জ্ঞানের ডিজিটাল সংগ্রহশালা</p>
+        </div>
+        <button class="btn-main" onclick="navigate('books')">সকল বই দেখুন</button>
+        <h3 style="margin-top:30px">প্রিয় লেখকগণ</h3>
+        <div id="hAuth"></div>
+    </div>
+
+    <div id="search" class="page">
+        <h3>বই খুঁজুন</h3>
+        <input type="text" id="sInp" placeholder="বই বা লেখকের নাম লিখুন..." onkeyup="search()">
+        <div id="sRes" style="margin-top:15px"></div>
+    </div>
+
+    <div id="authors" class="page"><h3>সব লেখক</h3><div id="allAuth"></div></div>
+    <div id="books" class="page"><h3 id="lTtl">বইয়ের তালিকা</h3><div id="bList"></div></div>
+
+    <div id="details" class="page">
+        <div class="slider" id="dSlid"></div>
+        <div id="dCnt" style="background:white; padding:20px; border-radius:15px; box-shadow:var(--shadow)"></div>
+        <button class="btn-main" onclick="navigate('books')" style="background:#6c757d">ফিরে যান</button>
+    </div>
+
+    <div id="profile" class="page">
+        <div id="loginArea">
+            <h3>এডমিন লগিন</h3>
+            <input type="password" id="pass" placeholder="পাসওয়ার্ড দিন" onkeydown="if(event.key === 'Enter') login()">
+            <button class="btn-main" onclick="login()">লগিন করুন</button>
+        </div>
+        <div id="adminArea" style="display:none">
+            <div class="admin-profile">
+                <img src="https://i.ibb.co/Xz9w32h/admin.jpg" class="admin-img" alt="Admin">
+                <h2 style="margin:0">আল নোমান শিকদার</h2>
+                <p style="color:#64748b; margin:5px 0">ঠিকানা: পহরডাঙ্গা (পশ্চিম), পহরডাঙ্গা, নড়াগাতী, নড়াইল।</p>
+                <div style="background:#eef2ff; padding:10px; border-radius:10px; font-size:14px; color:var(--primary); margin-top:10px">এডমিন স্ট্যাটাস: সক্রিয়</div>
+            </div>
+            <p style="text-align:center; color:#64748b">আপনি এখন নতুন বই এন্ট্রি, এডিট বা আপডেট করতে পারবেন।</p>
+            <button class="btn-main" onclick="location.reload()" style="background:var(--accent); margin-top:20px">লগ আউট</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Form -->
+<div id="mMod" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; overflow-y:auto">
+    <div style="background:white; margin:10% auto; padding:25px; width:90%; max-width:400px; border-radius:20px">
+        <h3 id="fTtl">বইয়ের তথ্য</h3>
+        <form id="bForm">
+            <input type="hidden" id="fi">
+            <input type="text" id="fn" placeholder="বইয়ের নাম *" required>
+            <input type="text" id="fa" placeholder="লেখকের নাম *" required>
+            <input type="text" id="fp" placeholder="প্রকাশনী">
+            <input type="text" id="fy" placeholder="প্রকাশের সাল (ইংরেজি)">
+            <input type="number" id="fm" placeholder="মুদ্রিত মূল্য (ইংরেজি)">
+            <input type="number" id="fb" placeholder="ক্রয় মূল্য (গোপন)">
+            <input type="text" id="fc" placeholder="ক্যাটাগরি">
+            <input type="text" id="fi_l" placeholder="ছবি লিঙ্ক (Google Drive)">
+            <button type="submit" class="btn-main" id="sb">সংরক্ষণ করুন</button>
+            <button type="button" class="btn-main" onclick="closeM()" style="background:#ddd; color:#333">বন্ধ করুন</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw83eDGjc3HNV1N_nvM_q7faM1DMduFf7fJ2ZEtPYg6lDhSNxq4bp7QCk2EwSxyIto/exec";
+    let allBooks = [], isAdmin = false;
+
+    // Helper: English to Bengali Number
+    function toBN(num) {
+        if(!num) return '০';
+        return num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+    }
+
+    async function init() {
+        try {
+            const r = await fetch(SCRIPT_URL + "?action=getData");
+            allBooks = await r.json();
+            renderAuthors();
+            document.getElementById('loader').style.display = 'none';
+        } catch (e) { document.getElementById('lMsg').innerHTML = "<span style='color:red'>ডাটা লোড হয়নি!</span>"; }
+    }
+
+    function navigate(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        const navs = ['home', 'search', 'authors', 'books', 'profile'];
+        document.querySelectorAll('.nav-item')[navs.indexOf(id)].classList.add('active');
+        if(id === 'books') renderBooks(allBooks, "সকল বই");
+        window.scrollTo(0,0);
+    }
+
+    function getImg(url) {
+        if(!url) return 'https://via.placeholder.com/100x140?text=No+Cover';
+        if(url.includes('drive.google.com')) {
+            const id = url.split('id=')[1] || url.split('/d/')[1].split('/')[0];
+            return `https://lh3.googleusercontent.com/u/0/d/${id}`;
+        }
+        return url;
+    }
+
+    function renderAuthors() {
+        const auths = [...new Set(allBooks.map(b => b.Author))];
+        const h = auths.map(a => `<div class="author-chip" onclick="filterByAuth('${a}')" style="background:white; padding:8px 15px; border-radius:20px; border:1px solid #ddd; margin:5px; display:inline-block; cursor:pointer">${a}</div>`).join('');
+        document.getElementById('hAuth').innerHTML = h;
+        document.getElementById('allAuth').innerHTML = h;
+    }
+
+    function filterByAuth(n) {
+        const f = allBooks.filter(b => b.Author === n);
+        renderBooks(f, n + "-এর বই");
+        navigate('books');
+    }
+
+    function renderBooks(l, t) {
+        document.getElementById('lTtl').innerText = t;
+        const h = l.map(b => `
+            <div class="book-card" onclick="showD(${b.ID})">
+                <img src="${getImg(b.Images.split(',')[0])}">
+                <div>
+                    <div style="font-weight:700; font-size:17px; color:#2b2d42">${b.BookName}</div>
+                    <div style="color:#64748b; font-size:14px">${b.Author}</div>
+                    <div style="color:var(--primary); font-size:13px; margin-top:5px">মুদ্রিত মূল্য: ${toBN(b.MRP)} টাকা</div>
+                </div>
+            </div>
+        `).join('');
+        document.getElementById('bList').innerHTML = h || "খালি!";
+    }
+
+    function search() {
+        const q = document.getElementById('sInp').value.toLowerCase();
+        const f = allBooks.filter(b => b.BookName.toLowerCase().includes(q) || b.Author.toLowerCase().includes(q));
+        const h = f.map(b => `
+            <div class="book-card" onclick="showD(${b.ID})">
+                <div><strong>${b.BookName}</strong> - ${b.Author}</div>
+                <div style="font-size:12px; color:var(--primary); margin-top:4px">মুদ্রিত মূল্য: ${toBN(b.MRP)} টাকা</div>
+            </div>`).join('');
+        document.getElementById('sRes').innerHTML = h;
+    }
+
+    function showD(id) {
+        const b = allBooks.find(x => x.ID == id);
+        const imgs = b.Images ? b.Images.split(',') : [''];
+        let sH = imgs.map((u, i) => `<img src="${getImg(u.trim())}" class="${i===0?'active':''}" id="sl-${i}">`).join('');
+        document.getElementById('dSlid').innerHTML = sH;
+        if(imgs.length > 1) {
+            let c = 0; clearInterval(window.itv);
+            window.itv = setInterval(() => {
+                document.getElementById(`sl-${c}`).classList.remove('active');
+                c = (c + 1) % imgs.length;
+                document.getElementById(`sl-${c}`).classList.add('active');
+            }, 3000);
+        }
+        document.getElementById('dCnt').innerHTML = `
+            <h2 style="margin:0 0 10px 0">${b.BookName}</h2>
+            <div style="line-height:1.8">
+                <p><strong>লেখক:</strong> ${b.Author}</p>
+                <p><strong>প্রকাশনী:</strong> ${b.Publisher || '-'}</p>
+                <p><strong>প্রকাশ সাল:</strong> ${toBN(b.PublishYear)}</p>
+                <p><strong>মুদ্রিত মূল্য:</strong> ${toBN(b.MRP)} টাকা</p>
+                ${isAdmin ? `<p style="color:var(--accent); font-weight:bold">ক্রয় মূল্য: ${toBN(b.BuyPrice)} টাকা</p>` : ''}
+                <p><strong>ক্যাটাগরি:</strong> ${b.Category || '-'}</p>
+            </div>
+            ${isAdmin ? `<div style="display:flex; gap:10px; margin-top:20px">
+                <button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট করুন</button>
+                <button class="btn-main" onclick="delB(${b.ID})" style="background:#ef4444">ডিলিট করুন</button>
+            </div>` : ''}
+        `;
+        navigate('details');
+    }
+
+    function login() {
+        if(document.getElementById('pass').value === "1234") {
+            isAdmin = true;
+            document.getElementById('loginArea').style.display='none';
+            document.getElementById('adminArea').style.display='block';
+            document.getElementById('fab').style.display='flex';
+            alert("স্বাগতম এডমিন!");
+        } else alert("ভুল পাসওয়ার্ড!");
+    }
+
+    function openM() { document.getElementById('mMod').style.display='block'; document.getElementById('bForm').reset(); document.getElementById('fi').value=""; }
+    function closeM() { document.getElementById('mMod').style.display='none'; }
+
+    document.getElementById('bForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const book = {
+            ID: document.getElementById('fi').value, BookName: document.getElementById('fn').value, Author: document.getElementById('fa').value,
+            Publisher: document.getElementById('fp').value, PublishYear: document.getElementById('fy').value, MRP: document.getElementById('fm').value,
+            BuyPrice: document.getElementById('fb').value, Category: document.getElementById('fc').value, Images: document.getElementById('fi_l').value,
+            EntryDate: new Date().toLocaleDateString()
+        };
+        document.getElementById('sb').innerText = "সেভ হচ্ছে...";
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action: 'saveBook', book: book}) });
+        closeM(); await init(); alert("সফল!"); document.getElementById('sb').innerText="সংরক্ষণ করুন";
+    };
+
+    function editB(id) {
+        const b = allBooks.find(x => x.ID == id); openM();
+        document.getElementById('fi').value = b.ID; document.getElementById('fn').value = b.BookName;
+        document.getElementById('fa').value = b.Author; document.getElementById('fp').value = b.Publisher;
+        document.getElementById('fy').value = b.PublishYear; document.getElementById('fm').value = b.MRP;
+        document.getElementById('fb').value = b.BuyPrice; document.getElementById('fc').value = b.Category;
+        document.getElementById('fi_l').value = b.Images;
+    }
+
+    async function delB(id) { if(confirm("ডিলিট করবেন?")) { await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action: 'deleteBook', id: id}) }); await init(); navigate('books'); } }
+
+    window.onload = init;
+</script>
+</body>
+</html>

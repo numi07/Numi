@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Noman Shikder | Personal Profile</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --text-dark: #2d3436;
+            --accent-soft: #6c5ce7;
+            --accent-gradient: linear-gradient(135deg, #6c5ce7 0%, #a1c4fd 100%);
+            --glass-white: rgba(255, 255, 255, 0.85);
+            --photo-border-glow: rgba(108, 92, 231, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- Hamburger Menu Style --- */
+        .navbar {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: block;
+            padding: 10px;
+        }
+
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: var(--accent-soft);
+            margin: 6px 0;
+            transition: 0.4s;
+            border-radius: 3px;
+        }
+
+        /* মেনু ওপেন হলে অ্যানিমেশন */
+        .hamburger.open .line1 { transform: rotate(-45deg) translate(-6px, 7px); }
+        .hamburger.open .line2 { opacity: 0; }
+        .hamburger.open .line3 { transform: rotate(45deg) translate(-6px, -7px); }
+
+        .nav-links {
+            position: fixed;
+            top: 0;
+            right: -100%; /* শুরুতে মেনু লুকানো থাকবে */
+            height: 100vh;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.5s ease-in-out;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-links.active {
+            right: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 15px 0;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-soft);
+        }
+
+        /* --- Main Card --- */
+        .profile-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 70px 30px 40px; /* উপরের প্যাডিং ফটোর জন্য সামঞ্জস্য করা হয়েছে */
+            width: 90%;
+            max-width: 500px;
+            margin: 80px auto 50px; /* উপরের মার্জিন বাড়ানো হয়েছে */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.4);
+            animation: fadeIn 1s ease;
+            position: relative; /* ফটোর পজিশনের জন্য */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === আধুনিক ফটো ডিজাইন === */
+        .photo-container {
+            position: absolute;
+            top: -65px; /* কার্ডের উপরে অর্ধেক ভাসমান */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--accent-gradient); /* গ্রাডিয়েন্ট বর্ডার */
+            padding: 5px; /* বর্ডারের পুরুত্ব */
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .photo-frame {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #fff; /* ছবি লোড হওয়ার আগের ব্যাকগ্রাউন্ড */
+            border: 3px solid #fff; /* ভেতরের সাদা বর্ডার */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        /* হোভার অ্যানিমেশন */
+        .photo-container:hover {
+            transform: translateX(-50%) translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 45px rgba(108, 92, 231, 0.3);
+        }
+
+        .photo-container:hover .photo-frame img {
+            transform: scale(1.1); /* ছবি একটু জুম হবে */
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 1.9rem;
+            margin-bottom: 5px;
+            margin-top: 15px; /* ফটোর নিচে জায়গা */
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .bio-text {
+            color: #444;
+            line-height: 1.8;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+
+        .highlight {
+            color: #6c5ce7;
+            font-weight: 600;
+        }
+
+        .footer-icons {
+            margin-top: 35px;
+            font-size: 1.6rem;
+            letter-spacing: 15px;
+            opacity: 0.8;
+        }
+
+        /* মোবাইল স্ক্রিনের জন্য অ্যাডজাস্টমেন্ট */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 15px;
+            }
+            .profile-card {
+                padding: 60px 20px 30px;
+                margin-top: 70px;
+                margin-bottom: 30px;
+            }
+            .photo-container {
+                width: 110px;
+                height: 110px;
+                top: -55px;
+            }
+            h1 { font-size: 1.7rem; }
+            .subtitle { font-size: 0.95rem; }
+            .bio-text { font-size: 1rem; }
+        }
+        .profile-name {
+            color: var(--text-dark);
+            font-size: 2rem; /* সাইজ কিছুটা বাড়ানো হয়েছে */
+            font-weight: 600;
+            margin-top: 20px; /* ফটোর নিচ থেকে দূরত্ব */
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            color: var(--accent-soft); /* সাবটাইটেলকে হাইলাইট করার জন্য */
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 25px;
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgba(108, 92, 231, 0.2); /* নিচে হালকা একটি দাগ */
+        }
+
+        /* মোবাইল রেসপন্সিভনেস */
+        @media (max-width: 480px) {
+            .profile-name {
+                font-size: 1.6rem;
+                margin-top: 15px;
+            }
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="hamburger" onclick="toggleMenu(this)">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html" onclick="toggleMenu()">হোম</a>
+            <a href="books.html" onclick="toggleMenu()">আমার লাইব্রেরি</a>
+        </div>
+    </nav>
+
+    <div class="profile-card">
+        <div class="photo-container">
+            <div class="photo-frame">
+                <img src="https://lh3.googleusercontent.com/u/0/d/1J0Hu9ZoO3-6A-5u8emTH0bbr4sb5w4SN" alt="আল নোমান শিকদার">
+            </div>
+        </div>
+
+        <h1 class="profile-name">আল নোমান শিকদার</h1>
+    <p class="subtitle">প্রকৃতি প্রেমী ও স্বপ্নচারী</p>
+
+        <div class="bio-text">
+            আমি এমন একজন মানুষ, যে ছোট ছোট জিনিসের মাঝে জীবনের গভীর আনন্দ খুঁজে পায়। 
+            গল্পের বইয়ের পাতায় হারিয়ে যাওয়া আর সুরের মাঝে প্রশান্তি খোঁজা আমার নেশা। 
+            অবসর পেলেই বেরিয়ে পড়ি—কখনও <span class="highlight">সমুদ্রের গর্জন</span> শুনতে, 
+            আবার কখনও <span class="highlight">পাহাড়ের</span> মৌনতায় নিজেকে নতুন করে চিনতে। 
+            
+            <br><br>
+            বৃষ্টির রিনিঝিনি শব্দ আর এক কাপ ধোঁয়া ওঠা গরম <span class="highlight">চা</span> আমার ভীষণ প্রিয়। 
+            নিজের হাতে বাগান করতে ভালোবাসি; আমার বাগানে যখন <span class="highlight">কদম, কামিনী, বেলি আর শিউলীর</span> 
+            সুবাস ছড়িয়ে পড়ে, তখন মনে হয় প্রকৃতির সবটুকু মায়া যেন আমাকেই ঘিরে আছে।
+        </div>
+
+        <div class="footer-icons">
+            🌊 ⛰️ ☕ 🌸
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu(x) {
+            const hamburger = document.querySelector('.hamburger');
+            hamburger.classList.toggle("open");
+            
+            const navLinks = document.getElementById("navLinks");
+            navLinks.classList.toggle("active");
+        }
+        
+        // স্ক্রিনের বাইরে ক্লিক করলে মেনু বন্ধ হওয়ার লজিক
+        window.onclick = function(event) {
+            const navLinks = document.getElementById("navLinks");
+            const hamburger = document.querySelector('.hamburger');
+            
+            // যদি মেনু একটিভ থাকে এবং ক্লিকটি হামবার্গার বা মেনুর ভেতরে না হয়
+            if (navLinks.classList.contains('active') && 
+                !event.target.closest('.hamburger') && 
+                !event.target.closest('.nav-links')) {
+                
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('open');
+            }
+        }
+    </script>
+</body>
+</html>
