@@ -30,7 +30,7 @@
             overflow-x: hidden;
         }
 
-        /* --- Hamburger Menu Style --- */
+    
         .navbar {
             width: 100%;
             padding: 20px;
@@ -55,7 +55,7 @@
             border-radius: 3px;
         }
 
-        /* মেনু ওপেন হলে অ্যানিমেশন */
+      
         .hamburger.open .line1 { transform: rotate(-45deg) translate(-6px, 7px); }
         .hamburger.open .line2 { opacity: 0; }
         .hamburger.open .line3 { transform: rotate(45deg) translate(-6px, -7px); }
@@ -63,7 +63,7 @@
         .nav-links {
             position: fixed;
             top: 0;
-            right: -100%; /* শুরুতে মেনু লুকানো থাকবে */
+            right: -100%;
             height: 100vh;
             width: 250px;
             background: rgba(255, 255, 255, 0.95);
@@ -93,20 +93,20 @@
             color: var(--accent-soft);
         }
 
-        /* --- Main Card --- */
+        
         .profile-card {
             background: var(--glass-white);
             backdrop-filter: blur(15px);
             border-radius: 30px;
-            padding: 70px 30px 40px; /* উপরের প্যাডিং ফটোর জন্য সামঞ্জস্য করা হয়েছে */
+            padding: 70px 30px 40px; 
             width: 90%;
             max-width: 500px;
-            margin: 80px auto 50px; /* উপরের মার্জিন বাড়ানো হয়েছে */
+            margin: 80px auto 50px; 
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
             text-align: center;
             border: 1px solid rgba(255,255,255,0.4);
             animation: fadeIn 1s ease;
-            position: relative; /* ফটোর পজিশনের জন্য */
+            position: relative; 
         }
 
         @keyframes fadeIn {
@@ -114,17 +114,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* === আধুনিক ফটো ডিজাইন === */
+    
         .photo-container {
             position: absolute;
-            top: -65px; /* কার্ডের উপরে অর্ধেক ভাসমান */
+            top: -65px; 
             left: 50%;
             transform: translateX(-50%);
             width: 130px;
             height: 130px;
             border-radius: 50%;
-            background: var(--accent-gradient); /* গ্রাডিয়েন্ট বর্ডার */
-            padding: 5px; /* বর্ডারের পুরুত্ব */
+            background: var(--accent-gradient); 
+            padding: 5px; 
             box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -134,8 +134,8 @@
             height: 100%;
             border-radius: 50%;
             overflow: hidden;
-            background: #fff; /* ছবি লোড হওয়ার আগের ব্যাকগ্রাউন্ড */
-            border: 3px solid #fff; /* ভেতরের সাদা বর্ডার */
+            background: #fff; 
+            border: 3px solid #fff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -148,21 +148,21 @@
             transition: transform 0.5s ease;
         }
 
-        /* হোভার অ্যানিমেশন */
+   
         .photo-container:hover {
             transform: translateX(-50%) translateY(-5px) scale(1.05);
             box-shadow: 0 20px 45px rgba(108, 92, 231, 0.3);
         }
 
         .photo-container:hover .photo-frame img {
-            transform: scale(1.1); /* ছবি একটু জুম হবে */
+            transform: scale(1.1);
         }
 
         h1 {
             color: var(--text-dark);
             font-size: 1.9rem;
             margin-bottom: 5px;
-            margin-top: 15px; /* ফটোর নিচে জায়গা */
+            margin-top: 15px; 
         }
 
         .subtitle {
@@ -191,7 +191,7 @@
             opacity: 0.8;
         }
 
-        /* মোবাইল স্ক্রিনের জন্য অ্যাডজাস্টমেন্ট */
+   
         @media (max-width: 480px) {
             .navbar {
                 padding: 15px;
@@ -212,24 +212,23 @@
         }
         .profile-name {
             color: var(--text-dark);
-            font-size: 2rem; /* সাইজ কিছুটা বাড়ানো হয়েছে */
+            font-size: 2rem;
             font-weight: 600;
-            margin-top: 20px; /* ফটোর নিচ থেকে দূরত্ব */
+            margin-top: 20px;
             margin-bottom: 5px;
             letter-spacing: 0.5px;
         }
 
         .subtitle {
-            color: var(--accent-soft); /* সাবটাইটেলকে হাইলাইট করার জন্য */
+            color: var(--accent-soft);
             font-size: 1.1rem;
             font-weight: 400;
             margin-bottom: 25px;
             display: inline-block;
             padding-bottom: 5px;
-            border-bottom: 2px solid rgba(108, 92, 231, 0.2); /* নিচে হালকা একটি দাগ */
+            border-bottom: 2px solid rgba(108, 92, 231, 0.2);
         }
-
-        /* মোবাইল রেসপন্সিভনেস */
+
         @media (max-width: 480px) {
             .profile-name {
                 font-size: 1.6rem;
@@ -268,7 +267,7 @@
     <p class="subtitle">প্রকৃতি প্রেমী ও স্বপ্নচারী</p>
 
         <div class="bio-text">
-            আমি এমন একজন মানুষ, যে ছোট ছোট জিনিসের মাঝে জীবনের গভীর আনন্দ খুঁজে পায়। 
+            আমি এমন একজন মানুষ, যে ছোট ছোট জিনিসের মাঝে জীবনের গভীর আনন্দ খুঁজে পাই। 
             গল্পের বইয়ের পাতায় হারিয়ে যাওয়া আর সুরের মাঝে প্রশান্তি খোঁজা আমার নেশা। 
             অবসর পেলেই বেরিয়ে পড়ি—কখনও <span class="highlight">সমুদ্রের গর্জন</span> শুনতে, 
             আবার কখনও <span class="highlight">পাহাড়ের</span> মৌনতায় নিজেকে নতুন করে চিনতে। 
@@ -293,12 +292,11 @@
             navLinks.classList.toggle("active");
         }
         
-        // স্ক্রিনের বাইরে ক্লিক করলে মেনু বন্ধ হওয়ার লজিক
+    
         window.onclick = function(event) {
             const navLinks = document.getElementById("navLinks");
             const hamburger = document.querySelector('.hamburger');
-            
-            // যদি মেনু একটিভ থাকে এবং ক্লিকটি হামবার্গার বা মেনুর ভেতরে না হয়
+            
             if (navLinks.classList.contains('active') && 
                 !event.target.closest('.hamburger') && 
                 !event.target.closest('.nav-links')) {
