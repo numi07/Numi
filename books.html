@@ -27,6 +27,13 @@
         .admin-profile { background: white; padding: 25px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; margin-bottom: 20px; border: 1px solid #eef2ff; }
         .admin-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 15px; }
         
+
+        .stat-grid { display: flex; gap: 10px; margin-top: 20px; }
+        .stat-box { flex: 1; background: #f0f3ff; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #dbeafe; }
+        .stat-box i { font-size: 20px; color: var(--primary); margin-bottom: 5px; }
+        .stat-val { display: block; font-size: 18px; font-weight: 700; color: #1e293b; }
+        .stat-lbl { font-size: 12px; color: #64748b; }
+
         .slider { width: 100%; height: 280px; border-radius: 20px; overflow: hidden; background: #000; margin-bottom: 15px; position: relative; }
         .slider img { width: 100%; height: 100%; object-fit: contain; position: absolute; opacity: 0; transition: 0.6s; }
         .slider img.active { opacity: 1; }
@@ -92,6 +99,19 @@
                 <h2 style="margin:0">আল নোমান শিকদার</h2>
                 <p style="color:#64748b; margin:5px 0">ঠিকানা: পহরডাঙ্গা (পশ্চিম), পহরডাঙ্গা, নড়াগাতী, নড়াইল।</p>
                 <div style="background:#eef2ff; padding:10px; border-radius:10px; font-size:14px; color:var(--primary); margin-top:10px">এডমিন স্ট্যাটাস: সক্রিয়</div>
+                
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <i class="fas fa-book-open"></i>
+                        <span class="stat-val" id="totalBooks">০</span>
+                        <span class="stat-lbl">মোট বই</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-wallet"></i>
+                        <span class="stat-val" id="totalCost">০</span>
+                        <span class="stat-lbl">মোট ক্রয়মূল্য</span>
+                    </div>
+                </div>
             </div>
             <p style="text-align:center; color:#64748b">আপনি এখন নতুন বই এন্ট্রি, এডিট বা আপডেট করতে পারবেন।</p>
             <button class="btn-main" onclick="location.reload()" style="background:var(--accent); margin-top:20px">লগ আউট</button>
@@ -122,8 +142,10 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw83eDGjc3HNV1N_nvM_q7faM1DMduFf7fJ2ZEtPYg6lDhSNxq4bp7QCk2EwSxyIto/exec";
     let allBooks = [], isAdmin = false;
 
+    const SECRET = "MjU4MA==";
+
     function toBN(num) {
-        if(!num) return '০';
+        if(!num && num !== 0) return '০';
         return num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
     }
 
@@ -226,16 +248,22 @@
     }
 
     function login() {
-    var p = document.getElementById('pass').value;
-    if(btoa(p) === "MjU4MA==") { 
-        isAdmin = true;
-        document.getElementById('loginArea').style.display='none';
-        document.getElementById('adminArea').style.display='block';
-        alert("স্বাগতম এডমিন!");
-    } else {
-        alert("ভুল পাসওয়ার্ড!");
+        const typed = document.getElementById('pass').value;
+        if(btoa(typed) === SECRET) {
+            isAdmin = true;
+            
+            let totalBooksCount = allBooks.length;
+            let totalPurchaseCost = allBooks.reduce((acc, curr) => acc + (parseFloat(curr.BuyPrice) || 0), 0);
+            
+            document.getElementById('totalBooks').innerText = toBN(totalBooksCount);
+            document.getElementById('totalCost').innerText = toBN(totalPurchaseCost) + " টাকা";
+
+            document.getElementById('loginArea').style.display='none';
+            document.getElementById('adminArea').style.display='block';
+            document.getElementById('fab').style.display='flex';
+            alert("স্বাগতম এডমিন!");
+        } else alert("ভুল পাসওয়ার্ড!");
     }
-}
 
     function openM() { document.getElementById('mMod').style.display='block'; document.getElementById('bForm').reset(); document.getElementById('fi').value=""; }
     function closeM() { document.getElementById('mMod').style.display='none'; }
