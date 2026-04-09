@@ -225,18 +225,12 @@
         navigate('details');
     }
 
-    async function login() {
-    const input = document.getElementById('pass').value;
-
-    const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    const correctHash = "f90141679093864070a7b578c290a42421711202a0a2f47621c4b752496a0999";
-    if(hashHex === correctHash) {
+    function login() {
+    var p = document.getElementById('pass').value;
+    if(btoa(p) === "MjU4MA==") { 
         isAdmin = true;
-        document.getElementById('loginArea').style.display = 'none';
-        document.getElementById('adminArea').style.display = 'block';
-        document.getElementById('fab').style.display = 'flex';
+        document.getElementById('loginArea').style.display='none';
+        document.getElementById('adminArea').style.display='block';
         alert("স্বাগতম এডমিন!");
     } else {
         alert("ভুল পাসওয়ার্ড!");
