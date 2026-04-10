@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shikdernumi.pro.bd/sitemap.xml
