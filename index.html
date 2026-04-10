@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আল নোমান শিকদার | নিজেকে ভালোবাসলে পৃথিবীটাও সুন্দর দেখাতে শুরু করে।</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --text-color: #334155;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --accent-color: #f59e0b;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode {
+            --bg-light: #0f172a;
+            --secondary-color: #f1f5f9;
+            --text-color: #cbd5e1;
+            --white: #1e293b;
+            --card-bg: #1e293b;
+            --nav-bg: rgba(15, 23, 42, 0.95);
+            --shadow: 0 4px 25px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            padding: 0.8rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .logo span { color: var(--primary-color); }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-list a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 1.05rem;
+            position: relative;
+        }
+
+        .nav-list a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: 0.3s;
+        }
+
+        .nav-list a:hover::after { width: 100%; }
+        .nav-list a:hover { color: var(--primary-color); }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.05);
+        }
+        body.dark-mode .theme-toggle { background: rgba(255,255,255,0.1); }
+        .theme-toggle:hover { transform: rotate(20deg); }
+      
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 8% 60px;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+            max-width: 1200px;
+        }
+
+        .welcome-text {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            color: var(--secondary-color);
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        .typewrite-text {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 35px;
+            height: 1.6em;
+            font-weight: 400;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            font-size: 1.05rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-pic-container {
+            width: 320px;
+            height: 320px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            border: 8px solid var(--white);
+            box-shadow: var(--shadow);
+            animation: morphing 10s infinite alternate;
+        }
+
+        @keyframes morphing {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            100% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+        }
+        section { padding: 90px 8%; }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 45px;
+            color: var(--secondary-color);
+            border-left: 6px solid var(--primary-color);
+            padding-left: 20px;
+        }
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .exp-card {
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .exp-card:hover { 
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+        }
+
+        .exp-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .exp-card h3 {
+            margin-bottom: 12px;
+            color: var(--secondary-color);
+        }
+        .skills-showcase {
+            margin-top: 50px;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: var(--bg-light);
+            color: var(--primary-color);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            transition: 0.3s;
+        }
+        .skill-tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .contact-container { max-width: 800px; margin: 0 auto; }
+
+        form {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        input, textarea {
+            padding: 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: var(--bg-light);
+            color: var(--text-color);
+            border-radius: 12px;
+            outline: none;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus { 
+            border-color: var(--primary-color); 
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+        footer {
+            padding: 18px;
+            text-align: center;
+            background: var(--white);
+            color: var(--secondary-color);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-weight: 500;
+        }
+        @media (max-width: 992px) {
+            nav { padding: 0.8rem 5%; }
+            .menu-toggle { display: flex; }
+            
+            .nav-list {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: var(--nav-bg);
+                backdrop-filter: blur(15px);
+                padding: 0;
+                text-align: center;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s ease-in-out, padding 0.3s ease;
+                z-index: 999;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            }
+
+            .nav-list.active {
+                max-height: 400px;
+                padding: 30px 0;
+                border-top: 1px solid rgba(0,0,0,0.05);
+            }
+
+            .nav-list li { margin: 15px 0; }
+
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content h1 { font-size: 2.6rem; }
+            .hero-btns { justify-content: center; }
+            .hero-visual { order: -1; margin-bottom: 20px; }
+            .profile-pic-container { width: 260px; height: 260px; }
+            
+            .menu-toggle.is-active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+            .menu-toggle.is-active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.is-active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">আল নোমান <span>শিকদার</span></a>
+        
+        <div class="nav-right">
+            <div class="theme-toggle" id="theme-btn" title="ডার্ক/লাইট মোড">
+                <i class="fas fa-moon"></i>
+            </div>
+
+            <ul class="nav-list" id="nav-menu">
+                <li><a href="index.html">হোম</a></li>
+                <li><a href="about.html">পরিচয়</a></li>
+                <li><a href="contact.html">যোগাযোগ</a></li>
+            </ul>
+
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="welcome-text">স্বাগতম, আমি</span>
+                <h1>আল নোমান শিকদার</h1>
+                
+                <div class="typewrite-text">
+                    <span id="typing-element"></span>
+                </div>
+
+                <div class="hero-btns">
+                    <a href="#contact" class="btn btn-primary">যোগাযোগ করুন</a>
+                    <a href="#about" class="btn btn-secondary">সিভি দেখুন</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="profile-pic-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1J0Hu9ZoO3-6A-5u8emTH0bbr4sb5w4SN" alt="আল নোমান শিকদার" class="profile-pic">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">পেশাগত পরিচিতি</h2>
+        
+        <div class="about-content">
+            <p style="font-size: 1.25rem; max-width: 1000px; margin-bottom: 30px; text-align: justify;">আমি <strong>আল নোমান শিকদার</strong>, 
+                একজন লক্ষ্য-স্থির এবং দায়িত্বশীল কর্পোরেট পেশাজীবী। ২০১৮ সাল থেকে আমি হিসাবরক্ষণ এবং আর্থিক ব্যবস্থাপনার জটিল চ্যালেঞ্জগুলো সফলভাবে মোকাবিলা করে আসছি। 
+                সহকারী ব্যবস্থাপক (হিসাব) হিসেবে আমার মূল লক্ষ্য হলো প্রতিষ্ঠানের আর্থিক স্বচ্ছতা নিশ্চিত করা এবং প্রশাসনিক গতিশীলতা বজায় রাখা।</p>
+
+            <div class="experience-grid">
+                <div class="exp-card">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>আর্থিক ব্যবস্থাপনা</h3>
+                    <p>২০১৮ সাল থেকে নিরবচ্ছিন্নভাবে আর্থিক হিসাবরক্ষণ ও অডিট কো-অর্ডিনেশনর দায়িত্ব পালন করছি।</p>
+                </div>
+
+                <div class="exp-card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>HR ও প্রশাসন</h3>
+                    <p>হিসাব বিভাগের পাশাপাশি জনশক্তি ব্যবস্থাপনা, পে-রোল (Payroll) এবং করপোরেট অ্যাডমিন সংক্রান্ত কাজে আমি অভিজ্ঞ।</p>
+                </div>
+                
+                <div class="exp-card">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h3>অডিট</h3>
+                    <p>প্রতিষ্ঠানের অভ্যন্তরীণ অডিট ব্যবস্থাপনা সংক্রান্ত কাজে বিশেষ দক্ষতা।</p>
+                </div>
+            </div>
+
+            <div class="skills-showcase">
+                <h4 style="margin-bottom:25px; color: var(--primary-color); font-size: 1.3rem;">বিশেষ দক্ষতাসমূহ</h4>
+                <div class="skills">
+                    <span class="skill-tag">আর্থিক রিপোর্টিং</span>
+                    <span class="skill-tag">অডিট ম্যানেজমেন্ট</span>
+                    <span class="skill-tag">পে-রোল প্রসেসিং</span>
+                    <span class="skill-tag">HR কমপ্লায়েন্স</span>
+                    <span class="skill-tag">MS Excel (Expert)</span>
+                    <span class="skill-tag">টিম লিডারশিপ</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; ২০২৬ আল নোমান শিকদার | সকল স্বত্ব সংরক্ষিত।</p>
+    </footer>
+
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const body = document.body;
+        const themeIcon = themeBtn.querySelector('i');
+
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+        const menuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('is-active');
+            navMenu.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('is-active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        const typingElement = document.getElementById('typing-element');
+        const professions = [
+            "সহকারী ব্যবস্থাপক (হিসাব)।",
+            "হিসাব বিভাগে ৬+ বছরের অভিজ্ঞতা।",
+            "মানবসম্পদ ব্যবস্থাপনায় দক্ষ।",
+            "আর্থিক ও অভ্যন্তরীণ অডিট বিশ্লেষক।"
+        ];
+        
+        let proIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function type() {
+            const currentProf = professions[proIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentProf.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50; 
+            } else {
+                typingElement.textContent = currentProf.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === currentProf.length) {
+                isDeleting = true;
+                typeSpeed = 2000; 
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                proIndex = (proIndex + 1) % professions.length;
+                typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
+</body>
+</html>
