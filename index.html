@@ -470,10 +470,20 @@
     </section>
 
     <footer>
-        <p>&copy; ২০২৬ আল নোমান শিকদার | সকল স্বত্ব সংরক্ষিত।</p>
+        <p>&copy; <span id="current-year"></span> আল নোমান শিকদার | সকল স্বত্ব সংরক্ষিত।</p>
     </footer>
 
     <script>
+        function updateYear() {
+            const yearSpan = document.getElementById('current-year');
+            const currentYear = new Date().getFullYear().toString();
+            
+            const bengaliDigits = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+            const bengaliYear = currentYear.replace(/[0-9]/g, w => bengaliDigits[w]);
+            
+            yearSpan.textContent = bengaliYear;
+        }
+        updateYear();
         const themeBtn = document.getElementById('theme-btn');
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
