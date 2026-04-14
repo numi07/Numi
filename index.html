@@ -533,10 +533,14 @@
             });
         });
 
-        const typingElement = document.getElementById('typing-element');
+
+        const startYear = 2018;
+        const currentYear = new Date().getFullYear();
+        const experienceYearsBN = (currentYear - startYear).toLocaleString('bn-BD');
+        
         const professions = [
             "সহকারী ব্যবস্থাপক (হিসাব)।",
-            "হিসাব বিভাগে ৮+ বছরের অভিজ্ঞতা।",
+            `হিসাব বিভাগে ${experienceYearsBN}+ বছরের অভিজ্ঞতা।`,
             "মানবসম্পদ ব্যবস্থাপনায় দক্ষ।",
             "আর্থিক ও অভ্যন্তরীণ অডিট বিশ্লেষক।"
         ];
