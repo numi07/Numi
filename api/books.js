@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
     const scriptURL = process.env.BOOKS_GAS_SCRIPT_URL;
     const adminPass = process.env.BOOKS_ADMIN_PASSWORD;
-    const allowedDomain = "thakurabulazam.pro.bd";
+    const allowedDomain = "shikdernumi.pro.bd";
 
     const referer = req.headers.referer || "";
     const isAllowedSource = referer.includes(allowedDomain) || referer.includes("localhost");
