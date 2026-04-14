@@ -1,9 +1,7 @@
-// api/books.js
 export default async function handler(req, res) {
     const scriptURL = process.env.BOOKS_GAS_SCRIPT_URL;
     const adminPass = process.env.BOOKS_ADMIN_PASSWORD;
-
-    // GET Request: ডাটা পড়া বা লগিন ভেরিফাই করা
+    
     if (req.method === 'GET') {
         const { action, pass } = req.query;
 
@@ -21,11 +19,9 @@ export default async function handler(req, res) {
         }
     }
 
-    // POST Request: ডাটা সেভ বা ডিলিট করা
     if (req.method === 'POST') {
         try {
             const payload = JSON.parse(req.body);
-            // পাসওয়ার্ড চেক
             if (payload.adminPass !== adminPass) {
                 return res.status(401).json({ error: "Unauthorized" });
             }
