@@ -191,114 +191,133 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyLrgg2nUy_R3fUuEEkrjR4ePAAM6XgTJ5L7JF73vbwy5lxKw3swiINCBz6w6e9JIne7A/exec'; 
-        const HASHED_PASS = "TnVtaTAwMjE5Mg=="; 
-        let currentPass = "";
+    // এই লিঙ্কটি এখন আপনার Vercel API-এর দিকে পয়েন্ট করবে
+    const proxyURL = '/api/contact'; 
+    let currentPass = "";
 
-        function formatPhone(input) {
-            let val = input.value.trim();
-            if (val && !val.startsWith('0')) { input.value = '0' + val; }
-        }
+    function formatPhone(input) {
+        let val = input.value.trim();
+        if (val && !val.startsWith('0')) { input.value = '0' + val; }
+    }
 
-        function toggleTheme() {
-            const body = document.getElementById('bodyTag');
-            const icon = document.getElementById('themeIcon');
-            const isDark = body.classList.toggle('dark');
-            icon.innerText = isDark ? '☀️' : '🌙';
-            body.style.background = isDark ? "#020617" : "#f1f5f9";
-            body.style.color = isDark ? "#f1f5f9" : "#0f172a";
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
+    function toggleTheme() {
+        const body = document.getElementById('bodyTag');
+        const icon = document.getElementById('themeIcon');
+        const isDark = body.classList.toggle('dark');
+        icon.innerText = isDark ? '☀️' : '🌙';
+        body.style.background = isDark ? "#020617" : "#f1f5f9";
+        body.style.color = isDark ? "#f1f5f9" : "#0f172a";
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const isActive = menu.classList.toggle('active');
-            document.getElementById('menuIcon').innerText = isActive ? '✕' : '☰';
-        }
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const isActive = menu.classList.toggle('active');
+        document.getElementById('menuIcon').innerText = isActive ? '✕' : '☰';
+    }
 
-        function showLogin() { document.getElementById('login-modal').classList.remove('hidden'); document.getElementById('adminPass').focus(); }
-        function hideLogin() { document.getElementById('login-modal').classList.add('hidden'); }
-        function logout() { location.reload(); }
+    function showLogin() { document.getElementById('login-modal').classList.remove('hidden'); document.getElementById('adminPass').focus(); }
+    function hideLogin() { document.getElementById('login-modal').classList.add('hidden'); }
+    function logout() { location.reload(); }
 
-        function accessAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if(btoa(pass) === HASHED_PASS) {
-                currentPass = pass;
-                document.getElementById('contact-section').classList.add('hidden');
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('admin-section').classList.remove('hidden');
-                fetchMessages();
-            } else { alert("ভুল পাসওয়ার্ড!"); document.getElementById('adminPass').value = ""; }
-        }
+    function accessAdmin() {
+        const pass = document.getElementById('adminPass').value;
+        currentPass = pass; // সরাসরি ইউজারের পাসওয়ার্ড স্টোর করুন
+        // পাসওয়ার্ড সঠিক কিনা তা প্রথমবার ডেটা ফেচ করলেই বোঝা যাবে
+        fetchMessages(); 
+    }
 
-        function fetchMessages() {
-            const container = document.getElementById('messages-container');
-            container.innerHTML = `<div class="col-span-full text-center py-20 opacity-50 text-xl animate-pulse">লোড হচ্ছে...</div>`;
-            
-            fetch(`${scriptURL}?pass=${atob(HASHED_PASS)}`).then(res => res.json()).then(data => {
-                container.innerHTML = "";
-                if(!data || data.length === 0) {
-                    container.innerHTML = "<p class='col-span-full text-center py-20 text-2xl'>ইনবক্স খালি! 📭</p>";
-                    return;
-                }
-                data.reverse().forEach((msg) => {
-                    const dateObj = new Date(msg.time || msg.date);
-                    const formattedDate = isNaN(dateObj) ? "তারিখ পাওয়া যায়নি" : dateObj.toLocaleString('bn-BD', {
-                        hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric'
-                    });
+    function fetchMessages() {
+        const container = document.getElementById('messages-container');
+        container.innerHTML = `<div class="col-span-full text-center py-20 opacity-50 text-xl animate-pulse">লোড হচ্ছে...</div>`;
+        
+        // পাসওয়ার্ডটি কুয়েরি প্যারামিটারে পাঠিয়ে প্রক্সি সার্ভারে চেক করা হবে
+        fetch(`${proxyURL}?pass=${currentPass}`).then(res => {
+            if (res.status === 401) {
+                alert("ভুল পাসওয়ার্ড!");
+                document.getElementById('adminPass').value = "";
+                throw new Error("Unauthorized");
+            }
+            return res.json();
+        }).then(data => {
+            container.innerHTML = "";
+            document.getElementById('contact-section').classList.add('hidden');
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('admin-section').classList.remove('hidden');
 
-                    container.innerHTML += `
-                        <div class="glass p-7 rounded-[3rem] border-t-4 border-primary shadow-premium animate-fade relative hover:-translate-y-2 transition-all duration-500 overflow-hidden">
-                            <div class="flex justify-between items-start mb-5 relative z-10">
-                                <span class="bg-primary/20 text-primary text-[10px] px-3 py-1 rounded-full font-black tracking-widest uppercase">আইডি: ${msg.id}</span>
-                                <div class="flex gap-2">
-                                    <button onclick="openEdit('${msg.id}', '${msg.name}', '${msg.phone}', '${msg.message}')" class="text-xl hover:scale-125 transition">✏️</button>
-                                    <button onclick="deleteMsg('${msg.id}')" class="text-xl hover:scale-125 transition">🗑️</button>
-                                </div>
-                            </div>
-                            <h4 class="text-2xl font-black mb-1 relative z-10">${msg.name}</h4>
-                            <div onclick="copyToClipboard('${msg.phone}')" class="inline-flex items-center gap-2 cursor-pointer bg-slate-500/10 px-4 py-2 rounded-xl mt-1 hover:bg-primary hover:text-white transition-all text-sm font-bold">
-                                📞 ${msg.phone}
-                            </div>
-                            <p class="text-[11px] opacity-60 mt-5 mb-5 font-bold flex items-center gap-2">🕒 ${formattedDate}</p>
-                            <div class="bg-slate-500/5 p-5 rounded-[2rem] border border-white/5 shadow-inner">
-                                <p class="text-[10px] font-black text-primary opacity-60 uppercase mb-2">বিষয়: ${msg.subject}</p>
-                                <p class="text-sm leading-relaxed">${msg.message}</p>
-                            </div>
-                        </div>`;
+            if(!data || data.length === 0) {
+                container.innerHTML = "<p class='col-span-full text-center py-20 text-2xl'>ইনবক্স খালি! 📭</p>";
+                return;
+            }
+            data.reverse().forEach((msg) => {
+                const dateObj = new Date(msg.time || msg.date);
+                const formattedDate = isNaN(dateObj) ? "তারিখ পাওয়া যায়নি" : dateObj.toLocaleString('bn-BD', {
+                    hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric'
                 });
+
+                container.innerHTML += `
+                    <div class="glass p-7 rounded-[3rem] border-t-4 border-primary shadow-premium animate-fade relative hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                        <div class="flex justify-between items-start mb-5 relative z-10">
+                            <span class="bg-primary/20 text-primary text-[10px] px-3 py-1 rounded-full font-black tracking-widest uppercase">আইডি: ${msg.id}</span>
+                            <div class="flex gap-2">
+                                <button onclick="openEdit('${msg.id}', '${msg.name}', '${msg.phone}', '${msg.message}')" class="text-xl hover:scale-125 transition">✏️</button>
+                                <button onclick="deleteMsg('${msg.id}')" class="text-xl hover:scale-125 transition">🗑️</button>
+                            </div>
+                        </div>
+                        <h4 class="text-2xl font-black mb-1 relative z-10">${msg.name}</h4>
+                        <div onclick="copyToClipboard('${msg.phone}')" class="inline-flex items-center gap-2 cursor-pointer bg-slate-500/10 px-4 py-2 rounded-xl mt-1 hover:bg-primary hover:text-white transition-all text-sm font-bold">
+                            📞 ${msg.phone}
+                        </div>
+                        <p class="text-[11px] opacity-60 mt-5 mb-5 font-bold flex items-center gap-2">🕒 ${formattedDate}</p>
+                        <div class="bg-slate-500/5 p-5 rounded-[2rem] border border-white/5 shadow-inner">
+                            <p class="text-[10px] font-black text-primary opacity-60 uppercase mb-2">বিষয়: ${msg.subject}</p>
+                            <p class="text-sm leading-relaxed">${msg.message}</p>
+                        </div>
+                    </div>`;
+            });
+        }).catch(err => {
+            console.error(err);
+        });
+    }
+
+    function deleteMsg(id) {
+        if(confirm("মেসেজটি ডিলিট করতে চান?")) {
+            showToast("ডিলিট হচ্ছে...", "info");
+            fetch(`${proxyURL}?action=delete&id=${id}&pass=${currentPass}`)
+            .then(res => res.json()).then(res => {
+                if(res.result === 'deleted') { showToast("সফলভাবে ডিলিট হয়েছে!", "success"); fetchMessages(); }
             });
         }
+    }
 
-        function deleteMsg(id) {
-            if(confirm("মেসেজটি ডিলিট করতে চান?")) {
-                showToast("ডিলিট হচ্ছে...", "info");
-                fetch(`${scriptURL}?action=delete&id=${id}&pass=${atob(HASHED_PASS)}`)
-                .then(res => res.json()).then(res => {
-                    if(res.result === 'deleted') { showToast("সফলভাবে ডিলিট হয়েছে!", "success"); fetchMessages(); }
-                });
-            }
-        }
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMsg').innerText = msg;
+        toast.style.opacity = "1";
+        toast.style.transform = "translate(-50%, -20px)";
+        setTimeout(() => { toast.style.opacity = "0"; toast.style.transform = "translate(-50%, 0)"; }, 3000);
+    }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            toast.style.opacity = "1";
-            toast.style.transform = "translate(-50%, -20px)";
-            setTimeout(() => { toast.style.opacity = "0"; toast.style.transform = "translate(-50%, 0)"; }, 3000);
-        }
+    function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => showToast("নাম্বার কপি হয়েছে!")); }
 
-        function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => showToast("নাম্বার কপি হয়েছে!")); }
-
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('sendBtn');
-            btn.innerText = "পাঠানো হচ্ছে...";
-            fetch(scriptURL, { method: 'POST', body: new URLSearchParams(new FormData(this)) })
-            .then(() => { showToast("সফলভাবে পাঠানো হয়েছে! ✅"); this.reset(); btn.innerText = "বার্তা পাঠান ✨"; });
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('sendBtn');
+        btn.innerText = "পাঠানো হচ্ছে...";
+        
+        fetch(proxyURL, { 
+            method: 'POST', 
+            body: new URLSearchParams(new FormData(this)).toString(),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(() => { 
+            showToast("সফলভাবে পাঠানো হয়েছে! ✅"); 
+            this.reset(); 
+            btn.innerText = "বার্তা পাঠান ✨"; 
         });
+    });
 
-        if(localStorage.getItem('theme') === 'light') toggleTheme();
-    </script>
+    if(localStorage.getItem('theme') === 'light') toggleTheme();
+</script>
 </body>
 </html>
