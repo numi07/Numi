@@ -475,5 +475,83 @@
 
     function openM(t) { 
         if(t==='book'){ document.getElementById('bMod').style.display='block'; document.getElementById('bookForm').reset(); document.getElementById('fi').value=""; document.getElementById('fed').value = new Date().toISOString().split('T')[0]; }
+        if(t==='auth'){ document.getElementById('aMod').style.display='block'; }
+    }
+    function closeM(t) { document.getElementById(t==='book'?'bMod':'aMod').style.display='none'; }
+
+    document.getElementById('bookForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const book = {
+            ID: document.getElementById('fi').value, BookName: document.getElementById('fn').value, Author: document.getElementById('fa').value,
+            TranslatedBy: document.getElementById('ft').value, Publisher: document.getElementById('fp').value, PublishYear: document.getElementById('fy').value,
+            MRP: document.getElementById('fm').value, BuyPrice: document.getElementById('fb').value, Category: document.getElementById('fc').value,
+            Images: document.getElementById('fi_l').value, EntryDate: document.getElementById('fed').value
+        };
+        showToast("ডাটা সেভ হচ্ছে...");
+        // পাসওয়ার্ডসহ ডাটা পাঠানো হচ্ছে
+        await fetch(API_URL, { 
+            method:'POST', 
+            body: JSON.stringify({ action: 'saveBook', book, adminPass: userPass }) 
+        });
+        closeM('book'); await init(); showToast("সংরক্ষণ সম্পন্ন!");
+    };
+
+    document.getElementById('authForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const author = { AuthorName: document.getElementById('an').value, AuthorImage: document.getElementById('ai').value };
+        showToast("আপডেট হচ্ছে...");
+        await fetch(API_URL, { 
+            method:'POST', 
+            body: JSON.stringify({ action: 'saveAuthor', author, adminPass: userPass }) 
+        });
+        document.getElementById('authForm').reset(); await init(); showToast("সম্পন্ন!");
+    };
+
+    function editB(id) {
+        const b = allBooks.find(x=>x.ID==id); openM('book');
+        document.getElementById('fi').value=b.ID; document.getElementById('fn').value=b.BookName;
+        document.getElementById('fa').value=b.Author; document.getElementById('ft').value=b.TranslatedBy||'';
+        document.getElementById('fp').value=b.Publisher; document.getElementById('fy').value=b.PublishYear;
+        document.getElementById('fm').value=b.MRP; document.getElementById('fb').value=b.BuyPrice;
+        document.getElementById('fc').value=b.Category; document.getElementById('fi_l').value=b.Images;
+        if(b.EntryDate) {
+            const date = new Date(b.EntryDate);
+            if(!isNaN(date.getTime())) document.getElementById('fed').value = date.toISOString().split('T')[0];
+        }
+    }
+    
+    async function delB(id) { 
+        if(confirm("বইটি কি ডিলিট করবেন?")){ 
+            showToast("ডিলিট হচ্ছে...");
+            // ডিলিট করার সময়ও পাসওয়ার্ড চেক করা হবে
+            const r = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'deleteBook', id, adminPass: userPass })
+            });
+            if(r.ok) {
+                await init(); navigate('books'); showToast("ডিলিট হয়েছে!"); 
+            } else {
+                showToast("ডিলিট করতে ব্যর্থ!");
+            }
+        } 
+    }
+
+    function showToast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="show"; setTimeout(()=>t.className="",3000); }
+    function getImg(u) {
+        if(!u) return 'https://via.placeholder.com/150?text=No+Image';
+        if(u.includes('drive.google.com')){
+            const id = u.split('id=')[1] || u.split('/d/')[1].split('/')[0];
+            return `https://lh3.googleusercontent.com/u/0/d/${id}`;
+        }
+        return u;
+    }
+    function search() {
+        const q = document.getElementById('sInp').value.toLowerCase();
+        const f = allBooks.filter(b => b.BookName.toLowerCase().includes(q) || b.Author.toLowerCase().includes(q));
+        document.getElementById('sRes').innerHTML = f.map(b => `<div class="book-card" onclick="showD(${b.ID})"><div style="flex:1"><strong>${b.BookName}</strong><p>${b.Author}</p></div></div>`).join('');
+    }
+
+    window.onload = init;
+</script>
 </body>
 </html>
