@@ -190,8 +190,7 @@
         <span id="toastIcon">✅</span> <span id="toastMsg">সফল হয়েছে!</span>
     </div>
 
-    <script>
-    // এই লিঙ্কটি এখন আপনার Vercel API-এর দিকে পয়েন্ট করবে
+   <script>
     const proxyURL = '/api/contact'; 
     let currentPass = "";
 
@@ -222,8 +221,7 @@
 
     function accessAdmin() {
         const pass = document.getElementById('adminPass').value;
-        currentPass = pass; // সরাসরি ইউজারের পাসওয়ার্ড স্টোর করুন
-        // পাসওয়ার্ড সঠিক কিনা তা প্রথমবার ডেটা ফেচ করলেই বোঝা যাবে
+        currentPass = pass; 
         fetchMessages(); 
     }
 
@@ -231,15 +229,16 @@
         const container = document.getElementById('messages-container');
         container.innerHTML = `<div class="col-span-full text-center py-20 opacity-50 text-xl animate-pulse">লোড হচ্ছে...</div>`;
         
-        // পাসওয়ার্ডটি কুয়েরি প্যারামিটারে পাঠিয়ে প্রক্সি সার্ভারে চেক করা হবে
-        fetch(`${proxyURL}?pass=${currentPass}`).then(res => {
+        fetch(`${proxyURL}?pass=${currentPass}`)
+        .then(res => {
             if (res.status === 401) {
                 alert("ভুল পাসওয়ার্ড!");
                 document.getElementById('adminPass').value = "";
                 throw new Error("Unauthorized");
             }
             return res.json();
-        }).then(data => {
+        })
+        .then(data => {
             container.innerHTML = "";
             document.getElementById('contact-section').classList.add('hidden');
             document.getElementById('login-modal').classList.add('hidden');
@@ -275,17 +274,15 @@
                         </div>
                     </div>`;
             });
-        }).catch(err => {
-            console.error(err);
-        });
+        }).catch(err => console.log("Login check failed"));
     }
 
     function deleteMsg(id) {
         if(confirm("মেসেজটি ডিলিট করতে চান?")) {
-            showToast("ডিলিট হচ্ছে...", "info");
+            showToast("ডিলিট হচ্ছে...");
             fetch(`${proxyURL}?action=delete&id=${id}&pass=${currentPass}`)
             .then(res => res.json()).then(res => {
-                if(res.result === 'deleted') { showToast("সফলভাবে ডিলিট হয়েছে!", "success"); fetchMessages(); }
+                if(res.result === 'deleted') { showToast("সফলভাবে ডিলিট হয়েছে!"); fetchMessages(); }
             });
         }
     }
