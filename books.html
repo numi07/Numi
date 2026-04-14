@@ -287,6 +287,7 @@
     async function init() {
         displayQuote();
         try {
+            // এখন সরাসরি GAS এ না গিয়ে API এ যাবে
             const r = await fetch(`${API_URL}?action=getData`);
             const d = await r.json();
             allBooks = d.books; allAuthors = d.authors;
@@ -448,7 +449,7 @@
         document.getElementById('details').classList.add('active');
     }
 
-    // সুরক্ষিত লগিন: Vercel এ রিকোয়েস্ট পাঠাবে
+    // সুরক্ষিত লগিন: Vercel এ রিকোয়েস্ট পাঠিয়ে পাসওয়ার্ড চেক করা হবে
     async function login() {
         const inputPass = document.getElementById('pass').value;
         showToast("চেক করা হচ্ছে...");
@@ -456,7 +457,7 @@
             const r = await fetch(`${API_URL}?action=checkLogin&pass=${inputPass}`);
             if (r.status === 200) {
                 isAdmin = true;
-                userPass = inputPass; // পরবর্তী রিকোয়েস্টের জন্য পাসওয়ার্ডটি সেভ হলো
+                userPass = inputPass; // সঠিক পাসওয়ার্ডটি ভেরিয়েবলে থাকল
                 document.getElementById('loginArea').style.display='none';
                 document.getElementById('adminArea').style.display='block';
                 document.getElementById('fab').style.display='flex';
@@ -488,7 +489,7 @@
             Images: document.getElementById('fi_l').value, EntryDate: document.getElementById('fed').value
         };
         showToast("ডাটা সেভ হচ্ছে...");
-        // পাসওয়ার্ডসহ ডাটা পাঠানো হচ্ছে
+        // API এ POST করার সময় পাসওয়ার্ড পাঠানো হচ্ছে
         await fetch(API_URL, { 
             method:'POST', 
             body: JSON.stringify({ action: 'saveBook', book, adminPass: userPass }) 
