@@ -2,12 +2,13 @@ export default async function handler(req, res) {
     const scriptURL = process.env.GAS_SCRIPT_URL;
     const adminPass = process.env.ADMIN_PASSWORD;
 
-    // ১. মেসেজ রিড এবং ডিলিট করার জন্য (GET Request)
+    // লগইন চেক এবং ডাটা রিড
     if (req.method === 'GET') {
         const { pass, action, id } = req.query;
 
-        // পাসওয়ার্ড চেক
-        if (pass !== adminPass) {
+        // চেক করুন পাসওয়ার্ড আসলেই মিলছে কি না
+        if (!pass || pass !== adminPass) {
+            console.log("Unauthorized attempt with pass:", pass); // এটি Vercel logs এ দেখা যাবে
             return res.status(401).json({ error: "Unauthorized" });
         }
 
@@ -19,28 +20,22 @@ export default async function handler(req, res) {
             const data = await response.json();
             return res.status(200).json(data);
         } catch (error) {
-            return res.status(500).json({ error: "Fetch failed" });
+            return res.status(500).json({ error: "Google Script connection failed" });
         }
     }
 
-    // ২. নতুন মেসেজ পাঠানোর জন্য (POST Request)
+    // ডাটা সেভ (POST)
     if (req.method === 'POST') {
         try {
-            // বডি ডাটা হ্যান্ডেল করা
-            const bodyData = typeof req.body === 'string' ? req.body : new URLSearchParams(req.body).toString();
-
             const response = await fetch(scriptURL, {
                 method: 'POST',
-                body: bodyData,
-                headers: { 
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json'
-                }
+                body: new URLSearchParams(req.body).toString(),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
-            
-            return res.status(200).json({ success: true });
+            const result = await response.json();
+            return res.status(200).json(result);
         } catch (error) {
-            return res.status(500).json({ error: "Post failed" });
+            return res.status(500).json({ error: "Data save failed" });
         }
     }
 }
