@@ -1,5 +1,3 @@
---- START OF FILE Paste April 14, 2026 - 3:21PM ---
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -39,8 +37,6 @@
         }
 
         body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
-
-        /* --- Header & Nav Menu Styles --- */
         .header {
             background-color: white;
             height: 60px;
@@ -78,8 +74,6 @@
             cursor: pointer;
             color: var(--primary);
         }
-
-        /* Mobile Menu */
         .mobile-menu {
             position: fixed;
             top: 60px;
@@ -109,7 +103,6 @@
             .nav-desktop { display: none; }
             .hamburger { display: block; }
         }
-        /* --- End of Header Styles --- */
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
         .page { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -176,7 +169,6 @@
 <div id="loader" class="loader"><div class="spinner"></div><p style="margin-top:15px; font-weight:bold; color:var(--text-sub)">লোড হচ্ছে...</p></div>
 <div id="toast">বার্তা</div>
 
-<!-- New Header -->
 <header class="header">
     <a href="#" class="logo" onclick="navigate('home')">চিলেকোঠা লাইব্রেরি</a>
     <nav class="nav-desktop">
@@ -393,7 +385,6 @@
         } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
     }
 
-    // Toggle Mobile Menu Functionality
     function toggleMenu() {
         document.getElementById('mobileMenu').classList.toggle('active');
         document.getElementById('overlay').classList.toggle('active');
