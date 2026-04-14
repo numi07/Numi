@@ -1,4 +1,3 @@
-// api/contact.js এর সম্পূর্ণ নতুন কোড
 export default async function handler(req, res) {
     const scriptURL = process.env.GAS_SCRIPT_URL;
     const adminPass = process.env.ADMIN_PASSWORD;
@@ -6,7 +5,6 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
         const { pass, action, id } = req.query;
 
-        // পাসওয়ার্ড চেক (সার্ভার সাইডে)
         if (pass !== adminPass) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -25,7 +23,6 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         try {
-            // বডি ডাটা কনভার্ট করে গুগল স্ক্রিপ্টে পাঠানো
             const response = await fetch(scriptURL, {
                 method: 'POST',
                 body: new URLSearchParams(req.body).toString(),
