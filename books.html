@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 14, 2026 - 3:21PM ---
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -37,8 +39,79 @@
         }
 
         body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
-        .container { padding: 15px; max-width: 500px; margin: auto; }
+
+        /* --- Header & Nav Menu Styles --- */
+        .header {
+            background-color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 2001;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-desktop {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-desktop a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .nav-desktop a:hover { color: var(--primary); }
         
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 60px;
+            left: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.1);
+            transition: 0.4s ease;
+            z-index: 2000;
+            padding-top: 20px;
+        }
+        .mobile-menu.active { left: 0; }
+        .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mobile-menu li { padding: 15px 25px; border-bottom: 1px solid #f1f5f9; }
+        .mobile-menu li a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 16px; display: block; }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1999;
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            .nav-desktop { display: none; }
+            .hamburger { display: block; }
+        }
+        /* --- End of Header Styles --- */
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
         .page { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -103,6 +176,30 @@
 <div id="loader" class="loader"><div class="spinner"></div><p style="margin-top:15px; font-weight:bold; color:var(--text-sub)">লোড হচ্ছে...</p></div>
 <div id="toast">বার্তা</div>
 
+<!-- New Header -->
+<header class="header">
+    <a href="#" class="logo" onclick="navigate('home')">চিলেকোঠা লাইব্রেরি</a>
+    <nav class="nav-desktop">
+        <a href="index.html" onclick="navigate('home')">হোম</a>
+        <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
+        <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
+        <a href="about.html" onclick="navigate('profile')">সম্পর্কে</a>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </div>
+</header>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <ul>
+        <li><a href="index.html" onclick="navigate('home')">হোম</a></li>
+        <li><a href="books.html" onclick="navigate('search')">লাইব্রেরি</a></li>
+        <li><a href="contact.html" onclick="navigate('books')">যোগাযোগ</a></li>
+        <li><a href="about.html" onclick="navigate('profile')">সম্পর্কে</a></li>
+    </ul>
+</div>
+
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="navigate('home')"><i class="fas fa-home"></i>হোম</div>
     <div class="nav-item" onclick="navigate('search')"><i class="fas fa-search"></i>সার্চ</div>
@@ -115,7 +212,7 @@
 
 <div class="container">
     <div id="home" class="page active">
-        <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:25px 5px; border-radius:0 0 15px 15px; color:white; text-align:center; margin-bottom:10px; box-shadow: var(--shadow);">
+        <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:25px 5px; border-radius:15px; color:white; text-align:center; margin-bottom:10px; box-shadow: var(--shadow); margin-top: 10px;">
             <h1 style="margin:0; font-size: 1.8rem;">চিলেকোঠা লাইব্রেরি</h1>
             <p style="opacity:0.85; margin-top:5px;">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
         </div>
@@ -294,6 +391,12 @@
             renderTopAuthors();
             document.getElementById('loader').style.display = 'none';
         } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
+    }
+
+    // Toggle Mobile Menu Functionality
+    function toggleMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
     }
 
     function navigate(id) {
