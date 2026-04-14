@@ -227,8 +227,9 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQRHW33egUrenGmu9SR1daOLmxzyXV6xEjhRmJZlJDWWpPrVEwNFN1rcp7aA8GQD4/exec"; 
-    let allBooks = [], allAuthors = [], isAdmin = false;
+    // এখন SCRIPT_URL এর বদলে Vercel API ব্যবহার হবে
+    const API_URL = "/api/books"; 
+    let allBooks = [], allAuthors = [], isAdmin = false, userPass = "";
     let currentFilteredBy = 'all'; 
 
     const quotes = [
@@ -287,7 +288,8 @@
     async function init() {
         displayQuote();
         try {
-            const r = await fetch(SCRIPT_URL + "?action=getData");
+            // API থেকে ডাটা ফেচ করা
+            const r = await fetch(`${API_URL}?action=getData`);
             const d = await r.json();
             allBooks = d.books; allAuthors = d.authors;
             renderCategories();
@@ -448,14 +450,23 @@
         document.getElementById('details').classList.add('active');
     }
 
-    function login() {
-        if(btoa(document.getElementById('pass').value) === "MjU4MA==") {
-            isAdmin = true;
-            document.getElementById('loginArea').style.display='none';
-            document.getElementById('adminArea').style.display='block';
-            document.getElementById('fab').style.display='flex';
-            updateStats(); showToast("এডমিন লগিন সফল!");
-        } else showToast("ভুল পাসওয়ার্ড!");
+    // সুরক্ষিত লগিন
+    async function login() {
+        const inputPass = document.getElementById('pass').value;
+        showToast("চেক করা হচ্ছে...");
+        try {
+            const r = await fetch(`${API_URL}?action=checkLogin&pass=${inputPass}`);
+            if (r.status === 200) {
+                isAdmin = true;
+                userPass = inputPass; // পরবর্তী রিকোয়েস্টের জন্য পাসওয়ার্ডটি সেভ করে রাখা
+                document.getElementById('loginArea').style.display='none';
+                document.getElementById('adminArea').style.display='block';
+                document.getElementById('fab').style.display='flex';
+                updateStats(); showToast("এডমিন লগিন সফল!");
+            } else {
+                showToast("ভুল পাসওয়ার্ড!");
+            }
+        } catch(e) { showToast("ত্রুটি হয়েছে!"); }
     }
 
     function updateStats() {
@@ -479,7 +490,11 @@
             Images: document.getElementById('fi_l').value, EntryDate: document.getElementById('fed').value
         };
         showToast("ডাটা সেভ হচ্ছে...");
-        await fetch(SCRIPT_URL, { method:'POST', body:JSON.stringify({action:'saveBook', book}) });
+        // সুরক্ষিতভাবে ডাটা পাঠানো
+        await fetch(API_URL, { 
+            method:'POST', 
+            body: JSON.stringify({ action: 'saveBook', book, adminPass: userPass }) 
+        });
         closeM('book'); await init(); showToast("সংরক্ষণ সম্পন্ন!");
     };
 
@@ -487,7 +502,10 @@
         e.preventDefault();
         const author = { AuthorName: document.getElementById('an').value, AuthorImage: document.getElementById('ai').value };
         showToast("আপডেট হচ্ছে...");
-        await fetch(SCRIPT_URL, { method:'POST', body:JSON.stringify({action:'saveAuthor', author}) });
+        await fetch(API_URL, { 
+            method:'POST', 
+            body: JSON.stringify({ action: 'saveAuthor', author, adminPass: userPass }) 
+        });
         document.getElementById('authForm').reset(); await init(); showToast("সম্পন্ন!");
     };
 
@@ -504,7 +522,15 @@
         }
     }
     
-    async function delB(id) { if(confirm("বইটি কি ডিলিট করবেন?")){ await fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'deleteBook', id})}); await init(); navigate('books'); showToast("ডিলিট হয়েছে!"); } }
+    async function delB(id) { 
+        if(confirm("বইটি কি ডিলিট করবেন?")){ 
+            showToast("ডিলিট হচ্ছে...");
+            const r = await fetch(`${API_URL}?action=deleteBook&id=${id}&pass=${userPass}`);
+            if(r.ok) {
+                await init(); navigate('books'); showToast("ডিলিট হয়েছে!"); 
+            } else { showToast("ডিলিট করতে ব্যর্থ!"); }
+        } 
+    }
 
     function showToast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="show"; setTimeout(()=>t.className="",3000); }
     function getImg(u) {
