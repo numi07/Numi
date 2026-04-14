@@ -3,34 +3,29 @@ export default async function handler(req, res) {
     const scriptURL = process.env.BOOKS_GAS_SCRIPT_URL;
     const adminPass = process.env.BOOKS_ADMIN_PASSWORD;
 
-    // ১. GET Request: ডাটা পড়া বা ডিলিট করা
+    // GET Request: ডাটা পড়া বা লগিন ভেরিফাই করা
     if (req.method === 'GET') {
-        const { action, pass, id } = req.query;
+        const { action, pass } = req.query;
 
-        // লগিন চেক বা ডিলিট করার সময় পাসওয়ার্ড ভেরিফাই করা
-        if ((action === 'checkLogin' || action === 'deleteBook') && pass !== adminPass) {
-            return res.status(401).json({ error: "Unauthorized" });
+        if (action === 'checkLogin') {
+            if (pass === adminPass) return res.status(200).json({ success: true });
+            else return res.status(401).json({ error: "Unauthorized" });
         }
 
         try {
-            let url = `${scriptURL}?action=${action || 'getData'}`;
-            if (id) url += `&id=${id}`;
-            
-            const response = await fetch(url);
+            const response = await fetch(`${scriptURL}?action=getData`);
             const data = await response.json();
-
-            if (action === 'checkLogin') return res.status(200).json({ success: true });
             return res.status(200).json(data);
         } catch (error) {
-            return res.status(500).json({ error: "Failed to fetch from GAS" });
+            return res.status(500).json({ error: "Fetch failed" });
         }
     }
 
-    // ২. POST Request: বই বা লেখক সেভ করা
+    // POST Request: ডাটা সেভ বা ডিলিট করা
     if (req.method === 'POST') {
         try {
             const payload = JSON.parse(req.body);
-            // সিকিউরিটি চেক
+            // পাসওয়ার্ড চেক
             if (payload.adminPass !== adminPass) {
                 return res.status(401).json({ error: "Unauthorized" });
             }
@@ -43,7 +38,7 @@ export default async function handler(req, res) {
             const data = await response.json();
             return res.status(200).json(data);
         } catch (error) {
-            return res.status(500).json({ error: "Failed to save data" });
+            return res.status(500).json({ error: "Operation failed" });
         }
     }
 }
