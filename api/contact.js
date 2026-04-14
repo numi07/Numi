@@ -1,14 +1,13 @@
+// api/contact.js এর সম্পূর্ণ নতুন কোড
 export default async function handler(req, res) {
     const scriptURL = process.env.GAS_SCRIPT_URL;
     const adminPass = process.env.ADMIN_PASSWORD;
 
-    // লগইন চেক এবং ডাটা রিড
     if (req.method === 'GET') {
         const { pass, action, id } = req.query;
 
-        // চেক করুন পাসওয়ার্ড আসলেই মিলছে কি না
-        if (!pass || pass !== adminPass) {
-            console.log("Unauthorized attempt with pass:", pass); // এটি Vercel logs এ দেখা যাবে
+        // পাসওয়ার্ড চেক (সার্ভার সাইডে)
+        if (pass !== adminPass) {
             return res.status(401).json({ error: "Unauthorized" });
         }
 
@@ -20,22 +19,21 @@ export default async function handler(req, res) {
             const data = await response.json();
             return res.status(200).json(data);
         } catch (error) {
-            return res.status(500).json({ error: "Google Script connection failed" });
+            return res.status(500).json({ error: "Failed to fetch from Google Script" });
         }
     }
 
-    // ডাটা সেভ (POST)
     if (req.method === 'POST') {
         try {
+            // বডি ডাটা কনভার্ট করে গুগল স্ক্রিপ্টে পাঠানো
             const response = await fetch(scriptURL, {
                 method: 'POST',
                 body: new URLSearchParams(req.body).toString(),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
-            const result = await response.json();
-            return res.status(200).json(result);
+            return res.status(200).json({ success: true });
         } catch (error) {
-            return res.status(500).json({ error: "Data save failed" });
+            return res.status(500).json({ error: "Failed to post data" });
         }
     }
 }
