@@ -54,6 +54,16 @@
             font-weight: 800;
             color: var(--primary);
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
         }
         .nav-desktop {
             display: flex;
@@ -127,9 +137,24 @@
         .nav-item.active { color: var(--primary); font-weight: 800; transform: translateY(-2px); }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
 
+        /* Watermark Styles */
+        .img-wrapper { position: relative; display: inline-block; overflow: hidden; border-radius: 16px; flex-shrink: 0; }
+        .img-wrapper::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA');
+            background-size: 30px;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 2;
+        }
+
         .book-card { background: var(--card); border-radius: 24px; padding: 12px; margin-bottom: 18px; display: flex; gap: 18px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .book-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1); }
-        .book-card img { width: 90px; height: 130px; border-radius: 16px; object-fit: cover; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); }
+        .book-card img { width: 90px; height: 130px; border-radius: 16px; object-fit: cover; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); display: block; }
         .book-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .book-info h4 { margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
         .book-info p { margin: 0; color: var(--text-sub); font-size: 14px; font-weight: 500; }
@@ -154,6 +179,8 @@
         .slider { width: 100%; height: 320px; border-radius: 30px; overflow: hidden; background: #f1f5f9; margin-bottom: 25px; position: relative; box-shadow: var(--shadow); }
         .slider img { width: 100%; height: 100%; object-fit: contain; position: absolute; opacity: 0; transition: 0.8s ease-in-out; }
         .slider img.active { opacity: 1; }
+        .slider .img-wrapper { width: 100%; height: 100%; }
+        .slider .img-wrapper::after { background-size: 60px; } /* Slider watermark slightly larger */
 
         #fab { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 20px; display: none; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 20px rgba(244, 63, 94, 0.4); border: none; z-index: 999; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 20px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; }
@@ -173,7 +200,10 @@
 <div id="toast">বার্তা</div>
 
 <header class="header">
-    <a href="#" class="logo" onclick="navigate('home')">চিলেকোঠা লাইব্রেরি</a>
+    <a href="#" class="logo" onclick="navigate('home')">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo">
+        চিলেকোঠা লাইব্রেরি
+    </a>
     <nav class="nav-desktop">
         <a href="index.html" onclick="navigate('home')">হোম</a>
         <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
@@ -324,7 +354,7 @@
     let currentFilteredBy = 'all'; 
 
     const quotes = [
-        { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
+        { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
         { t: "একটি ভালো বই মানে একজন নিঃস্বার্থ বন্ধু।", a: "হুমায়ূন আহমেদ" },
         { t: "বই হচ্ছে এমন এক মাধ্যম যার সাহায্যে আমরা এক জগত থেকে অন্য জগতে পাড়ি দিতে পারি।", a: "সংগৃহীত" },
         { t: "মানুষ বই দিয়ে তার অতীত আর বর্তমানকে বেঁধে রাখে।", a: "রবীন্দ্রনাথ ঠাকুর" },
@@ -506,7 +536,9 @@
         document.getElementById('lTtl').innerText = title;
         const h = list.map(b => `
             <div class="book-card" onclick="showD(${b.ID})">
-                <img src="${getImg(b.Images.split(',')[0])}">
+                <div class="img-wrapper">
+                    <img src="${getImg(b.Images.split(',')[0])}">
+                </div>
                 <div class="book-info">
                     <h4>${b.BookName}</h4>
                     <p>${b.Author}</p>
@@ -521,7 +553,10 @@
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
         const imgs = b.Images ? b.Images.split(',') : [''];
-        document.getElementById('dSlid').innerHTML = imgs.map((u, i) => `<img src="${getImg(u.trim())}" class="${i===0?'active':''}" id="sl-${i}">`).join('');
+        document.getElementById('dSlid').innerHTML = imgs.map((u, i) => `
+            <div class="img-wrapper ${i===0?'active':''}" id="sl-${i}" style="position:absolute; inset:0; display:${i===0?'block':'none'}">
+                <img src="${getImg(u.trim())}" style="width:100%; height:100%; object-fit:contain;">
+            </div>`).join('');
         
         document.getElementById('dCnt').innerHTML = `
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
