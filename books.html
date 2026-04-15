@@ -37,6 +37,8 @@
         }
 
         body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
+        
+        /* Header Logo Fix */
         .header {
             background-color: white;
             height: 60px;
@@ -50,72 +52,48 @@
             z-index: 2001;
         }
         .logo {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--primary);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-        .logo img {
+        .logo-circle {
             width: 35px;
             height: 35px;
             border-radius: 50%;
-            object-fit: cover;
+            overflow: hidden;
             border: 2px solid var(--primary);
-        }
-        .nav-desktop {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
         }
-        .nav-desktop a {
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: 600;
-            font-size: 14px;
-            transition: 0.3s;
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
+
+        .nav-desktop { display: flex; gap: 20px; }
+        .nav-desktop a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; transition: 0.3s; }
         .nav-desktop a:hover { color: var(--primary); }
         
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--primary);
-        }
-        .mobile-menu {
-            position: fixed;
-            top: 60px;
-            left: -100%;
-            width: 70%;
-            height: 100vh;
-            background: white;
-            box-shadow: 10px 0 20px rgba(0,0,0,0.1);
-            transition: 0.4s ease;
-            z-index: 2000;
-            padding-top: 20px;
-        }
+        .hamburger { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+        .mobile-menu { position: fixed; top: 60px; left: -100%; width: 70%; height: 100vh; background: white; box-shadow: 10px 0 20px rgba(0,0,0,0.1); transition: 0.4s ease; z-index: 2000; padding-top: 20px; }
         .mobile-menu.active { left: 0; }
         .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
         .mobile-menu li { padding: 15px 25px; border-bottom: 1px solid #f1f5f9; }
         .mobile-menu li a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 16px; display: block; }
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 1999;
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 1999; }
         .overlay.active { display: block; }
 
         @media (max-width: 768px) {
             .nav-desktop { display: none; }
             .hamburger { display: block; }
         }
-        
-        body.dark-mode .theme-toggle { background: rgba(255,255,255,0.1); }
-        .theme-toggle:hover { transform: rotate(20deg); }
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
         .page { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -137,10 +115,22 @@
         .nav-item.active { color: var(--primary); font-weight: 800; transform: translateY(-2px); }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
 
-        /* Watermark Styles */
-        .img-wrapper { position: relative; display: inline-block; overflow: hidden; border-radius: 16px; flex-shrink: 0; }
-        .img-wrapper::after {
-            content: "";
+        /* Image & Watermark UI */
+        .book-img-box {
+            position: relative;
+            width: 90px;
+            height: 130px;
+            border-radius: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        }
+        .book-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .watermark {
             position: absolute;
             inset: 0;
             background-image: url('https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA');
@@ -149,12 +139,11 @@
             background-position: center;
             opacity: 0.4;
             pointer-events: none;
-            z-index: 2;
+            z-index: 5;
         }
 
         .book-card { background: var(--card); border-radius: 24px; padding: 12px; margin-bottom: 18px; display: flex; gap: 18px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .book-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1); }
-        .book-card img { width: 90px; height: 130px; border-radius: 16px; object-fit: cover; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); display: block; }
         .book-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .book-info h4 { margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
         .book-info p { margin: 0; color: var(--text-sub); font-size: 14px; font-weight: 500; }
@@ -177,10 +166,20 @@
         .stat-val { font-size: 22px; font-weight: 800; color: var(--primary); display: block; }
 
         .slider { width: 100%; height: 320px; border-radius: 30px; overflow: hidden; background: #f1f5f9; margin-bottom: 25px; position: relative; box-shadow: var(--shadow); }
-        .slider img { width: 100%; height: 100%; object-fit: contain; position: absolute; opacity: 0; transition: 0.8s ease-in-out; }
-        .slider img.active { opacity: 1; }
-        .slider .img-wrapper { width: 100%; height: 100%; }
-        .slider .img-wrapper::after { background-size: 60px; } /* Slider watermark slightly larger */
+        .slider-item { width: 100%; height: 100%; position: absolute; opacity: 0; transition: 0.8s ease-in-out; display: flex; justify-content: center; align-items: center; }
+        .slider-item.active { opacity: 1; }
+        .slider-item img { width: 100%; height: 100%; object-fit: contain; }
+        .slider-watermark {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA');
+            background-size: 60px;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 10;
+        }
 
         #fab { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 20px; display: none; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 20px rgba(244, 63, 94, 0.4); border: none; z-index: 999; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 20px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; }
@@ -201,7 +200,9 @@
 
 <header class="header">
     <a href="#" class="logo" onclick="navigate('home')">
-        <img src="https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo">
+        <div class="logo-circle">
+            <img src="https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo">
+        </div>
         চিলেকোঠা লাইব্রেরি
     </a>
     <nav class="nav-desktop">
@@ -236,6 +237,7 @@
 <button id="fab" onclick="openM('book')"><i class="fas fa-plus"></i></button>
 
 <div class="container">
+    <!-- Home Page -->
     <div id="home" class="page active">
         <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:25px 5px; border-radius:15px; color:white; text-align:center; margin-bottom:10px; box-shadow: var(--shadow); margin-top: 10px;">
             <h1 style="margin:0; font-size: 1.8rem;">চিলেকোঠা লাইব্রেরি</h1>
@@ -257,6 +259,7 @@
         <button class="btn-main" onclick="showAllBooks()" style="margin-top:25px">সকল বই দেখুন <i class="fas fa-arrow-right"></i></button>
     </div>
 
+    <!-- Search Page -->
     <div id="search" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -266,6 +269,7 @@
         <div id="sRes"></div>
     </div>
 
+    <!-- Authors Page -->
     <div id="authors" class="page">
         <div class="page-header">
             <button id="authBackBtn" class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -274,6 +278,7 @@
         <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
     </div>
     
+    <!-- Books List Page -->
     <div id="books" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="goBackFromBooks()"><i class="fas fa-chevron-left"></i></button>
@@ -285,6 +290,7 @@
         <div id="bList"></div>
     </div>
 
+    <!-- Details Page -->
     <div id="details" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('books')"><i class="fas fa-chevron-left"></i></button>
@@ -294,6 +300,7 @@
         <div id="dCnt" style="background:white; padding:25px; border-radius:30px; box-shadow:var(--shadow)"></div>
     </div>
 
+    <!-- Profile/Admin Page -->
     <div id="profile" class="page">
         <div id="loginArea">
             <h3>এডমিন লগিন</h3>
@@ -315,6 +322,7 @@
     </div>
 </div>
 
+<!-- Modals -->
 <div id="bMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; backdrop-filter: blur(5px);">
     <div style="background:white; margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
         <h3>বইয়ের তথ্য</h3>
@@ -354,7 +362,7 @@
     let currentFilteredBy = 'all'; 
 
     const quotes = [
-        { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
+        { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
         { t: "একটি ভালো বই মানে একজন নিঃস্বার্থ বন্ধু।", a: "হুমায়ূন আহমেদ" },
         { t: "বই হচ্ছে এমন এক মাধ্যম যার সাহায্যে আমরা এক জগত থেকে অন্য জগতে পাড়ি দিতে পারি।", a: "সংগৃহীত" },
         { t: "মানুষ বই দিয়ে তার অতীত আর বর্তমানকে বেঁধে রাখে।", a: "রবীন্দ্রনাথ ঠাকুর" },
@@ -536,8 +544,9 @@
         document.getElementById('lTtl').innerText = title;
         const h = list.map(b => `
             <div class="book-card" onclick="showD(${b.ID})">
-                <div class="img-wrapper">
+                <div class="book-img-box">
                     <img src="${getImg(b.Images.split(',')[0])}">
+                    <div class="watermark"></div>
                 </div>
                 <div class="book-info">
                     <h4>${b.BookName}</h4>
@@ -553,9 +562,12 @@
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
         const imgs = b.Images ? b.Images.split(',') : [''];
+        
+        // Detailed Slider with Watermark
         document.getElementById('dSlid').innerHTML = imgs.map((u, i) => `
-            <div class="img-wrapper ${i===0?'active':''}" id="sl-${i}" style="position:absolute; inset:0; display:${i===0?'block':'none'}">
-                <img src="${getImg(u.trim())}" style="width:100%; height:100%; object-fit:contain;">
+            <div class="slider-item ${i===0?'active':''}" id="sl-${i}">
+                <img src="${getImg(u.trim())}">
+                <div class="slider-watermark"></div>
             </div>`).join('');
         
         document.getElementById('dCnt').innerHTML = `
@@ -578,6 +590,7 @@
         `;
         document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
         document.getElementById('details').classList.add('active');
+        window.scrollTo(0,0);
     }
 
     async function login() {
