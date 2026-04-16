@@ -841,6 +841,125 @@
         document.getElementById('sRes').innerHTML = f.map(b => `<div class="book-card" onclick="showD(${b.ID})"><div style="flex:1"><strong>${b.BookName}</strong><p>${b.Author}</p></div></div>`).join('');
     }
 
+    // --- এডমিন সেশন এবং অটো লগআউট লজিক ---
+
+const SESSION_TIMEOUT = 5 * 60 * 1000; // ৫ মিনিট (মিলি-সেকেন্ডে)
+
+// এক্টিভিটি ট্র্যাকিং ফাংশন
+function updateActivity() {
+    if (isAdmin) {
+        localStorage.setItem('lastActivityTime', Date.now());
+    }
+}
+
+// ইন-এক্টিভিটি চেক করার ফাংশন
+function checkInactivity() {
+    if (isAdmin) {
+        const lastActivity = localStorage.getItem('lastActivityTime');
+        if (lastActivity && (Date.now() - lastActivity > SESSION_TIMEOUT)) {
+            showToast("নিষ্ক্রিয়তার কারণে লগআউট করা হয়েছে");
+            adminLogout();
+        }
+    }
+}
+
+// লগআউট ফাংশন
+function adminLogout() {
+    isAdmin = false;
+    userPass = "";
+    localStorage.removeItem('adminPass');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('lastActivityTime');
+    location.reload(); // পেজ রিলোড দিয়ে স্টেট পরিষ্কার করা
+}
+
+// উপহার মেনু কন্ট্রোল (শুধুমাত্র এডমিন দেখবে)
+function updateGiftMenuVisibility() {
+    const giftNavItem = document.querySelector('.nav-item[onclick*="gift-list-page"]');
+    if (giftNavItem) {
+        giftNavItem.style.display = isAdmin ? 'flex' : 'none';
+    }
+}
+
+// মূল init ফাংশনটি ওভাররাইট/আপডেট করা হচ্ছে সেশন চেক করার জন্য
+const originalInit = init;
+init = async function() {
+    // আগের সেশন চেক
+    const savedPass = localStorage.getItem('adminPass');
+    const savedAdminStatus = localStorage.getItem('isAdmin');
+    
+    if (savedPass && savedAdminStatus === 'true') {
+        const lastActivity = localStorage.getItem('lastActivityTime');
+        if (lastActivity && (Date.now() - lastActivity < SESSION_TIMEOUT)) {
+            isAdmin = true;
+            userPass = savedPass;
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('adminArea').style.display = 'block';
+            document.getElementById('fab').style.display = 'flex';
+            updateActivity();
+        } else {
+            localStorage.clear();
+        }
+    }
+
+    await originalInit(); // আপনার আগের init লজিক রান করবে
+    updateGiftMenuVisibility(); // উপহার মেনু লুকানো বা দেখানো
+    
+    // ইভেন্ট লিসেনার যুক্ত করা (Activity Detect করার জন্য)
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
+        window.addEventListener(evt, updateActivity, true)
+    );
+    
+    // প্রতি ১০ সেকেন্ড অন্তর ইন-এক্টিভিটি চেক করবে
+    setInterval(checkInactivity, 10000);
+    };
+    
+    // লগিন ফাংশনটি আপডেট করা হচ্ছে যাতে ডাটা সেভ হয়
+    const originalLogin = login;
+    login = async function() {
+        const inputPass = document.getElementById('pass').value;
+        showToast("চেক করা হচ্ছে...");
+        try {
+            const r = await fetch(`${API_URL}?action=checkLogin&pass=${inputPass}`);
+            if (r.status === 200) {
+                isAdmin = true;
+                userPass = inputPass;
+                
+                // ব্রাউজারে ডাটা সেভ করা
+                localStorage.setItem('adminPass', userPass);
+                localStorage.setItem('isAdmin', 'true');
+                localStorage.setItem('lastActivityTime', Date.now());
+    
+                document.getElementById('loginArea').style.display='none';
+                document.getElementById('adminArea').style.display='block';
+                document.getElementById('fab').style.display='flex';
+                
+                updateStats();
+                updateGiftMenuVisibility(); // লগিন হওয়ার সাথে সাথে উপহার মেনু দেখানো
+                showToast("এডমিন লগিন সফল!");
+                if(document.getElementById('books').classList.contains('active')) showAllBooks();
+            } else {
+                showToast("ভুল পাসওয়ার্ড!");
+            }
+        } catch(e) { showToast("ত্রুটি হয়েছে!"); }
+    };
+    
+    // উপহার পেজে যাওয়ার সময় সিকিউরিটি চেক
+    const originalNavigate = navigate;
+    navigate = function(id) {
+        if (id === 'gift-list-page' && !isAdmin) {
+            showToast("এই পেজটি শুধুমাত্র এডমিনদের জন্য!");
+            return;
+        }
+        originalNavigate(id);
+    };
+    
+    // লগ আউট বাটন এর লজিক আপডেট
+    const logoutBtn = document.querySelector('button[onclick="location.reload()"]');
+    if(logoutBtn) {
+        logoutBtn.setAttribute('onclick', 'adminLogout()');
+    }
+
     window.onload = init;
 </script>
 </body>
