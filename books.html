@@ -1,3 +1,6 @@
+--- START OF FILE Paste April 17, 2026 - 1:15AM ---
+
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -36,10 +39,19 @@
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); 
         }
 
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
+        /* ডার্ক মোড কালার স্কিম */
+        body.dark-mode {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; transition: background 0.3s; }
         
         .header {
-            background-color: white;
+            background-color: var(--card);
             height: 60px;
             display: flex;
             align-items: center;
@@ -67,12 +79,14 @@
             object-fit: cover;
         }
         
-        .nav-desktop { display: flex; gap: 20px; }
+        .nav-desktop { display: flex; align-items: center; gap: 20px; }
         .nav-desktop a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; transition: 0.3s; }
         .nav-desktop a:hover { color: var(--primary); }
         .hamburger { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
 
-        .mobile-menu { position: fixed; top: 60px; left: -100%; width: 70%; height: 100vh; background: white; box-shadow: 10px 0 20px rgba(0,0,0,0.1); transition: 0.4s ease; z-index: 2000; padding-top: 20px; }
+        .dark-toggle-btn { font-size: 20px; cursor: pointer; color: var(--primary); margin-right: 5px; }
+
+        .mobile-menu { position: fixed; top: 60px; left: -100%; width: 70%; height: 100vh; background: var(--card); box-shadow: 10px 0 20px rgba(0,0,0,0.1); transition: 0.4s ease; z-index: 2000; padding-top: 20px; }
         .mobile-menu.active { left: 0; }
         .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
         .mobile-menu li { padding: 15px 25px; border-bottom: 1px solid #f1f5f9; }
@@ -88,16 +102,19 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .quote-card { background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-radius: 20px; padding: 20px; margin: 15px 0 25px 0; border-left: 5px solid var(--primary); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .dark-mode .quote-card { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
         .quote-card i.fa-quote-left { position: absolute; top: 10px; left: 10px; opacity: 0.1; font-size: 40px; }
         #quoteText { font-size: 16px; font-weight: 600; color: #3730a3; line-height: 1.6; margin-bottom: 8px; font-style: italic; }
+        .dark-mode #quoteText { color: #c7d2fe; }
         #quoteAuthor { font-size: 13px; color: var(--primary); font-weight: 700; text-align: right; display: block; }
 
         .page-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
-        .back-btn { width: 35px; height: 35px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: var(--shadow); cursor: pointer; border: none; font-size: 16px; transition: 0.3s; }
+        .back-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: var(--shadow); cursor: pointer; border: none; font-size: 16px; transition: 0.3s; }
         .back-btn:hover { background: var(--primary); color: white; }
         .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 0; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f1f5f9; z-index: 1000; box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.03); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: var(--card); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #f1f5f9; z-index: 1000; box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.03); }
+        .dark-mode .bottom-nav { border-color: #334155; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #94a3b8; text-decoration: none; font-size: 11px; flex: 1; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--primary); font-weight: 800; transform: translateY(-2px); }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
@@ -136,13 +153,16 @@
         .book-info h4 { margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
         .book-info p { margin: 0; color: var(--text-sub); font-size: 14px; font-weight: 500; }
         .book-tag { background: #f1f5f9; color: var(--primary); font-size: 11px; padding: 4px 10px; border-radius: 8px; font-weight: 700; margin-top: 8px; display: inline-block; align-self: flex-start; }
+        .dark-mode .book-tag { background: #334155; }
         .book-price { color: var(--primary); font-weight: 800; margin-top: 10px; font-size: 16px; }
 
-        /* নতুন ফিচারের জন্য স্টাইল */
         .series-badge { background: #e0e7ff; color: #4338ca; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-top: 5px; display: inline-block; }
-        .review-box { margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 15px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6; }
+        .dark-mode .series-badge { background: #3730a3; color: #c7d2fe; }
+        .review-box { margin-top: 15px; padding: 15px; background: var(--bg); border-radius: 15px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6; }
+        .dark-mode .review-box { border-color: #334155; }
 
         .slider { width: 100%; height: 320px; border-radius: 30px; overflow: hidden; background: #f1f5f9; margin-bottom: 25px; position: relative; box-shadow: var(--shadow); }
+        .dark-mode .slider { background: #334155; }
         .slider-img-container { width: 100%; height: 100%; position: absolute; opacity: 0; transition: 0.8s; display: flex; align-items: center; justify-content: center; }
         .slider-img-container.active { opacity: 1; }
         .slider-shield {
@@ -158,28 +178,32 @@
 
         .chip-container { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; scrollbar-width: none; }
         .cat-box { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; }
-        .cat-icon-circle { width: 60px; height: 60px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); box-shadow: var(--shadow); margin-bottom: 8px; transition: 0.3s; border: 1px solid #f1f5f9; }
+        .cat-icon-circle { width: 60px; height: 60px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); box-shadow: var(--shadow); margin-bottom: 8px; transition: 0.3s; border: 1px solid #f1f5f9; }
+        .dark-mode .cat-icon-circle { border-color: #334155; }
         .cat-box:hover .cat-icon-circle { transform: scale(1.1); background: var(--primary); color: white; }
 
         .author-box { display: flex; flex-direction: column; align-items: center; min-width: 95px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
         .author-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: 0.3s; }
+        .dark-mode .author-img { border-color: #1e293b; }
         .author-box:hover .author-img { transform: scale(1.1); border-color: var(--primary); }
 
         .admin-card { background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); padding: 30px 20px; border-radius: 30px; box-shadow: var(--shadow); text-align: center; margin-bottom: 20px; border: 1px solid #fff; }
+        .dark-mode .admin-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-color: #334155; }
         .admin-pfp { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; }
         .stat-container { display: flex; gap: 12px; margin-top: 25px; }
-        .stat-card { flex: 1; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .stat-card { flex: 1; background: var(--card); padding: 15px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .stat-val { font-size: 22px; font-weight: 800; color: var(--primary); display: block; }
 
         #fab { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 20px; display: none; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 20px rgba(244, 63, 94, 0.4); border: none; z-index: 999; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 20px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        input, textarea { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #e2e8f0; box-sizing: border-box; font-family: inherit; }
+        input, textarea { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #e2e8f0; box-sizing: border-box; font-family: inherit; background: var(--card); color: var(--text-main); }
+        .dark-mode input, .dark-mode textarea { border-color: #334155; }
         
-        .loader { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .loader { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 4px solid #f1f5f9; border-top: 4px solid var(--primary); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #toast { visibility: hidden; min-width: 250px; background: #1e293b; color: #fff; text-align: center; border-radius: 16px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 14px; font-weight: 600; }
-        #toast.show { visibility: hidden; } /* Toast toggle fixed in JS */
+        #toast.show { visibility: visible; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -193,23 +217,27 @@
         চিলেকোঠা লাইব্রেরি
     </a>
     <nav class="nav-desktop">
-        <a href="index.html" onclick="navigate('home')">হোম</a>
-        <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
-        <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
-        <a href="about.html" onclick="navigate('profile')">সম্পর্কে</a>
+        <i id="darkIcon" class="fas fa-moon dark-toggle-btn" onclick="toggleDarkMode()"></i>
+        <a href="#" onclick="navigate('home')">হোম</a>
+        <a href="#" onclick="navigate('search')">লাইব্রেরি</a>
+        <a href="#" onclick="navigate('books')">যোগাযোগ</a>
+        <a href="#" onclick="navigate('profile')">সম্পর্কে</a>
     </nav>
-    <div class="hamburger" onclick="toggleMenu()">
-        <i class="fas fa-bars"></i>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <i id="darkIconMob" class="fas fa-moon dark-toggle-btn" style="display:none" onclick="toggleDarkMode()"></i>
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
     </div>
 </header>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="mobile-menu" id="mobileMenu">
     <ul>
-        <li><a href="index.html" onclick="navigate('home')">হোম</a></li>
-        <li><a href="books.html" onclick="navigate('search')">লাইব্রেরি</a></li>
-        <li><a href="contact.html" onclick="navigate('books')">যোগাযোগ</a></li>
-        <li><a href="about.html" onclick="navigate('profile')">সম্পর্কে</a></li>
+        <li><a href="#" onclick="navigate('home'); toggleMenu()">হোম</a></li>
+        <li><a href="#" onclick="navigate('search'); toggleMenu()">লাইব্রেরি</a></li>
+        <li><a href="#" onclick="navigate('books'); toggleMenu()">যোগাযোগ</a></li>
+        <li><a href="#" onclick="navigate('profile'); toggleMenu()">সম্পর্কে</a></li>
     </ul>
 </div>
 
@@ -279,7 +307,7 @@
             <h3 class="page-title">বইয়ের বিবরণ</h3>
         </div>
         <div class="slider" id="dSlid"></div>
-        <div id="dCnt" style="background:white; padding:25px; border-radius:30px; box-shadow:var(--shadow)"></div>
+        <div id="dCnt" style="background:var(--card); padding:25px; border-radius:30px; box-shadow:var(--shadow)"></div>
     </div>
 
     <div id="profile" class="page">
@@ -302,8 +330,9 @@
         </div>
     </div>
 </div>
+
 <div id="bMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; backdrop-filter: blur(5px);">
-    <div style="background:white; margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
+    <div style="background:var(--card); margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
         <h3>বইয়ের তথ্য</h3>
         <form id="bookForm">
             <input type="hidden" id="fi">
@@ -339,7 +368,7 @@
 </div>
 
 <div id="aMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; backdrop-filter: blur(5px);">
-    <div style="background:white; margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
+    <div style="background:var(--card); margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
         <h3> লেখক ডাটাবেস</h3>
         <form id="authForm">
             <input type="text" id="an" placeholder="লেখকের নাম *" required>
@@ -347,6 +376,21 @@
             <button type="submit" class="btn-main" style="background:#10b981">সেভ করুন</button>
         </form>
         <button type="button" class="btn-main" onclick="closeM('auth')" style="background:#f1f5f9; color:#475569; margin-top:10px;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<!-- গিফট এন্ট্রি মডাল -->
+<div id="gMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; backdrop-filter: blur(5px);">
+    <div style="background:var(--card); margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
+        <h3>বই গিফট এন্ট্রি</h3>
+        <p id="giftBookName" style="font-weight:bold; color:var(--primary)"></p>
+        <form id="giftForm">
+            <input type="hidden" id="gId">
+            <input type="text" id="gRec" placeholder="যাকে গিফট করা হচ্ছে (নাম) *" required>
+            <input type="date" id="gDate" required>
+            <button type="submit" class="btn-main" style="background:var(--accent)">গিফট কনফার্ম করুন</button>
+        </form>
+        <button type="button" class="btn-main" onclick="document.getElementById('gMod').style.display='none'" style="background:#f1f5f9; color:#475569; margin-top:10px;">বন্ধ করুন</button>
     </div>
 </div>
 
@@ -402,6 +446,18 @@
         return toBN(`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`);
     }
 
+    // ডার্ক মোড লজিক
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById('darkIcon');
+        const iconMob = document.getElementById('darkIconMob');
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        icon.className = isDark ? 'fas fa-sun dark-toggle-btn' : 'fas fa-moon dark-toggle-btn';
+        iconMob.className = icon.className;
+        localStorage.setItem('libraryTheme', isDark ? 'dark' : 'light');
+    }
+
     function displayQuote() {
         const q = quotes[Math.floor(Math.random() * quotes.length)];
         document.getElementById('quoteText').innerText = `"${q.t}"`;
@@ -409,6 +465,14 @@
     }
 
     async function init() {
+        if(localStorage.getItem('libraryTheme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkIcon').className = 'fas fa-sun dark-toggle-btn';
+            document.getElementById('darkIconMob').className = 'fas fa-sun dark-toggle-btn';
+        }
+        if(window.innerWidth <= 768) {
+            document.getElementById('darkIconMob').style.display = 'block';
+        }
         displayQuote();
         try {
             const r = await fetch(`${API_URL}?action=getData`);
@@ -534,7 +598,6 @@
         window.scrollTo(0,0);
     }
 
-    // মুদ্রিত মূল্য হাইড এবং সিরিজ ডিসপ্লে লজিক যোগ করা হয়েছে
     function renderBooks(list, title) {
         document.getElementById('lTtl').innerText = title;
         const h = list.map(b => `
@@ -547,18 +610,13 @@
                     <h4>${b.BookName}</h4>
                     <p>${b.Author}</p>
                     <span class="book-tag">${b.Category || 'বিবিধ'}</span>
-                    
-                    <!-- সিরিজ ব্যাজ -->
                     ${b.SeriesName ? `<br><span class="series-badge"><i class="fas fa-layer-group"></i> ${b.SeriesName} (${toBN(b.SeriesOrder)})</span>` : ''}
-                    
-                    <!-- মুদ্রিত মূল্য শুধু এডমিনকে দেখানো হবে -->
                     ${isAdmin ? `<br><span class="book-price">MRP: ${toBN(b.MRP)} ৳</span>` : ''}
                 </div>
             </div>`).join('');
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
     }
 
-    // রিভিউ এবং গিফট সিস্টেম লজিক যোগ করা হয়েছে
     function showD(id) {
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
@@ -571,10 +629,10 @@
             </div>`).join('');
         
         let adminSec = isAdmin ? `
-            <div style="background:#fff1f2; padding:15px; border-radius:15px; margin-top:15px; border:1px dashed var(--accent)">
+            <div style="background:rgba(79, 70, 229, 0.05); padding:15px; border-radius:15px; margin-top:15px; border:1px dashed var(--primary)">
                 <p><b>মুদ্রিত মূল্য:</b> ${toBN(b.MRP)} ৳ | <b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} ৳</p>
-                <p><b>বর্তমান স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
-                <button class="btn-main" onclick="giftBook(${b.ID})" style="background:var(--accent); font-size:12px; padding:10px;">১টি গিফট করুন (মাইনাস হবে)</button>
+                <p><b>স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
+                <button class="btn-main" onclick="openGiftM(${b.ID}, '${b.BookName}')" style="background:var(--accent); font-size:12px; padding:10px;">১টি গিফট করুন (মাইনাস হবে)</button>
                 <div style="display:flex; gap:10px; margin-top:10px">
                     <button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট</button>
                     <button class="btn-main" onclick="delB(${b.ID})" style="background:#ef4444">ডিলিট</button>
@@ -620,6 +678,8 @@
                 document.getElementById('adminArea').style.display='block';
                 document.getElementById('fab').style.display='flex';
                 updateStats(); showToast("এডমিন লগিন সফল!");
+                // রিরেন্ডার বুক লিস্ট প্রাইস দেখার জন্য
+                if(document.getElementById('books').classList.contains('active')) showAllBooks();
             } else {
                 showToast("ভুল পাসওয়ার্ড!");
             }
@@ -638,22 +698,35 @@
     }
     function closeM(t) { document.getElementById(t==='book'?'bMod':'aMod').style.display='none'; }
 
-    // নতুন গিফট লজিক ফাংশন
-    async function giftBook(id) {
-        if(!confirm("১টি বই কি গিফট হিসেবে স্টক থেকে মাইনাস করতে চান?")) return;
+    // গিফট মডাল ওপেন
+    function openGiftM(id, name) {
+        document.getElementById('gMod').style.display = 'block';
+        document.getElementById('gId').value = id;
+        document.getElementById('giftBookName').innerText = "বই: " + name;
+        document.getElementById('gDate').value = new Date().toISOString().split('T')[0];
+    }
+
+    // গিফট সাবমিট লজিক
+    document.getElementById('giftForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('gId').value;
+        const recipient = document.getElementById('gRec').value;
+        const date = document.getElementById('gDate').value;
+        
         showToast("আপডেট হচ্ছে...");
         const r = await fetch(API_URL, { 
             method: 'POST', 
-            body: JSON.stringify({ action: 'giftBook', id: id, adminPass: userPass }) 
+            body: JSON.stringify({ action: 'giftBook', id: id, recipient: recipient, giftDate: date, adminPass: userPass }) 
         });
         if(r.ok) { 
+            document.getElementById('gMod').style.display = 'none';
+            document.getElementById('giftForm').reset();
             await init(); 
             showD(id); 
-            showToast("স্টক আপডেট হয়েছে!"); 
+            showToast("গিফট এন্ট্রি সফল!"); 
         }
-    }
+    };
 
-    // সেভ বুক লজিক আপডেট
     document.getElementById('bookForm').onsubmit = async (e) => {
         e.preventDefault();
         const book = {
@@ -684,7 +757,6 @@
         document.getElementById('authForm').reset(); await init(); showToast("সম্পন্ন!");
     };
 
-    // এডিট বুক লজিক আপডেট
     function editB(id) {
         const b = allBooks.find(x=>x.ID==id); openM('book');
         document.getElementById('fi').value=b.ID; document.getElementById('fn').value=b.BookName;
