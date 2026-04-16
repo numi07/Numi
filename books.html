@@ -36,6 +36,7 @@
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); 
         }
 
+        /* ডার্ক মুড ভেরিয়েবল */
         body.dark-mode {
             --bg: #0f172a;
             --card: #1e293b;
@@ -44,7 +45,7 @@
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; transition: background 0.3s ease; }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
         
         .header {
             background-color: var(--card);
@@ -75,27 +76,26 @@
             object-fit: cover;
         }
         
-
-        .nav-right-area { display: flex; align-items: center; gap: 15px; }
         .nav-desktop { display: flex; gap: 20px; align-items: center; }
         .nav-desktop a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; transition: 0.3s; }
         .nav-desktop a:hover { color: var(--primary); }
-        
-        .theme-toggle {
+        .hamburger { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+        /* ডার্ক মুড টগল বাটন */
+        .dark-mode-toggle {
             cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-right: 15px;
             width: 35px;
             height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: var(--bg);
-            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
             transition: 0.3s;
-            border: 1px solid rgba(79, 70, 229, 0.2);
         }
-
-        .hamburger { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
 
         .mobile-menu { position: fixed; top: 60px; left: -100%; width: 70%; height: 100vh; background: var(--card); box-shadow: 10px 0 20px rgba(0,0,0,0.1); transition: 0.4s ease; z-index: 2000; padding-top: 20px; }
         .mobile-menu.active { left: 0; }
@@ -161,6 +161,9 @@
         #toast { visibility: hidden; min-width: 250px; background: #1e293b; color: #fff; text-align: center; border-radius: 16px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 14px; font-weight: 600; }
         #toast.show { visibility: visible; animation: fadeInOut 3s; }
         @keyframes fadeInOut { 0%, 100% { opacity: 0; } 15%, 85% { opacity: 1; } }
+
+        /* Modal specific dark mode adjustments */
+        body.dark-mode #bMod > div, body.dark-mode #aMod > div { background: var(--card); color: var(--text-main); }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -173,25 +176,28 @@
         <img src="https://lh3.googleusercontent.com/u/0/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" class="logo-img">
         চিলেকোঠা লাইব্রেরি
     </a>
-    
-    <div class="nav-right-area">
-
-        <div class="theme-toggle" onclick="toggleDarkMode()">
-            <i id="themeIcon" class="fas fa-moon"></i>
+    <div class="nav-desktop">
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i id="darkIcon" class="fas fa-moon"></i>
         </div>
-
-        <nav class="nav-desktop">
-            <a href="index.html" onclick="navigate('home')">হোম</a>
-            <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
-            <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
-            <a href="about.html" onclick="navigate('profile')">সম্পর্কে</a>
-        </nav>
-
+        <a href="index.html" onclick="navigate('home')">হোম</a>
+        <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
+        <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
+        <a href="about.html" onclick="navigate('profile')">সম্পর্কে</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="dark-mode-toggle hamburger-toggle" style="display: none;" onclick="toggleDarkMode()">
+            <i id="darkIconMob" class="fas fa-moon"></i>
+        </div>
         <div class="hamburger" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </div>
     </div>
 </header>
+
+<style>
+    @media (max-width: 768px) { .hamburger-toggle { display: flex !important; } }
+</style>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="mobile-menu" id="mobileMenu">
@@ -214,7 +220,6 @@
 <button id="fab" onclick="openM('book')"><i class="fas fa-plus"></i></button>
 
 <div class="container">
-
     <div id="home" class="page active">
         <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:25px 5px; border-radius:15px; color:white; text-align:center; margin-bottom:10px; box-shadow: var(--shadow); margin-top: 10px;">
             <h1 style="margin:0; font-size: 1.8rem;">চিলেকোঠা লাইব্রেরি</h1>
@@ -235,6 +240,7 @@
         
         <button class="btn-main" onclick="showAllBooks()" style="margin-top:25px">সকল বই দেখুন <i class="fas fa-arrow-right"></i></button>
     </div>
+
     <div id="search" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -243,6 +249,7 @@
         <input type="text" id="sInp" placeholder="বই বা লেখকের নাম লিখুন..." onkeyup="search()">
         <div id="sRes"></div>
     </div>
+
     <div id="authors" class="page">
         <div class="page-header">
             <button id="authBackBtn" class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -250,6 +257,7 @@
         </div>
         <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
     </div>
+    
     <div id="books" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="goBackFromBooks()"><i class="fas fa-chevron-left"></i></button>
@@ -260,6 +268,7 @@
         </div>
         <div id="bList"></div>
     </div>
+
     <div id="details" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('books')"><i class="fas fa-chevron-left"></i></button>
@@ -268,6 +277,7 @@
         <div class="slider" id="dSlid"></div>
         <div id="dCnt" style="background:var(--card); padding:25px; border-radius:30px; box-shadow:var(--shadow)"></div>
     </div>
+
     <div id="profile" class="page">
         <div id="loginArea">
             <h3>এডমিন লগিন</h3>
@@ -296,26 +306,21 @@
             <input type="hidden" id="fi">
             <input type="text" id="fn" placeholder="বইয়ের নাম *" required>
             <input type="text" id="fa" placeholder="লেখকের নাম *" required>
-            
             <div style="display:flex; gap:10px">
                 <input type="text" id="fsn" placeholder="সিরিজের নাম">
                 <input type="number" id="fso" placeholder="সিরিজ নং">
             </div>
-
             <input type="text" id="ft" placeholder="অনুবাদকের নাম">
             <input type="text" id="fp" placeholder="প্রকাশনী">
             <input type="text" id="fy" placeholder="প্রকাশ সাল">
-            
             <div style="display:flex; gap:10px">
                 <input type="number" id="fm" placeholder="মুদ্রিত মূল্য *">
                 <input type="number" id="fb" placeholder="ক্রয় মূল্য *">
             </div>
-
             <input type="number" id="fq" placeholder="বইয়ের সংখ্যা (Quantity) *" required>
             <input type="text" id="fc" placeholder="ক্যাটাগরি">
             <input type="text" id="fi_l" placeholder="বইয়ের ছবি লিঙ্ক">
             <textarea id="frv" placeholder="বইয়ের রিভিউ লিখুন..." rows="4"></textarea>
-
             <input type="date" id="fed" required>
             <button type="submit" class="btn-main">সংরক্ষণ করুন</button>
             <button type="button" class="btn-main" onclick="closeM('book')" style="background:#f1f5f9; color:#475569; margin-top:10px;">বন্ধ করুন</button>
@@ -393,22 +398,25 @@
         document.getElementById('quoteAuthor').innerText = `- ${q.a}`;
     }
 
+    // ডার্ক মুড ফাংশন
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeIcon(isDark);
+        localStorage.setItem('darkMode', isDark);
+        updateDarkIcons(isDark);
     }
 
-    function updateThemeIcon(isDark) {
-        const icon = document.getElementById('themeIcon');
-        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    function updateDarkIcons(isDark) {
+        const icon = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        document.getElementById('darkIcon').className = icon;
+        document.getElementById('darkIconMob').className = icon;
     }
 
     async function init() {
-        if (localStorage.getItem('theme') === 'dark') {
+        // ডার্ক মুড প্রিফারেন্স চেক
+        if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
-            updateThemeIcon(true);
+            updateDarkIcons(true);
         }
 
         displayQuote();
@@ -542,13 +550,14 @@
             <div class="book-card" onclick="showD(${b.ID})">
                 <div class="book-img-wrapper">
                     <div class="book-bg-img" style="background-image: url('${getImg(b.Images.split(',')[0])}')"></div>
+                    <div class="img-shield"></div>
                 </div>
                 <div class="book-info">
                     <h4>${b.BookName}</h4>
                     <p>${b.Author}</p>
                     <span class="book-tag">${b.Category || 'বিবিধ'}</span>
                     ${b.SeriesName ? `<br><span class="series-badge"><i class="fas fa-layer-group"></i> ${b.SeriesName} (${toBN(b.SeriesOrder)})</span>` : ''}
-                    ${isAdmin ? `<br><span class="book-price" style="font-size: 13px;">MRP: ${toBN(b.MRP)} ৳</span>` : ''}
+                    ${isAdmin ? `<br><span class="book-price">MRP: ${toBN(b.MRP)} ৳</span>` : ''}
                 </div>
             </div>`).join('');
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
@@ -562,13 +571,14 @@
         document.getElementById('dSlid').innerHTML = imgs.map((u, i) => `
             <div class="slider-img-container ${i===0?'active':''}" id="sl-${i}">
                 <div style="width:100%; height:100%; background-image: url('${getImg(u.trim())}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                <div class="slider-shield"></div>
             </div>`).join('');
         
         let adminSec = isAdmin ? `
             <div style="background:rgba(244, 63, 94, 0.1); padding:15px; border-radius:15px; margin-top:15px; border:1px dashed var(--accent)">
                 <p><b>মুদ্রিত মূল্য:</b> ${toBN(b.MRP)} ৳ | <b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} ৳</p>
                 <p><b>বর্তমান স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
-                <button class="btn-main" onclick="giftBook(${b.ID})" style="background:var(--accent); font-size:12px; padding:10px;">১টি গিফট করুন (মাইনাস হবে)</button>
+                <button class="btn-main" onclick="giftBook(${b.ID})" style="background:var(--accent); padding:10px; font-size:12px;">১টি গিফট করুন (মাইনাস হবে)</button>
                 <div style="display:flex; gap:10px; margin-top:10px">
                     <button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট</button>
                     <button class="btn-main" onclick="delB(${b.ID})" style="background:#ef4444">ডিলিট</button>
@@ -582,6 +592,7 @@
             </div>
             <div style="line-height:1.8">
                 ${b.SeriesName ? `<p style="color:var(--primary)"><b>সিরিজ:</b> ${b.SeriesName} (${toBN(b.SeriesOrder)} তম বই)</p>` : ''}
+                ${(b.TranslatedBy && b.TranslatedBy.trim() !== '' && b.TranslatedBy !== '-') ? `<p><b>অনুবাদক:</b> ${b.TranslatedBy}</p>` : ''}
                 <p><b>প্রকাশনী:</b> ${b.Publisher || '-'}</p>
                 <p><b>প্রকাশ সাল:</b> ${toBN(b.PublishYear)}</p>
                 <p><b>ক্যাটাগরি:</b> ${b.Category || '-'}</p>
