@@ -1,7 +1,3 @@
---- START OF FILE Paste April 17, 2026 - 2:12AM ---
-
---- START OF FILE Paste April 17, 2026 - 1:48AM ---
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -39,8 +35,6 @@
             --text-sub: #64748b;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); 
         }
-
-        /* ডার্ক মোড কালার স্কিম */
         body.dark-mode {
             --bg: #0f172a;
             --card: #1e293b;
@@ -79,8 +73,6 @@
             border: 2px solid var(--primary);
             object-fit: cover;
         }
-        
-        /* ডেস্কটপ মেনু এলাইনমেন্ট */
         .nav-desktop { display: flex; align-items: center; gap: 20px; }
         .nav-desktop a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; transition: 0.3s; }
         .nav-desktop a:hover { color: var(--primary); }
@@ -168,7 +160,6 @@
         .review-box { margin-top: 15px; padding: 15px; background: var(--bg); border-radius: 15px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6; }
         .dark-mode .review-box { border-color: #334155; }
 
-        /* উপহার কার্ড আপডেট ডিজাইন */
         .gift-card { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 5px solid var(--accent); position: relative; display: flex; gap: 15px; align-items: flex-start; }
         .gift-img { width: 70px; height: 100px; border-radius: 10px; object-fit: cover; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); flex-shrink: 0; }
         .gift-info { flex: 1; }
@@ -234,13 +225,12 @@
     </a>
     <nav class="nav-desktop">
         <i id="darkIcon" class="fas fa-moon dark-toggle-btn" onclick="toggleDarkMode()"></i>
-        <a href="#" onclick="navigate('home')">হোম</a>
-        <a href="#" onclick="navigate('search')">লাইব্রেরি</a>
-        <a href="#" onclick="navigate('books')">যোগাযোগ</a>
-        <a href="#" onclick="navigate('profile')">সম্পর্কে</a>
+        <a href="index.html" onclick="navigate('home')">হোম</a>
+        <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
+        <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
+        <a href="about.thml" onclick="navigate('profile')">সম্পর্কে</a>
     </nav>
     <div style="display: flex; align-items: center; gap: 15px;">
-        <!-- মোবাইলে ডার্ক মোড আইকন হ্যামবার্গারের বাম পাশে নিশ্চিত করা হয়েছে -->
         <i id="darkIconMob" class="fas fa-moon dark-toggle-btn" style="display:none" onclick="toggleDarkMode()"></i>
         <div class="hamburger" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
@@ -251,10 +241,10 @@
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="mobile-menu" id="mobileMenu">
     <ul>
-        <li><a href="#" onclick="navigate('home'); toggleMenu()">হোম</a></li>
-        <li><a href="#" onclick="navigate('search'); toggleMenu()">লাইব্রেরি</a></li>
-        <li><a href="#" onclick="navigate('books'); toggleMenu()">যোগাযোগ</a></li>
-        <li><a href="#" onclick="navigate('profile'); toggleMenu()">সম্পর্কে</a></li>
+        <li><a href="index.html" onclick="navigate('home'); toggleMenu()">হোম</a></li>
+        <li><a href="books.html" onclick="navigate('search'); toggleMenu()">লাইব্রেরি</a></li>
+        <li><a href="contact.html" onclick="navigate('books'); toggleMenu()">যোগাযোগ</a></li>
+        <li><a href="about.html" onclick="navigate('profile'); toggleMenu()">সম্পর্কে</a></li>
     </ul>
 </div>
 
@@ -307,8 +297,7 @@
         </div>
         <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
     </div>
-    
-    <!-- উপহার তালিকা পেজ -->
+
     <div id="gift-list-page" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -412,7 +401,7 @@
         <p id="giftBookName" style="font-weight:bold; color:var(--primary)"></p>
         <form id="giftForm">
             <input type="hidden" id="gId">
-            <input type="hidden" id="gEntryIdx"> <!-- এডিট এর জন্য ইনডেক্স -->
+            <input type="hidden" id="gEntryIdx">
             <input type="text" id="gRec" placeholder="যাকে গিফট করা হচ্ছে (নাম) *" required>
             <input type="date" id="gDate" required>
             <button type="submit" id="giftSubmitBtn" class="btn-main" style="background:var(--accent)">গিফট কনফার্ম করুন</button>
@@ -425,7 +414,7 @@
     const API_URL = "/api/books";
     let allBooks = [], allAuthors = [], allGifts = [], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
-    const SESSION_TIMEOUT = 5 * 60 * 1000; // ৫ মিনিট
+    const SESSION_TIMEOUT = 5 * 60 * 1000;
 
     const quotes = [
         { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
@@ -474,7 +463,6 @@
         return toBN(`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`);
     }
 
-    // ডার্ক মোড লজিক
     function toggleDarkMode() {
         const body = document.body;
         const icon = document.getElementById('darkIcon');
@@ -486,14 +474,12 @@
         localStorage.setItem('libraryTheme', isDark ? 'dark' : 'light');
     }
 
-    // এক্টিভিটি ট্র্যাকিং ফাংশন
     function updateActivity() {
         if (isAdmin) {
             localStorage.setItem('lastActivityTime', Date.now());
         }
     }
 
-    // ইন-এক্টিভিটি চেক করার ফাংশন
     function checkInactivity() {
         if (isAdmin) {
             const lastActivity = localStorage.getItem('lastActivityTime');
@@ -504,7 +490,6 @@
         }
     }
 
-    // লগআউট ফাংশন
     function adminLogout() {
         isAdmin = false;
         userPass = "";
@@ -532,7 +517,6 @@
             document.getElementById('darkIconMob').style.display = 'block';
         }
 
-        // সেশন রিস্টোর
         const savedPass = localStorage.getItem('adminPass');
         const savedAdminStatus = localStorage.getItem('isAdmin');
         if (savedPass && savedAdminStatus === 'true') {
@@ -597,7 +581,6 @@
         window.scrollTo(0,0);
     }
 
-    // উপহার তালিকা রেন্ডার করা (বইয়ের ছবিসহ)
     function renderGiftList() {
         const area = document.getElementById('gListArea');
         if(allGifts.length === 0) {
@@ -730,7 +713,7 @@
                     <p>${b.Author}</p>
                     <span class="book-tag">${b.Category || 'বিবিধ'}</span>
                     ${b.SeriesName ? `<br><span class="series-badge"><i class="fas fa-layer-group"></i> ${b.SeriesName} (${toBN(b.SeriesOrder)})</span>` : ''}
-                    ${isAdmin ? `<br><span class="book-price">MRP: ${toBN(b.MRP)} ৳</span>` : ''}
+                    ${isAdmin ? `<br><span class="book-price">মুদ্রিত মূল্য: ${toBN(b.MRP)} ৳</span>` : ''}
                 </div>
             </div>`).join('');
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
@@ -834,7 +817,6 @@
         document.getElementById('gDate').value = new Date().toISOString().split('T')[0];
     }
 
-    // উপহার এডিট
     function editGiftEntry(idx) {
         const g = allGifts[idx];
         document.getElementById('gMod').style.display = 'block';
@@ -847,7 +829,6 @@
         document.getElementById('gDate').value = new Date(g.Date).toISOString().split('T')[0];
     }
 
-    // উপহার ডিলিট/বাতিল
     async function deleteGiftEntry(idx, type) {
         if(!confirm("আপনি কি নিশ্চিত?")) return;
         const g = allGifts[idx];
