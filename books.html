@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 17, 2026 - 2:12AM ---
+
 --- START OF FILE Paste April 17, 2026 - 1:48AM ---
 
 <!DOCTYPE html>
@@ -97,7 +99,7 @@
         @media (max-width: 768px) { 
             .nav-desktop { display: none; } 
             .hamburger { display: block; } 
-            #darkIconMob { display: block !important; } /* মোবাইল ডার্ক মোড নিশ্চিত */
+            #darkIconMob { display: block !important; margin-right: 15px; } 
         }
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
@@ -166,12 +168,14 @@
         .review-box { margin-top: 15px; padding: 15px; background: var(--bg); border-radius: 15px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6; }
         .dark-mode .review-box { border-color: #334155; }
 
-        /* উপহার কার্ড স্টাইল */
-        .gift-card { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 5px solid var(--accent); position: relative; }
+        /* উপহার কার্ড আপডেট ডিজাইন */
+        .gift-card { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 5px solid var(--accent); position: relative; display: flex; gap: 15px; align-items: flex-start; }
+        .gift-img { width: 70px; height: 100px; border-radius: 10px; object-fit: cover; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .gift-info { flex: 1; }
         .gift-card h5 { margin: 0 0 5px 0; font-size: 16px; color: var(--text-main); }
         .gift-card p { margin: 2px 0; font-size: 13px; color: var(--text-sub); }
         .gift-actions { display: flex; gap: 8px; margin-top: 12px; }
-        .btn-small { padding: 6px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-small { padding: 6px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.3s; color: white; }
 
         .slider { width: 100%; height: 320px; border-radius: 30px; overflow: hidden; background: #f1f5f9; margin-bottom: 25px; position: relative; box-shadow: var(--shadow); }
         .dark-mode .slider { background: #334155; }
@@ -258,7 +262,7 @@
     <div class="nav-item active" onclick="navigate('home')"><i class="fas fa-home"></i>হোম</div>
     <div class="nav-item" onclick="navigate('search')"><i class="fas fa-search"></i>সার্চ</div>
     <div class="nav-item" onclick="navigate('authors-tab')"><i class="fas fa-feather"></i>লেখক</div>
-    <div class="nav-item" onclick="navigate('gift-list-page')"><i class="fas fa-gift"></i>উপহার</div>
+    <div class="nav-item" id="giftNav" style="display:none" onclick="navigate('gift-list-page')"><i class="fas fa-gift"></i>উপহার</div>
     <div class="nav-item" onclick="navigate('books')"><i class="fas fa-book"></i>সব বই</div>
     <div class="nav-item" onclick="navigate('profile')"><i class="fas fa-user-shield"></i>এডমিন</div>
 </nav>
@@ -421,6 +425,7 @@
     const API_URL = "/api/books";
     let allBooks = [], allAuthors = [], allGifts = [], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
+    const SESSION_TIMEOUT = 5 * 60 * 1000; // ৫ মিনিট
 
     const quotes = [
         { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
@@ -481,6 +486,34 @@
         localStorage.setItem('libraryTheme', isDark ? 'dark' : 'light');
     }
 
+    // এক্টিভিটি ট্র্যাকিং ফাংশন
+    function updateActivity() {
+        if (isAdmin) {
+            localStorage.setItem('lastActivityTime', Date.now());
+        }
+    }
+
+    // ইন-এক্টিভিটি চেক করার ফাংশন
+    function checkInactivity() {
+        if (isAdmin) {
+            const lastActivity = localStorage.getItem('lastActivityTime');
+            if (lastActivity && (Date.now() - lastActivity > SESSION_TIMEOUT)) {
+                showToast("নিষ্ক্রিয়তার কারণে লগআউট করা হয়েছে");
+                adminLogout();
+            }
+        }
+    }
+
+    // লগআউট ফাংশন
+    function adminLogout() {
+        isAdmin = false;
+        userPass = "";
+        localStorage.removeItem('adminPass');
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('lastActivityTime');
+        location.reload(); 
+    }
+
     function displayQuote() {
         const q = quotes[Math.floor(Math.random() * quotes.length)];
         document.getElementById('quoteText').innerText = `"${q.t}"`;
@@ -498,6 +531,24 @@
         if(window.innerWidth <= 768) {
             document.getElementById('darkIconMob').style.display = 'block';
         }
+
+        // সেশন রিস্টোর
+        const savedPass = localStorage.getItem('adminPass');
+        const savedAdminStatus = localStorage.getItem('isAdmin');
+        if (savedPass && savedAdminStatus === 'true') {
+            const lastActivity = localStorage.getItem('lastActivityTime');
+            if (lastActivity && (Date.now() - lastActivity < SESSION_TIMEOUT)) {
+                isAdmin = true;
+                userPass = savedPass;
+                document.getElementById('loginArea').style.display = 'none';
+                document.getElementById('adminArea').style.display = 'block';
+                document.getElementById('fab').style.display = 'flex';
+                updateActivity();
+            } else {
+                localStorage.clear();
+            }
+        }
+
         displayQuote();
         try {
             const r = await fetch(`${API_URL}?action=getData`);
@@ -505,8 +556,14 @@
             allBooks = d.books; allAuthors = d.authors; allGifts = d.gifts || [];
             renderCategories();
             renderTopAuthors();
+            updateGiftMenuVisibility();
             document.getElementById('loader').style.display = 'none';
         } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
+
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
+            window.addEventListener(evt, updateActivity, true)
+        );
+        setInterval(checkInactivity, 10000);
     }
     
     function toggleMenu() {
@@ -525,6 +582,7 @@
         } else if(id === 'home') {
             displayQuote();
         } else if(id === 'gift-list-page') {
+            if(!isAdmin) { showToast("এডমিন প্রয়োজন!"); return; }
             renderGiftList();
         }
 
@@ -539,29 +597,38 @@
         window.scrollTo(0,0);
     }
 
-    // উপহার তালিকা রেন্ডার করা (এডিট/ডিলিট সহ)
+    // উপহার তালিকা রেন্ডার করা (বইয়ের ছবিসহ)
     function renderGiftList() {
         const area = document.getElementById('gListArea');
         if(allGifts.length === 0) {
             area.innerHTML = "<p style='text-align:center; padding:20px'>কোনো উপহারের রেকর্ড পাওয়া যায়নি।</p>";
             return;
         }
-        const h = allGifts.map((g, idx) => `
+        area.innerHTML = allGifts.map((g, idx) => {
+            const book = allBooks.find(b => b.ID == g.BookID);
+            const bookImg = book ? getImg(book.Images.split(',')[0]) : 'https://via.placeholder.com/70x100';
+            return `
             <div class="gift-card">
-                <h5>${g.BookName}</h5>
-                <p><b>উপহার পেয়েছেন:</b> ${g.RecipientName}</p>
-                <p><b>তারিখ:</b> ${formatDate(g.Date)}</p>
-                <p style="font-size:11px; opacity:0.7">বই আইডি: ${toBN(g.BookID)}</p>
-                ${isAdmin ? `
-                <div class="gift-actions">
-                    <button class="btn-small" style="background:#10b981; color:white;" onclick="editGiftEntry(${idx})">এডিট</button>
-                    <button class="btn-small" style="background:var(--accent); color:white;" onclick="deleteGiftEntry(${idx}, 'del')">ডিলিট</button>
-                    <button class="btn-small" style="background:#475569; color:white;" onclick="deleteGiftEntry(${idx}, 'cancel')">বাতিল</button>
+                <img src="${bookImg}" class="gift-img">
+                <div class="gift-info">
+                    <h5>${g.BookName}</h5>
+                    <p><b>উপহার পেয়েছেন:</b> ${g.RecipientName}</p>
+                    <p><b>তারিখ:</b> ${formatDate(g.Date)}</p>
+                    ${isAdmin ? `
+                    <div class="gift-actions">
+                        <button class="btn-small" style="background:#10b981" onclick="editGiftEntry(${idx})">এডিট</button>
+                        <button class="btn-small" style="background:var(--accent)" onclick="deleteGiftEntry(${idx}, 'del')">ডিলিট</button>
+                        <button class="btn-small" style="background:#475569" onclick="deleteGiftEntry(${idx}, 'cancel')">বাতিল/ফেরত</button>
+                    </div>
+                    ` : ''}
                 </div>
-                ` : ''}
-            </div>
-        `).join('');
-        area.innerHTML = h;
+            </div>`;
+        }).join('');
+    }
+
+    function updateGiftMenuVisibility() {
+        const giftNav = document.getElementById('giftNav');
+        if(giftNav) giftNav.style.display = isAdmin ? 'flex' : 'none';
     }
 
     function goBackFromBooks() {
@@ -580,7 +647,7 @@
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
             document.getElementById('books').classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-            document.querySelectorAll('.nav-item')[4].classList.add('active'); // আপডেট ইনডেক্স
+            document.querySelectorAll('.nav-item')[4].classList.add('active');
         }
     }
 
@@ -727,7 +794,6 @@
                 isAdmin = true;
                 userPass = inputPass;
                 
-                // ব্রাউজারে ডাটা সেভ করা (আপনার আগের কোডের লজিক অনুযায়ী)
                 localStorage.setItem('adminPass', userPass);
                 localStorage.setItem('isAdmin', 'true');
                 localStorage.setItem('lastActivityTime', Date.now());
@@ -763,69 +829,57 @@
         document.getElementById('giftTitle').innerText = "বই গিফট এন্ট্রি";
         document.getElementById('giftSubmitBtn').innerText = "গিফট কনফার্ম করুন";
         document.getElementById('gId').value = id;
-        document.getElementById('gEntryIdx').value = ""; // নতুন এন্ট্রি
+        document.getElementById('gEntryIdx').value = ""; 
         document.getElementById('giftBookName').innerText = "বই: " + name;
         document.getElementById('gDate').value = new Date().toISOString().split('T')[0];
     }
 
-    // উপহার এডিট ফাংশন
+    // উপহার এডিট
     function editGiftEntry(idx) {
         const g = allGifts[idx];
         document.getElementById('gMod').style.display = 'block';
-        document.getElementById('giftTitle').innerText = "উপহার তথ্য এডিট";
-        document.getElementById('giftSubmitBtn').innerText = "তথ্য আপডেট করুন";
+        document.getElementById('giftTitle').innerText = "উপহার এডিট";
+        document.getElementById('giftSubmitBtn').innerText = "আপডেট করুন";
         document.getElementById('gId').value = g.BookID;
         document.getElementById('gEntryIdx').value = idx;
         document.getElementById('giftBookName').innerText = "বই: " + g.BookName;
         document.getElementById('gRec').value = g.RecipientName;
-        
-        if(g.Date) {
-            const date = new Date(g.Date);
-            if(!isNaN(date.getTime())) document.getElementById('gDate').value = date.toISOString().split('T')[0];
-        }
+        document.getElementById('gDate').value = new Date(g.Date).toISOString().split('T')[0];
     }
 
-    // উপহার ডিলিট/বাতিল ফাংশন
+    // উপহার ডিলিট/বাতিল
     async function deleteGiftEntry(idx, type) {
+        if(!confirm("আপনি কি নিশ্চিত?")) return;
         const g = allGifts[idx];
-        const msg = type === 'cancel' ? "উপহারটি কি বাতিল করবেন? (স্টক ১টি বৃদ্ধি পাবে)" : "উপহারের রেকর্ডটি কি ডিলিট করবেন? (স্টক পরিবর্তন হবে না)";
-        if(!confirm(msg)) return;
-
-        showToast("প্রসেসিং হচ্ছে...");
+        showToast("প্রসেসিং...");
         const action = type === 'cancel' ? 'cancelGift' : 'deleteGiftRecord';
         const r = await fetch(API_URL, { 
             method: 'POST', 
-            body: JSON.stringify({ action: action, bookId: g.BookID, entryIdx: idx, adminPass: userPass }) 
+            body: JSON.stringify({ action, bookId: g.BookID, entryIdx: idx, adminPass: userPass }) 
         });
-        
-        if(r.ok) { 
-            await init(); 
-            renderGiftList(); 
-            showToast("সম্পন্ন হয়েছে!"); 
-        } else {
-            showToast("ব্যর্থ হয়েছে!");
-        }
+        if(r.ok) { await init(); renderGiftList(); showToast("সম্পন্ন!"); }
     }
 
     document.getElementById('giftForm').onsubmit = async (e) => {
         e.preventDefault();
         const id = document.getElementById('gId').value;
         const idx = document.getElementById('gEntryIdx').value;
-        const recipient = document.getElementById('gRec').value;
-        const date = document.getElementById('gDate').value;
-        
-        showToast("আপডেট হচ্ছে...");
         const action = (idx === "") ? 'giftBook' : 'updateGiftRecord';
+        showToast("আপডেট হচ্ছে...");
         const r = await fetch(API_URL, { 
             method: 'POST', 
-            body: JSON.stringify({ action: action, id: id, entryIdx: idx, recipient: recipient, giftDate: date, adminPass: userPass }) 
+            body: JSON.stringify({ 
+                action, id, entryIdx: idx, 
+                recipient: document.getElementById('gRec').value, 
+                giftDate: document.getElementById('gDate').value, 
+                adminPass: userPass 
+            }) 
         });
         if(r.ok) { 
             document.getElementById('gMod').style.display = 'none';
-            document.getElementById('giftForm').reset();
             await init(); 
             if(idx === "") showD(id); else renderGiftList();
-            showToast("সফলভাবে সম্পন্ন!"); 
+            showToast("সফল!"); 
         }
     };
 
@@ -902,125 +956,6 @@
         const q = document.getElementById('sInp').value.toLowerCase();
         const f = allBooks.filter(b => b.BookName.toLowerCase().includes(q) || b.Author.toLowerCase().includes(q));
         document.getElementById('sRes').innerHTML = f.map(b => `<div class="book-card" onclick="showD(${b.ID})"><div style="flex:1"><strong>${b.BookName}</strong><p>${b.Author}</p></div></div>`).join('');
-    }
-
-    // --- এডমিন সেশন এবং অটো লগআউট লজিক ---
-
-    const SESSION_TIMEOUT = 5 * 60 * 1000; // ৫ মিনিট (মিলি-সেকেন্ডে)
-
-    // এক্টিভিটি ট্র্যাকিং ফাংশন
-    function updateActivity() {
-        if (isAdmin) {
-            localStorage.setItem('lastActivityTime', Date.now());
-        }
-    }
-
-    // ইন-এক্টিভিটি চেক করার ফাংশন
-    function checkInactivity() {
-        if (isAdmin) {
-            const lastActivity = localStorage.getItem('lastActivityTime');
-            if (lastActivity && (Date.now() - lastActivity > SESSION_TIMEOUT)) {
-                showToast("নিষ্ক্রিয়তার কারণে লগআউট করা হয়েছে");
-                adminLogout();
-            }
-        }
-    }
-
-    // লগআউট ফাংশন
-    function adminLogout() {
-        isAdmin = false;
-        userPass = "";
-        localStorage.removeItem('adminPass');
-        localStorage.removeItem('isAdmin');
-        localStorage.removeItem('lastActivityTime');
-        location.reload(); // পেজ রিলোড দিয়ে স্টেট পরিষ্কার করা
-    }
-
-    // উপহার মেনু কন্ট্রোল (শুধুমাত্র এডমিন দেখবে)
-    function updateGiftMenuVisibility() {
-        const giftNavItem = document.querySelector('.nav-item[onclick*="gift-list-page"]');
-        if (giftNavItem) {
-            giftNavItem.style.display = isAdmin ? 'flex' : 'none';
-        }
-    }
-
-    // মূল init ফাংশনটি ওভাররাইট/আপডেট করা হচ্ছে সেশন চেক করার জন্য
-    const originalInit = init;
-    init = async function() {
-        // আগের সেশন চেক
-        const savedPass = localStorage.getItem('adminPass');
-        const savedAdminStatus = localStorage.getItem('isAdmin');
-        
-        if (savedPass && savedAdminStatus === 'true') {
-            const lastActivity = localStorage.getItem('lastActivityTime');
-            if (lastActivity && (Date.now() - lastActivity < SESSION_TIMEOUT)) {
-                isAdmin = true;
-                userPass = savedPass;
-                document.getElementById('loginArea').style.display = 'none';
-                document.getElementById('adminArea').style.display = 'block';
-                document.getElementById('fab').style.display = 'flex';
-                updateActivity();
-            } else {
-                localStorage.clear();
-            }
-        }
-
-        await originalInit(); // আপনার আগের init লজিক রান করবে
-        updateGiftMenuVisibility(); // উপহার মেনু লুকানো বা দেখানো
-        
-        // ইভেন্ট লিসেনার যুক্ত করা (Activity Detect করার জন্য)
-        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
-            window.addEventListener(evt, updateActivity, true)
-        );
-        
-        // প্রতি ১০ সেকেন্ড অন্তর ইন-এক্টিভিটি চেক করবে
-        setInterval(checkInactivity, 10000);
-    };
-    
-    // লগিন ফাংশন
-    login = async function() {
-        const inputPass = document.getElementById('pass').value;
-        showToast("চেক করা হচ্ছে...");
-        try {
-            const r = await fetch(`${API_URL}?action=checkLogin&pass=${inputPass}`);
-            if (r.status === 200) {
-                isAdmin = true;
-                userPass = inputPass;
-                
-                // ব্রাউজারে ডাটা সেভ করা
-                localStorage.setItem('adminPass', userPass);
-                localStorage.setItem('isAdmin', 'true');
-                localStorage.setItem('lastActivityTime', Date.now());
-    
-                document.getElementById('loginArea').style.display='none';
-                document.getElementById('adminArea').style.display='block';
-                document.getElementById('fab').style.display='flex';
-                
-                updateStats();
-                updateGiftMenuVisibility(); // লগিন হওয়ার সাথে সাথে উপহার মেনু দেখানো
-                showToast("এডমিন লগিন সফল!");
-                if(document.getElementById('books').classList.contains('active')) showAllBooks();
-                if(document.getElementById('gift-list-page').classList.contains('active')) renderGiftList();
-            } else {
-                showToast("ভুল পাসওয়ার্ড!");
-            }
-        } catch(e) { showToast("ত্রুটি হয়েছে!"); }
-    };
-    
-    // উপহার পেজে যাওয়ার সময় সিকিউরিটি চেক
-    const originalNavigate = navigate;
-    navigate = function(id) {
-        if (id === 'gift-list-page' && !isAdmin) {
-            showToast("এই পেজটি শুধুমাত্র এডমিনদের জন্য!");
-            return;
-        }
-        originalNavigate(id);
-    };
-    
-    // লগ আউট বাটন এর লজিক আপডেট
-    const logoutBtnArea = document.querySelector('button[onclick="location.reload()"]');
-    if(logoutBtnArea) {
-        logoutBtnArea.setAttribute('onclick', 'adminLogout()');
     }
 
     window.onload = init;
