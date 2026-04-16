@@ -179,8 +179,7 @@
         .spinner { border: 4px solid #f1f5f9; border-top: 4px solid var(--primary); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #toast { visibility: hidden; min-width: 250px; background: #1e293b; color: #fff; text-align: center; border-radius: 16px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 14px; font-weight: 600; }
-        #toast.show { visibility: visible; animation: fadeInOut 3s; }
-        @keyframes fadeInOut { 0%, 100% { opacity: 0; } 15%, 85% { opacity: 1; } }
+        #toast.show { visibility: hidden; } /* Toast toggle fixed in JS */
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -311,7 +310,6 @@
             <input type="text" id="fn" placeholder="বইয়ের নাম *" required>
             <input type="text" id="fa" placeholder="লেখকের নাম *" required>
             
-            <!-- সিরিজ ও স্টক ইনপুট যোগ করা হয়েছে -->
             <div style="display:flex; gap:10px">
                 <input type="text" id="fsn" placeholder="সিরিজের নাম">
                 <input type="number" id="fso" placeholder="সিরিজ নং">
@@ -326,13 +324,11 @@
                 <input type="number" id="fb" placeholder="ক্রয় মূল্য *">
             </div>
 
-            <!-- বইয়ের সংখ্যা -->
             <input type="number" id="fq" placeholder="বইয়ের সংখ্যা (Quantity) *" required>
             
             <input type="text" id="fc" placeholder="ক্যাটাগরি">
             <input type="text" id="fi_l" placeholder="বইয়ের ছবি লিঙ্ক">
             
-            <!-- রিভিউ ইনপুট -->
             <textarea id="frv" placeholder="বইয়ের রিভিউ লিখুন..." rows="4"></textarea>
 
             <input type="date" id="fed" required>
@@ -344,7 +340,7 @@
 
 <div id="aMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; backdrop-filter: blur(5px);">
     <div style="background:white; margin:10% auto; padding:30px; width:90%; max-width:420px; border-radius:25px">
-        <h3>লেখক ডাটাবেস</h3>
+        <h3> লেখক ডাটাবেস</h3>
         <form id="authForm">
             <input type="text" id="an" placeholder="লেখকের নাম *" required>
             <input type="text" id="ai" placeholder="ছবি লিঙ্ক">
@@ -599,7 +595,7 @@
                 
                 <div class="review-box">
                     <h4 style="margin-top:0"><i class="fas fa-quote-left"></i> বইয়ের রিভিউ</h4>
-                    ${b.Review ? b.Review : 'এখনো রিভিউ দেওয়া হয়নি।'}
+                    <p style="margin:0; font-size:14px; white-space: pre-line;">${b.Review || 'এখনো রিভিউ দেওয়া হয়নি।'}</p>
                 </div>
                 ${adminSec}
                 <p style="font-size:12px; color:#999; border-top:1px solid #eee; margin-top:15px; padding-top:10px">
@@ -719,7 +715,7 @@
         } 
     }
 
-    function showToast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="show"; setTimeout(()=>t.className="",3000); }
+    function showToast(m) { const t=document.getElementById("toast"); t.innerText=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3000); }
     function getImg(u) {
         if(!u) return 'https://via.placeholder.com/150?text=No+Image';
         if(u.includes('drive.google.com')){
