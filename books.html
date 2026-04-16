@@ -138,6 +138,10 @@
         .book-tag { background: #f1f5f9; color: var(--primary); font-size: 11px; padding: 4px 10px; border-radius: 8px; font-weight: 700; margin-top: 8px; display: inline-block; align-self: flex-start; }
         .book-price { color: var(--primary); font-weight: 800; margin-top: 10px; font-size: 16px; }
 
+        /* নতুন ফিচারের জন্য স্টাইল */
+        .series-badge { background: #e0e7ff; color: #4338ca; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-top: 5px; display: inline-block; }
+        .review-box { margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 15px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6; }
+
         .slider { width: 100%; height: 320px; border-radius: 30px; overflow: hidden; background: #f1f5f9; margin-bottom: 25px; position: relative; box-shadow: var(--shadow); }
         .slider-img-container { width: 100%; height: 100%; position: absolute; opacity: 0; transition: 0.8s; display: flex; align-items: center; justify-content: center; }
         .slider-img-container.active { opacity: 1; }
@@ -169,7 +173,7 @@
 
         #fab { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 20px; display: none; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 20px rgba(244, 63, 94, 0.4); border: none; z-index: 999; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 20px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #e2e8f0; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #e2e8f0; box-sizing: border-box; font-family: inherit; }
         
         .loader { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 4px solid #f1f5f9; border-top: 4px solid var(--primary); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
@@ -306,13 +310,31 @@
             <input type="hidden" id="fi">
             <input type="text" id="fn" placeholder="বইয়ের নাম *" required>
             <input type="text" id="fa" placeholder="লেখকের নাম *" required>
+            
+            <!-- সিরিজ ও স্টক ইনপুট যোগ করা হয়েছে -->
+            <div style="display:flex; gap:10px">
+                <input type="text" id="fsn" placeholder="সিরিজের নাম">
+                <input type="number" id="fso" placeholder="সিরিজ নং">
+            </div>
+
             <input type="text" id="ft" placeholder="অনুবাদকের নাম">
             <input type="text" id="fp" placeholder="প্রকাশনী">
             <input type="text" id="fy" placeholder="প্রকাশ সাল">
-            <input type="number" id="fm" placeholder="মুদ্রিত মূল্য">
-            <input type="number" id="fb" placeholder="ক্রয় মূল্য">
+            
+            <div style="display:flex; gap:10px">
+                <input type="number" id="fm" placeholder="মুদ্রিত মূল্য *">
+                <input type="number" id="fb" placeholder="ক্রয় মূল্য *">
+            </div>
+
+            <!-- বইয়ের সংখ্যা -->
+            <input type="number" id="fq" placeholder="বইয়ের সংখ্যা (Quantity) *" required>
+            
             <input type="text" id="fc" placeholder="ক্যাটাগরি">
             <input type="text" id="fi_l" placeholder="বইয়ের ছবি লিঙ্ক">
+            
+            <!-- রিভিউ ইনপুট -->
+            <textarea id="frv" placeholder="বইয়ের রিভিউ লিখুন..." rows="4"></textarea>
+
             <input type="date" id="fed" required>
             <button type="submit" class="btn-main">সংরক্ষণ করুন</button>
             <button type="button" class="btn-main" onclick="closeM('book')" style="background:#f1f5f9; color:#475569; margin-top:10px;">বন্ধ করুন</button>
@@ -516,6 +538,7 @@
         window.scrollTo(0,0);
     }
 
+    // মুদ্রিত মূল্য হাইড এবং সিরিজ ডিসপ্লে লজিক যোগ করা হয়েছে
     function renderBooks(list, title) {
         document.getElementById('lTtl').innerText = title;
         const h = list.map(b => `
@@ -528,12 +551,18 @@
                     <h4>${b.BookName}</h4>
                     <p>${b.Author}</p>
                     <span class="book-tag">${b.Category || 'বিবিধ'}</span>
-                    <span class="book-price">মূল্য: ${toBN(b.MRP)} টাকা</span>
+                    
+                    <!-- সিরিজ ব্যাজ -->
+                    ${b.SeriesName ? `<br><span class="series-badge"><i class="fas fa-layer-group"></i> ${b.SeriesName} (${toBN(b.SeriesOrder)})</span>` : ''}
+                    
+                    <!-- মুদ্রিত মূল্য শুধু এডমিনকে দেখানো হবে -->
+                    ${isAdmin ? `<br><span class="book-price">MRP: ${toBN(b.MRP)} ৳</span>` : ''}
                 </div>
             </div>`).join('');
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
     }
 
+    // রিভিউ এবং গিফট সিস্টেম লজিক যোগ করা হয়েছে
     function showD(id) {
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
@@ -545,23 +574,38 @@
                 <div class="slider-shield"></div>
             </div>`).join('');
         
+        let adminSec = isAdmin ? `
+            <div style="background:#fff1f2; padding:15px; border-radius:15px; margin-top:15px; border:1px dashed var(--accent)">
+                <p><b>মুদ্রিত মূল্য:</b> ${toBN(b.MRP)} ৳ | <b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} ৳</p>
+                <p><b>বর্তমান স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
+                <button class="btn-main" onclick="giftBook(${b.ID})" style="background:var(--accent); font-size:12px; padding:10px;">১টি গিফট করুন (মাইনাস হবে)</button>
+                <div style="display:flex; gap:10px; margin-top:10px">
+                    <button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট</button>
+                    <button class="btn-main" onclick="delB(${b.ID})" style="background:#ef4444">ডিলিট</button>
+                </div>
+            </div>` : '';
+
         document.getElementById('dCnt').innerHTML = `
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
                 <img src="${getImg(a?.AuthorImage)}" style="width:55px; height:55px; border-radius:50%; object-fit:cover; border:2px solid var(--primary)">
                 <div><h2 style="margin:0; font-size:20px">${b.BookName}</h2><small style="color:var(--primary); font-weight:700">লেখক: ${b.Author}</small></div>
             </div>
             <div style="line-height:1.8">
+                ${b.SeriesName ? `<p style="color:var(--primary)"><b>সিরিজ:</b> ${b.SeriesName} (${toBN(b.SeriesOrder)} তম বই)</p>` : ''}
                 ${(b.TranslatedBy && b.TranslatedBy.trim() !== '' && b.TranslatedBy !== '-') ? `<p><b>অনুবাদক:</b> ${b.TranslatedBy}</p>` : ''}
                 <p><b>প্রকাশনী:</b> ${b.Publisher || '-'}</p>
                 <p><b>প্রকাশ সাল:</b> ${toBN(b.PublishYear)}</p>
-                <p><b>মুদ্রিত মূল্য:</b> ${toBN(b.MRP)} টাকা</p>
-                ${isAdmin ? `<p style="color:var(--accent)"><b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} টাকা</p>` : ''}
                 <p><b>ক্যাটাগরি:</b> ${b.Category || '-'}</p>
+                
+                <div class="review-box">
+                    <h4 style="margin-top:0"><i class="fas fa-quote-left"></i> বইয়ের রিভিউ</h4>
+                    ${b.Review ? b.Review : 'এখনো রিভিউ দেওয়া হয়নি।'}
+                </div>
+                ${adminSec}
                 <p style="font-size:12px; color:#999; border-top:1px solid #eee; margin-top:15px; padding-top:10px">
                     <i class="far fa-clock"></i> এন্ট্রি তারিখ: ${formatDate(b.EntryDate)}
                 </p>
             </div>
-            ${isAdmin ? `<div style="display:flex; gap:10px; margin-top:15px"><button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট</button><button class="btn-main" onclick="delB(${b.ID})" style="background:#ef4444">ডিলিট</button></div>` : ''}
         `;
         document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
         document.getElementById('details').classList.add('active');
@@ -598,13 +642,32 @@
     }
     function closeM(t) { document.getElementById(t==='book'?'bMod':'aMod').style.display='none'; }
 
+    // নতুন গিফট লজিক ফাংশন
+    async function giftBook(id) {
+        if(!confirm("১টি বই কি গিফট হিসেবে স্টক থেকে মাইনাস করতে চান?")) return;
+        showToast("আপডেট হচ্ছে...");
+        const r = await fetch(API_URL, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: 'giftBook', id: id, adminPass: userPass }) 
+        });
+        if(r.ok) { 
+            await init(); 
+            showD(id); 
+            showToast("স্টক আপডেট হয়েছে!"); 
+        }
+    }
+
+    // সেভ বুক লজিক আপডেট
     document.getElementById('bookForm').onsubmit = async (e) => {
         e.preventDefault();
         const book = {
             ID: document.getElementById('fi').value, BookName: document.getElementById('fn').value, Author: document.getElementById('fa').value,
+            SeriesName: document.getElementById('fsn').value, SeriesOrder: document.getElementById('fso').value,
             TranslatedBy: document.getElementById('ft').value, Publisher: document.getElementById('fp').value, PublishYear: document.getElementById('fy').value,
-            MRP: document.getElementById('fm').value, BuyPrice: document.getElementById('fb').value, Category: document.getElementById('fc').value,
-            Images: document.getElementById('fi_l').value, EntryDate: document.getElementById('fed').value
+            MRP: document.getElementById('fm').value, BuyPrice: document.getElementById('fb').value, 
+            Quantity: document.getElementById('fq').value, Category: document.getElementById('fc').value,
+            Images: document.getElementById('fi_l').value, Review: document.getElementById('frv').value,
+            EntryDate: document.getElementById('fed').value
         };
         showToast("ডাটা সেভ হচ্ছে...");
         await fetch(API_URL, { 
@@ -625,13 +688,16 @@
         document.getElementById('authForm').reset(); await init(); showToast("সম্পন্ন!");
     };
 
+    // এডিট বুক লজিক আপডেট
     function editB(id) {
         const b = allBooks.find(x=>x.ID==id); openM('book');
         document.getElementById('fi').value=b.ID; document.getElementById('fn').value=b.BookName;
-        document.getElementById('fa').value=b.Author; document.getElementById('ft').value=b.TranslatedBy||'';
+        document.getElementById('fa').value=b.Author; document.getElementById('fsn').value=b.SeriesName||'';
+        document.getElementById('fso').value=b.SeriesOrder||''; document.getElementById('ft').value=b.TranslatedBy||'';
         document.getElementById('fp').value=b.Publisher; document.getElementById('fy').value=b.PublishYear;
         document.getElementById('fm').value=b.MRP; document.getElementById('fb').value=b.BuyPrice;
-        document.getElementById('fc').value=b.Category; document.getElementById('fi_l').value=b.Images;
+        document.getElementById('fq').value=b.Quantity; document.getElementById('fc').value=b.Category; 
+        document.getElementById('fi_l').value=b.Images; document.getElementById('frv').value=b.Review||'';
         if(b.EntryDate) {
             const date = new Date(b.EntryDate);
             if(!isNaN(date.getTime())) document.getElementById('fed').value = date.toISOString().split('T')[0];
