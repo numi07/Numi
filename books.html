@@ -861,6 +861,7 @@
         document.getElementById('gId').value = id;
         document.getElementById('gEntryIdx').value = ""; 
         document.getElementById('giftBookName').innerText = "বই: " + name;
+        document.getElementById('gRec').value = "";
         document.getElementById('gDate').value = new Date().toISOString().split('T')[0];
     }
 
@@ -915,24 +916,16 @@
         e.preventDefault();
         const id = document.getElementById('fi').value;
         const bookName = document.getElementById('fn').value;
-        const authName = document.getElementById('fa').value;
-
+        
         if (!id) {
             const bookExists = allBooks.some(b => b.BookName.trim().toLowerCase() === bookName.trim().toLowerCase());
-            const authorExists = allAuthors.some(a => a.AuthorName.trim().toLowerCase() === authName.trim().toLowerCase());
-
-            if (bookExists || authorExists) {
-                let msg = "";
-                if (bookExists && authorExists) msg = "এই নামে বই এবং লেখক উভয়ই আগে থেকেই আছে।";
-                else if (bookExists) msg = "এই নামে বই আগে থেকেই আছে।";
-                else msg = "এই নামে লেখক আগে থেকেই আছে।";
-
-                if (!confirm(`${msg} আপনি কি নতুন করে এটি যুক্ত করতে ইচ্ছুক?`)) return;
+            if (bookExists) {
+                if (!confirm("এই নামে বই আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?")) return;
             }
         }
 
         const book = {
-            ID: id, BookName: bookName, Author: authName,
+            ID: id, BookName: bookName, Author: document.getElementById('fa').value,
             SeriesName: document.getElementById('fsn').value, SeriesOrder: document.getElementById('fso').value,
             TranslatedBy: document.getElementById('ft').value, Publisher: document.getElementById('fp').value, PublishYear: document.getElementById('fy').value,
             MRP: document.getElementById('fm').value, BuyPrice: document.getElementById('fb').value, 
@@ -976,7 +969,9 @@
         
         if (!isReadOnly) {
             const authorExists = allAuthors.some(a => a.AuthorName.trim().toLowerCase() === authorName.trim().toLowerCase());
-            if (authorExists && !confirm("এই নামে লেখক আগে থেকেই আছে। আপনি কি পুনরায় এটি যুক্ত করতে ইচ্ছুক?")) return;
+            if (authorExists) {
+                if (!confirm("এই নামে লেখক আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?")) return;
+            }
         }
 
         const author = { AuthorName: authorName, AuthorImage: document.getElementById('ai').value };
