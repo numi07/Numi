@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 17, 2026 - 9:57AM ---
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -299,7 +301,6 @@
         </div>
         <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
     </div>
-    
     <div id="gift-list-page" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
@@ -548,11 +549,21 @@
         try {
             const r = await fetch(`${API_URL}?action=getData`);
             const d = await r.json();
-            allBooks = d.books; allAuthors = d.authors; allGifts = d.gifts || [];
+            
+            allBooks = d.books.sort((a, b) => {
+                const dateA = new Date(a.EntryDate);
+                const dateB = new Date(b.EntryDate);
+                if (dateB - dateA !== 0) return dateB - dateA;
+                return b.ID - a.ID;
+            });
+
+            allAuthors = d.authors;
+            allGifts = (d.gifts || []).reverse();
+
             renderCategories();
             renderTopAuthors();
             updateGiftMenuVisibility();
-            populateAuthorList(); // সাজেশন লিস্ট তৈরি
+            populateAuthorList();
             document.getElementById('loader').style.display = 'none';
         } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
 
@@ -592,6 +603,7 @@
         if(idx !== -1) document.querySelectorAll('.nav-item')[idx].classList.add('active');
         window.scrollTo(0,0);
     }
+
     function renderGiftList() {
         const area = document.getElementById('gListArea');
         if(allGifts.length === 0) {
