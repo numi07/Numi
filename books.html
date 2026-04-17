@@ -515,14 +515,82 @@
         }
     }
 
-    async function init() {
-        if(localStorage.getItem('libraryTheme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            const icon = document.getElementById('darkIcon');
-            const iconMob = document.getElementById('darkIconMob');
-            icon.className = 'fas fa-sun dark-toggle-btn';
-            iconMob.className = 'fas fa-sun dark-toggle-btn';
+   async function init() {
+    // ডার্ক মোড চেক
+    if(localStorage.getItem('libraryTheme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        const icon = document.getElementById('darkIcon');
+        const iconMob = document.getElementById('darkIconMob');
+        icon.className = 'fas fa-sun dark-toggle-btn';
+        iconMob.className = 'fas fa-sun dark-toggle-btn';
         }
+        // মোবাইল ডার্ক মোড বাটন শো
+        if(window.innerWidth <= 768) {
+            document.getElementById('darkIconMob').style.display = 'block';
+        }
+    
+        // সেশন রিস্টোর লজিক (আপনার কোডে যা ছিল)
+        const savedPass = localStorage.getItem('adminPass');
+        if (savedPass && localStorage.getItem('isAdmin') === 'true') {
+            const lastActivity = localStorage.getItem('lastActivityTime');
+            if (lastActivity && (Date.now() - lastActivity < SESSION_TIMEOUT)) {
+                isAdmin = true; userPass = savedPass;
+                document.getElementById('loginArea').style.display = 'none';
+                document.getElementById('adminArea').style.display = 'block';
+                document.getElementById('fab').style.display = 'flex';
+                updateActivity();
+            } else localStorage.clear();
+        }
+    
+        displayQuote();
+    
+        try {
+            const r = await fetch(`${API_URL}?action=getData`);
+            const d = await r.json();
+            
+            // সর্বশেষ এন্ট্রি সবার উপরে
+            allBooks = d.books.sort((a, b) => {
+                const dateA = new Date(a.EntryDate), dateB = new Date(b.EntryDate);
+                if (dateB - dateA !== 0) return dateB - dateA;
+                return b.ID - a.ID;
+            });
+    
+            allAuthors = d.authors;
+            allGifts = (d.gifts || []).reverse();
+    
+            renderCategories(); 
+            renderTopAuthors(); 
+            updateGiftMenuVisibility(); 
+            
+            // --- এই দুটি লাইন মোবাইলে ড্রপডাউন নিশ্চিত করবে ---
+            populateAuthorList(); 
+            setupMobileDropdown(); 
+    
+            document.getElementById('loader').style.display = 'none';
+        } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
+    
+        // এক্টিভিটি লিসেনার
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
+            window.addEventListener(evt, updateActivity, true)
+        );
+        setInterval(checkInactivity, 10000);
+    }
+    
+    // মোবাইলে ড্রপডাউন সাজেশন দেখানোর জন্য এই সাপোর্টিং ফাংশনটি আপনার স্ক্রিপ্টের নিচে কোথাও রেখে দিন
+    function setupMobileDropdown() {
+        const authInp = document.getElementById('fa');
+        if(authInp) {
+            // মোবাইলে ক্লিক করলে যেন পুরো লিস্ট দেখায়
+            authInp.addEventListener('focus', function() {
+                this.value = ''; // ক্লিক করলে বক্স খালি হবে যেন সব সাজেশন দেখা যায়
+                populateAuthorList(); 
+            });
+            // অনেক ফোনে সরাসরি datalist আসে না, তাই নিচের ট্রিকটি কাজ করবে
+            authInp.addEventListener('touchstart', function() {
+                populateAuthorList();
+            });
+        }
+    }
         if(window.innerWidth <= 768) {
             document.getElementById('darkIconMob').style.display = 'block';
         }
