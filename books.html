@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 17, 2026 - 3:03PM ---
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -413,6 +415,16 @@
     </div>
 </div>
 
+<div id="confMod" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3001; backdrop-filter: blur(5px);">
+    <div style="background:var(--card); margin:20% auto; padding:30px; width:85%; max-width:350px; border-radius:25px; text-align:center; box-shadow: var(--shadow);">
+        <p id="confMsg" style="font-weight:600; line-height:1.6; margin-bottom:25px; color:var(--text-main); font-size: 16px;"></p>
+        <div style="display:flex; gap:12px;">
+            <button id="confYes" class="btn-main" style="flex:1; padding: 12px;">হ্যাঁ</button>
+            <button id="confNo" class="btn-main" style="flex:1; background:#f1f5f9; color:#475569; padding: 12px;">না</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_URL = "/api/books";
     let allBooks = [], allAuthors = [], allGifts = [], isAdmin = false, userPass = ""; 
@@ -513,6 +525,21 @@
         if(list && allAuthors.length > 0) {
             list.innerHTML = allAuthors.map(a => `<option value="${a.AuthorName}">`).join('');
         }
+    }
+
+    function askUser(msg) {
+        return new Promise((resolve) => {
+            const mod = document.getElementById('confMod');
+            const msgP = document.getElementById('confMsg');
+            const yesBtn = document.getElementById('confYes');
+            const noBtn = document.getElementById('confNo');
+            
+            msgP.innerText = msg;
+            mod.style.display = 'block';
+            
+            yesBtn.onclick = () => { mod.style.display = 'none'; resolve(true); };
+            noBtn.onclick = () => { mod.style.display = 'none'; resolve(false); };
+        });
     }
 
     async function init() {
@@ -916,11 +943,12 @@
         e.preventDefault();
         const id = document.getElementById('fi').value;
         const bookName = document.getElementById('fn').value;
-        
+
         if (!id) {
             const bookExists = allBooks.some(b => b.BookName.trim().toLowerCase() === bookName.trim().toLowerCase());
             if (bookExists) {
-                if (!confirm("এই নামে বই আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?")) return;
+                const confirmed = await askUser("এই নামে বই আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?");
+                if (!confirmed) return;
             }
         }
 
@@ -970,7 +998,8 @@
         if (!isReadOnly) {
             const authorExists = allAuthors.some(a => a.AuthorName.trim().toLowerCase() === authorName.trim().toLowerCase());
             if (authorExists) {
-                if (!confirm("এই নামে লেখক আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?")) return;
+                const confirmed = await askUser("এই নামে লেখক আগে থেকে তালিকা ভুক্ত আছে আপনি কি আবার ও যুক্ত করতে ইচ্ছুক?");
+                if (!confirmed) return;
             }
         }
 
