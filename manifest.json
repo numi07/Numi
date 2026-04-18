@@ -1,0 +1,22 @@
+{
+  "name": "পকেট হিসাব - আল নোমান শিকদার",
+  "short_name": "পকেট হিসাব",
+  "description": "দৈনিক আয়-ব্যয়ের স্মার্ট হিসাব",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#064e3b",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
