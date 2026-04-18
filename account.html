@@ -1,9 +1,11 @@
+--- START OF FILE Paste April 19, 2026 - 12:53AM ---
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>স্মার্ট লেজার প্রো - ফাইনাল আপডেট</title>
+    <title>পকেট হিসাব | আল নোমান শিকদার</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -31,6 +33,8 @@
         .modal-animate { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
+        #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
+
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
@@ -39,6 +43,9 @@
     </style>
 </head>
 <body class="pb-28">
+
+    <!-- Offline Status Indicator -->
+    <div id="offlineBadge" class="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg">অফলাইন মোড: ডাটা পরে সিঙ্ক হবে</div>
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-6">
@@ -60,7 +67,7 @@
                     <img id="headerProfileImg" src="https://via.placeholder.com/100" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 id="headerAdminName" class="text-lg font-bold italic">স্মার্ট লেজার</h1>
+                    <h1 id="headerAdminName" class="text-lg font-bold italic">দৈনিক হিসাব</h1>
                     <div class="flex items-center text-[9px] opacity-80">
                         <span class="time-circle"></span><span id="liveClock">লোডিং...</span>
                     </div>
@@ -178,12 +185,52 @@
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
         const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
 
+        // --- ইন্টারনেট চেক ও অফলাইন সিঙ্ক লজিক ---
+        window.addEventListener('online', () => {
+            document.getElementById('offlineBadge').style.display = 'none';
+            syncOfflineData();
+        });
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineBadge').style.display = 'block';
+        });
+
+        async function syncOfflineData() {
+            if (!navigator.onLine) return;
+            const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+            if (queue.length === 0) return;
+
+            console.log("Syncing offline data...");
+            for (let i = 0; i < queue.length; i++) {
+                try {
+                    const res = await fetch(proxyURL, { 
+                        method: 'POST', 
+                        body: new URLSearchParams(queue[i]) 
+                    });
+                    if (res.ok) {
+                        queue.splice(i, 1);
+                        i--; // অ্যারে রিসাইজ হ্যান্ডল করতে
+                    }
+                } catch (e) { break; } // সার্ভার এরর হলে লুপ থামিয়ে দিবে
+            }
+            localStorage.setItem('offline_queue', JSON.stringify(queue));
+            if (queue.length === 0) fetchData(); // সিঙ্ক শেষে লেটেস্ট ডাটা আনবে
+        }
+
+        function saveToOfflineQueue(payload) {
+            let queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+            queue.push(payload);
+            localStorage.setItem('offline_queue', JSON.stringify(queue));
+            
+            // তাৎক্ষণিক ইউআই আপডেট (ইন্টারনেট না থাকলেও যেন লিস্টে দেখা যায়)
+            db.push(payload);
+            renderApp();
+        }
+
         // --- অটো লগআউট ও সেশন লজিক ---
         function updateActivity() {
             if(userPass) localStorage.setItem('last_activity', Date.now());
         }
 
-        // মাউস, কিবোর্ড বা স্ক্রল করলেই টাইম রিসেট হবে
         ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, updateActivity);
         });
@@ -196,7 +243,7 @@
                 alert("৫ মিনিট কোনো কাজ না করায় অটোমেটিক লগআউট করা হয়েছে।");
             }
         }
-        setInterval(checkSession, 10000); // প্রতি ১০ সেকেন্ডে চেক করবে
+        setInterval(checkSession, 10000);
 
         document.getElementById('adminPassInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') attemptLogin(); });
 
@@ -242,11 +289,20 @@
                 if (res.ok) {
                     userPass = pass;
                     localStorage.setItem('app_pass', pass);
-                    localStorage.setItem('last_activity', Date.now()); // সেশন শুরু
+                    localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
                     fetchData();
                 } else { alert("ভুল পাসওয়ার্ড!"); }
-            } catch (e) { alert("সার্ভার এরর!"); }
+            } catch (e) { 
+                // লগইন এর সময় অফলাইন থাকলে লোকাল পাসওয়ার্ড চেক (যদি আগে সেভ থাকে)
+                if (localStorage.getItem('app_pass') === pass) {
+                    userPass = pass;
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    renderApp(); 
+                } else {
+                    alert("ইন্টারনেট নেই এবং আগে লগইন করা হয়নি!");
+                }
+            }
             document.getElementById('loginBtn').innerText = "লগইন";
         }
 
@@ -256,9 +312,19 @@
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
                 const data = await res.json();
                 db = Array.isArray(data) ? data : [];
+                
+                // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
+                const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                queue.forEach(q => {
+                    if (!db.find(d => d.id == q.id)) db.push(q);
+                });
+
                 renderApp();
                 checkPeriodicNotifications();
-            } catch (e) { console.error("Fetch failed"); }
+            } catch (e) { 
+                console.error("Fetch failed, showing cached data");
+                renderApp();
+            }
         }
 
         async function saveData() {
@@ -269,14 +335,27 @@
             if(!desc || !amount) return alert("তথ্য দিন");
             
             const payload = { pass: userPass, id: editingId || Date.now(), desc, amount, person, type, loanCat, date, method, ts: new Date(date).getTime() };
+            
+            // অফলাইন চেক
+            if (!navigator.onLine) {
+                saveToOfflineQueue(payload);
+                closeModal();
+                return;
+            }
+
             try {
                 const res = await fetch(proxyURL, { method: 'POST', body: new URLSearchParams(payload) });
                 if(res.ok) { closeModal(); fetchData(); }
-            } catch (e) { alert("সেভ এরর"); }
+                else { throw new Error(); }
+            } catch (e) { 
+                saveToOfflineQueue(payload);
+                closeModal();
+            }
         }
 
         async function deleteEntry(id) {
             if(!confirm("মুছে ফেলতে চান?")) return;
+            if(!navigator.onLine) return alert("ডিলিট করার জন্য ইন্টারনেট প্রয়োজন।");
             try {
                 const res = await fetch(`${proxyURL}?pass=${userPass}&action=delete&id=${id}`);
                 if(res.ok) fetchData();
@@ -487,14 +566,23 @@
         function closeModal() { document.getElementById('entryModal').style.display = 'none'; }
         function openEntryModal() { document.getElementById('entryModal').style.display = 'flex'; clearModalInputs(); }
         function closeNotifModal() { document.getElementById('notifModal').style.display = 'none'; }
+        function clearModalInputs() {
+            document.getElementById('mDesc').value = ''; document.getElementById('mAmount').value = '';
+            document.getElementById('mPerson').value = ''; document.getElementById('editingId').value = '';
+            document.getElementById('mDate').value = new Date().toISOString().slice(0, 16);
+            document.getElementById('saveBtn').innerText = "সেভ করুন";
+        }
+        
         window.onload = () => { 
             loadProfileData();
             if (userPass) { 
                 document.getElementById('loginOverlay').style.display = 'none'; 
                 fetchData(); 
-                updateActivity(); // সেশন রিসেট
+                syncOfflineData(); // অ্যাপ লোড হলে সিঙ্ক চেক করবে
+                updateActivity();
             } 
-            updateClock(); 
+            updateClock();
+            if(!navigator.onLine) document.getElementById('offlineBadge').style.display = 'block';
         };
     </script>
 </body>
