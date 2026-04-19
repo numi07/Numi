@@ -32,23 +32,24 @@
             --primary-color: #2563eb;
             --secondary-color: #1e293b;
             --text-color: #334155;
-            --bg-light: #f8fafc;
-            --white: #ffffff;
+            /* উন্নত ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট */
+            --bg-light: radial-gradient(circle at top right, #e0e7ff 0%, #f8fafc 50%);
+            --white: rgba(255, 255, 255, 0.9);
             --accent-color: #f59e0b;
-            --card-bg: #ffffff;
-            --nav-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --nav-bg: rgba(255, 255, 255, 0.8);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
         }
 
         body.dark-mode {
-            --bg-light: #0f172a;
+            --bg-light: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%);
             --secondary-color: #f1f5f9;
             --text-color: #cbd5e1;
-            --white: #1e293b;
-            --card-bg: #1e293b;
-            --nav-bg: rgba(15, 23, 42, 0.95);
-            --shadow: 0 4px 25px rgba(0,0,0,0.3);
+            --white: rgba(30, 41, 59, 0.9);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --nav-bg: rgba(15, 23, 42, 0.8);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -59,16 +60,30 @@
         }
 
         body {
-            background-color: var(--bg-light);
+            background: var(--bg-light);
+            background-attachment: fixed; /* ব্যাকগ্রাউন্ড ফিক্সড থাকবে */
             color: var(--text-color);
             line-height: 1.6;
             scroll-behavior: smooth;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            transition: background 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+        }
+
+        /* ব্যাকগ্রাউন্ডে হালকা ব্লার ইফেক্ট যোগ করা */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* সূক্ষ্ম টেক্সচার */
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
         }
 
         nav {
             background: var(--nav-bg);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 0.8rem 8%;
             display: flex;
             justify-content: space-between;
@@ -78,6 +93,7 @@
             top: 0;
             box-shadow: var(--shadow);
             z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logo {
@@ -272,16 +288,19 @@
 
         .exp-card {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 35px;
             border-radius: 20px;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .exp-card:hover { 
             transform: translateY(-10px);
             border-color: var(--primary-color);
+            background: var(--white);
         }
 
         .exp-card i {
@@ -297,10 +316,12 @@
         }
         .skills-showcase {
             margin-top: 50px;
-            background: var(--white);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 24px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .skills {
@@ -310,7 +331,7 @@
         }
 
         .skill-tag {
-            background: var(--bg-light);
+            background: rgba(37, 99, 235, 0.1);
             color: var(--primary-color);
             padding: 10px 24px;
             border-radius: 50px;
@@ -326,23 +347,30 @@
 
         form {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 24px;
             display: flex;
             flex-direction: column;
             gap: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         input, textarea {
             padding: 16px;
-            border: 1px solid rgba(0,0,0,0.1);
-            background: var(--bg-light);
+            border: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.5);
             color: var(--text-color);
             border-radius: 12px;
             outline: none;
             font-size: 1rem;
             transition: var(--transition);
+        }
+
+        body.dark-mode input, body.dark-mode textarea {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(255,255,255,0.05);
         }
 
         input:focus, textarea:focus { 
@@ -353,9 +381,10 @@
         footer {
             padding: 18px;
             text-align: center;
-            background: var(--white);
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
             color: var(--secondary-color);
-            border-top: 1px solid rgba(0,0,0,0.05);
+            border-top: 1px solid rgba(255,255,255,0.1);
             font-weight: 500;
         }
         @media (max-width: 992px) {
@@ -382,7 +411,7 @@
             .nav-list.active {
                 max-height: 400px;
                 padding: 30px 0;
-                border-top: 1px solid rgba(0,0,0,0.05);
+                border-top: 1px solid rgba(255,255,255,0.1);
             }
 
             .nav-list li { margin: 15px 0; }
