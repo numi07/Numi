@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
-
-    <!-- PWA Meta Tags & Icons -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,20 +17,17 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
 
-    <!-- Static Inline Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%20%E0%A6%B6%E0%A6%BF%E0%A6%95%E0%A6%A6%E0%A6%BE%E0%A6%B0%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; color: #1e293b; transition: 0.3s; overflow-x: hidden; }
 
-        /* Bright Mode Visibility Fix */
         .text-slate-400 { color: #475569 !important; } 
         .text-slate-500 { color: #334155 !important; }
         .opacity-60 { opacity: 0.9 !important; }
 
-        /* --- Additional Bright Mode Text Clarity --- */
         body:not(.dark) h3 { color: #064e3b !important; font-weight: 800; }
         body:not(.dark) #walletBalancesArea .premium-card p { color: #475569 !important; font-weight: 700; }
         body:not(.dark) #walletBalancesArea .premium-card .font-black { color: #020617 !important; }
@@ -60,12 +55,10 @@
         .modal-animate { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Custom Alert Style */
         #customAlert { display: none; backdrop-filter: blur(10px); z-index: 5000; }
 
         #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
 
-        /* PDF / Print Mode Styles */
         @media print {
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
@@ -78,7 +71,6 @@
 
     <div id="offlineBadge" class="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg">অফলাইন মোড: ডাটা পরে সিঙ্ক হবে</div>
 
-    <!-- Custom Popup Alert (No Domain Name) -->
     <div id="customAlert" class="fixed inset-0 flex items-center justify-center p-6 bg-black/60">
         <div class="bg-white dark:bg-slate-900 p-8 rounded-[35px] w-full max-w-xs shadow-2xl text-center modal-animate">
             <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -90,7 +82,6 @@
         </div>
     </div>
 
-    <!-- Login Overlay -->
     <div id="loginOverlay" class="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-6">
         <div class="bg-white dark:bg-slate-900 p-8 rounded-[40px] w-full max-w-sm shadow-2xl text-center">
             <div id="loginAvatar" class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
@@ -102,7 +93,6 @@
         </div>
     </div>
 
-    <!-- Header -->
     <div class="app-header p-6 pb-10 text-white relative">
         <div class="flex justify-between items-center mb-5">
             <div class="flex items-center gap-3">
@@ -131,7 +121,6 @@
             <h2 id="mainBalance" class="text-4xl font-black">৳ ০</h2>
         </div>
 
-        <!-- Past Month Carry Forward -->
         <div class="bg-black/10 rounded-[28px] p-4 border border-white/5 backdrop-blur-sm grid grid-cols-3 gap-2 text-center mt-6">
             <div class="border-r border-white/10"><p class="text-[8px] opacity-70">স্থিতি</p><p id="openingBal" class="text-xs font-bold text-emerald-300">৳ ০</p></div>
             <div class="border-r border-white/10"><p class="text-[8px] opacity-70">বকেয়া লোন</p><p id="openingLoan" class="text-xs font-bold text-amber-300">৳ ০</p></div>
@@ -139,42 +128,33 @@
         </div>
     </div>
 
-    <!-- Global Month Scroll -->
     <div class="px-4 mt-4"><div id="monthContainer" class="flex gap-2 overflow-x-auto no-scrollbar pb-2"></div></div>
 
-    <!-- Monthly Summary Dashboard (Updated) -->
     <div class="px-4 mt-2 space-y-3">
         <div class="grid grid-cols-2 gap-3">
             <div class="premium-card p-3 border-l-4 border-emerald-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
             <div class="premium-card p-3 border-l-4 border-rose-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
         </div>
-        <!-- Loan/Dhaar Summary Row 1 -->
         <div class="grid grid-cols-2 gap-3">
             <div class="premium-card p-3 border-l-4 border-amber-500"><p class="text-[9px] font-bold uppercase opacity-60">লোন নিলাম</p><p id="summaryLoanTaken" class="text-lg font-black text-amber-600">৳ ০</p></div>
             <div class="premium-card p-3 border-l-4 border-slate-500"><p class="text-[9px] font-bold uppercase opacity-60">লোন শোধ</p><p id="summaryLoanPaid" class="text-lg font-black text-slate-600">৳ ০</p></div>
         </div>
-        <!-- Loan/Dhaar Summary Row 2 -->
         <div class="grid grid-cols-2 gap-3">
             <div class="premium-card p-3 border-l-4 border-blue-500"><p class="text-[9px] font-bold uppercase opacity-60">ধার দিলাম</p><p id="summaryDhaarGiven" class="text-lg font-black text-blue-600">৳ ০</p></div>
             <div class="premium-card p-3 border-l-4 border-indigo-500"><p class="text-[9px] font-bold uppercase opacity-60">ধার ফেরত পেলাম</p><p id="summaryDhaarBack" class="text-lg font-black text-indigo-600">৳ ০</p></div>
         </div>
     </div>
 
-    <!-- Main Content -->
     <main class="mt-4 px-4">
         <div id="home-tab" class="tab-content">
             
-            <!-- Account & Wallet Balances Dashboard -->
             <div class="flex justify-between items-center mb-3 mt-4">
                 <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200"><i class="fas fa-wallet text-emerald-500 mr-2"></i>অ্যাকাউন্ট ব্যালেন্স</h3>
             </div>
             
-            <!-- Grid for Wallets -->
             <div id="walletBalancesArea" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                <!-- Populated via JS dynamically -->
             </div>
 
-            <!-- Recent Transactions -->
             <div class="flex justify-between items-center mb-3">
                 <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200"><i class="fas fa-list text-emerald-500 mr-2"></i>সাম্প্রতিক লেনদেন</h3>
             </div>
@@ -206,7 +186,6 @@
         </div>
     </main>
 
-    <!-- Navigation -->
     <nav class="fixed bottom-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 px-6 py-2 flex justify-around items-center z-[100] rounded-t-[35px] shadow-2xl">
         <button onclick="switchTab('home')" class="nav-btn active-tab flex flex-col items-center p-2 text-emerald-600" id="btn-home"><i class="fas fa-receipt text-xl mb-1"></i><span class="text-[10px] font-bold">লেনদেন</span></button>
         <button onclick="switchTab('ledger')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-ledger"><i class="fas fa-history text-xl mb-1"></i><span class="text-[10px] font-bold">ইতিহাস</span></button>
@@ -216,7 +195,6 @@
         <button onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-profile"><i class="fas fa-user-circle text-xl mb-1"></i><span class="text-[10px] font-bold">প্রোফাইল</span></button>
     </nav>
 
-    <!-- Type Selection Modal (Income/Expense/Transfer Popup) -->
     <div id="typeSelectionModal" class="fixed inset-0 bg-black/60 hidden z-[600] items-end sm:items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate text-center mb-20 sm:mb-0">
             <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-white">কী এন্ট্রি করবেন?</h3>
@@ -238,12 +216,10 @@
         </div>
     </div>
 
-    <!-- Entry Form Modal -->
     <div id="entryModal" class="fixed inset-0 bg-black/60 hidden z-[500] items-end">
         <div class="bg-white dark:bg-slate-900 w-full rounded-t-[40px] p-6 modal-animate max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center mb-6"><h3 id="modalHeadText" class="text-xl font-bold">নতুন এন্ট্রি</h3><button onclick="closeModal()" class="text-2xl opacity-40">&times;</button></div>
             
-            <!-- Type Tabs in Form -->
             <div class="grid grid-cols-3 gap-2 mb-4">
                 <button type="button" onclick="setCatType('Income')" id="btnInc" class="py-2 rounded-xl text-sm font-bold border-2 transition-all">আয়</button>
                 <button type="button" onclick="setCatType('Expense')" id="btnExp" class="py-2 rounded-xl text-sm font-bold border-2 transition-all">ব্যয়</button>
@@ -302,7 +278,6 @@
         </div>
     </div>
 
-    <!-- Debt status Modal -->
     <div id="notifModal" class="fixed inset-0 bg-black/70 hidden z-[6000] items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate">
             <h3 class="text-xl font-black text-center mb-6 text-emerald-600">বকেয়া রিমাইন্ডার</h3>
@@ -311,11 +286,9 @@
         </div>
     </div>
 
-    <!-- Print Area -->
     <div id="printArea" class="hidden"></div>
 
     <script>
-        // --- CUSTOM POPUP SYSTEM ---
         function showCustomAlert(msg, title = "নোটিফিকেশন") {
             document.getElementById('alertTitle').innerText = title;
             document.getElementById('alertMsg').innerText = msg;
@@ -323,7 +296,6 @@
         }
         function closeAlert() { document.getElementById('customAlert').style.display = 'none'; }
 
-        // --- BROWSER PUSH NOTIFICATION LOGIC (3 Days Cycle) ---
         function setupPushNotification() {
             if (!("Notification" in window)) return;
             if (Notification.permission === "default") {
@@ -345,11 +317,10 @@
                     }
                 }
             };
-            setInterval(checkAndNotify, 3600000); // Check every hour
+            setInterval(checkAndNotify, 3600000);
             checkAndNotify();
         }
 
-        // আন-ইন্সটল ওল্ড সার্ভিস ওয়ার্কার
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
@@ -365,8 +336,7 @@
         const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
         const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
-
-        // কাস্টম ডেট ও টাইম ফর্মেটার (Custom Date & Time Formatter)
+        
         function formatDateTime(dStr) {
             const d = new Date(dStr);
             const day = toBN(d.getDate());
@@ -383,7 +353,6 @@
             return `${day} ${month} ${year}, ${timeStr}`;
         }
 
-        // অনলাইন/অফলাইন সিঙ্ক
         window.addEventListener('online', () => {
             document.getElementById('offlineBadge').style.display = 'none';
             syncOfflineData();
@@ -415,7 +384,6 @@
             renderApp();
         }
 
-        // অটো লগআউট
         function updateActivity() { if(userPass) localStorage.setItem('last_activity', Date.now()); }
         function checkSession() {
             const lastActive = localStorage.getItem('last_activity');
@@ -433,8 +401,7 @@
         });
 
         document.getElementById('adminPassInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') attemptLogin(); });
-
-        // ঘড়ি ও বার (দিন)
+        
         function updateClock() {
             const d = new Date();
             const dateStr = d.toLocaleDateString('bn-BD', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -443,7 +410,6 @@
         }
         setInterval(updateClock, 1000);
 
-        // প্রোফাইল
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -459,7 +425,7 @@
             loadProfileData(); showCustomAlert("প্রোফাইল আপডেট হয়েছে!", "সফল");
         }
         function loadProfileData() {
-            const name = localStorage.getItem('admin_name') || "স্মার্ট ইউজার";
+            const name = localStorage.getItem('admin_name') || "আল নোমান শিকদার";
             const img = localStorage.getItem('admin_img') || "https://via.placeholder.com/100";
             document.getElementById('headerAdminName').innerText = name;
             document.getElementById('adminNameInput').value = name;
@@ -467,7 +433,6 @@
             document.getElementById('profilePreview').src = img;
         }
 
-        // লগিন ও ডাটা
         async function attemptLogin() {
             const pass = document.getElementById('adminPassInput').value;
             if(!pass) return showCustomAlert("পাসওয়ার্ড দিন", "সতর্কতা");
@@ -547,7 +512,6 @@
         }
 
         async function deleteEntry(id) {
-            // Replaced default confirm with custom logic if needed, but for simplicity keeping native confirm within logic wrapper
             if(!confirm("মুছে ফেলতে চান?")) return;
             if(!navigator.onLine) return showCustomAlert("ডিলিট করার জন্য ইন্টারনেট প্রয়োজন।", "অফলাইন");
             try {
@@ -556,7 +520,6 @@
             } catch (e) { showCustomAlert("ডিলিট এরর", "ব্যর্থ"); }
         }
 
-        // --- Render UI ও Wallet Calculation ---
         function renderApp() {
             const list = document.getElementById('appList'); list.innerHTML = '';
             
@@ -564,7 +527,6 @@
             let openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0;
             
-            // Monthly Summery Metrics
             let mLoanTaken = 0, mLoanPaid = 0, mDhaarGiven = 0, mDhaarBack = 0;
 
             const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
@@ -575,7 +537,6 @@
                 const method = i.method || 'ক্যাশ';
                 if(wallets[method] === undefined) wallets[method] = 0;
 
-                // Wallet Calcs (All time)
                 if (i.type === 'Transfer') {
                     const toMethod = i.toMethod || 'ক্যাশ';
                     if(wallets[toMethod] === undefined) wallets[toMethod] = 0;
@@ -586,7 +547,6 @@
                     if(isPlus) wallets[method] += amt; else wallets[method] -= amt;
                 }
 
-                // Carry Forward / Opening
                 if(i.ts < startOfSelMonth) {
                     if(i.loanCat === 'Loan') openingLoan += amt;
                     if(i.loanCat === 'Loan_Paid') openingLoan -= amt;
@@ -594,12 +554,10 @@
                     if(i.loanCat === 'Dhaar_Back') openingDhaar -= amt;
                 }
 
-                // Monthly Stats & List Rendering
                 if(new Date(i.date).getMonth() + "-" + new Date(i.date).getFullYear() === currentMonthKey) {
                     if(i.type === 'Income') mInc += amt;
                     if(i.type === 'Expense' && i.loanCat === 'General') mExp += amt;
                     
-                    // Monthly Summaries
                     if(i.loanCat === 'Loan') mLoanTaken += amt;
                     if(i.loanCat === 'Loan_Paid') mLoanPaid += amt;
                     if(i.loanCat === 'Dhaar') mDhaarGiven += amt;
@@ -635,7 +593,6 @@
                 }
             });
 
-            // Update UI Totals
             let grandTotal = Object.values(wallets).reduce((sum, val) => sum + val, 0);
             document.getElementById('mainBalance').innerText = "৳ " + toBN(grandTotal);
             document.getElementById('openingBal').innerText = "৳ " + toBN(grandTotal); 
@@ -644,13 +601,11 @@
             document.getElementById('topInc').innerText = "৳" + toBN(mInc);
             document.getElementById('topExp').innerText = "৳" + toBN(mExp);
             
-            // Dashboard Loan/Dhaar Monthly
             document.getElementById('summaryLoanTaken').innerText = "৳ " + toBN(mLoanTaken);
             document.getElementById('summaryLoanPaid').innerText = "৳ " + toBN(mLoanPaid);
             document.getElementById('summaryDhaarGiven').innerText = "৳ " + toBN(mDhaarGiven);
             document.getElementById('summaryDhaarBack').innerText = "৳ " + toBN(mDhaarBack);
 
-            // Populate Wallet Dashboard Grid
             const walletArea = document.getElementById('walletBalancesArea');
             if(walletArea) {
                 walletArea.innerHTML = Object.keys(wallets).map(w => {
@@ -727,7 +682,6 @@
             });
         }
 
-        // --- ENHANCED PDF REPORT GENERATOR ---
         function generatePDFReport() {
             const start = document.getElementById('reportStart').value;
             const end = document.getElementById('reportEnd').value;
@@ -748,7 +702,7 @@
                     </div>
                     <div style="text-align:right;">
                         <p style="margin:0; font-size:10px; color:#888;">তৈরির সময়: ${genAt}</p>
-                        <p style="margin:0; font-weight:bold;">ইউজার: ${localStorage.getItem('admin_name') || 'স্মার্ট ইউজার'}</p>
+                        <p style="margin:0; font-weight:bold;">ইউজার: ${localStorage.getItem('admin_name') || 'আল নোমান শিকদার'}</p>
                     </div>
                 </div>
                 
@@ -812,7 +766,6 @@
         }
         window.addEventListener("afterprint", () => { document.getElementById('printArea').classList.add('hidden'); });
 
-        // --- UI Modal Controls & Type Selection ---
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-emerald-600'); b.classList.add('text-slate-400'); });
