@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags (Added for Installability) -->
+    <!-- PWA Meta Tags & Icons (Matched with books.html for App-like Install) -->
     <meta name="theme-color" content="#064e3b">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="পকেট হিসাব">
-    <link rel="apple-touch-icon" href="https://via.placeholder.com/192">
+    
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./android-chrome-512x512.png">
+
+    <!-- Static Inline Manifest for Installation -->
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22.%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22.%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -183,40 +193,9 @@
     </div>
 
     <script>
-        // --- ALL-IN-ONE PWA Setup (Single File Mode) ---
+        // --- PWA Service Worker Setup ---
         (function() {
-            // ১. ডাইনামিক ম্যানিফেস্ট তৈরি
-            const myManifest = {
-                "name": "পকেট হিসাব - আল নোমান শিকদার",
-                "short_name": "পকেট হিসাব",
-                "description": "দৈনিক আয়-ব্যয়ের স্মার্ট হিসাব",
-                "start_url": "/account",
-                "display": "standalone",
-                "background_color": "#020617",
-                "theme_color": "#064e3b",
-                "icons": [
-                    {
-                        "src": "https://via.placeholder.com/192",
-                        "sizes": "192x192",
-                        "type": "image/png",
-                        "purpose": "any maskable"
-                    },
-                    {
-                        "src": "https://via.placeholder.com/512",
-                        "sizes": "512x512",
-                        "type": "image/png"
-                    }
-                ]
-            };
-            const stringManifest = JSON.stringify(myManifest);
-            const blob = new Blob([stringManifest], {type: 'application/json'});
-            const manifestURL = URL.createObjectURL(blob);
-            const link = document.createElement('link');
-            link.rel = 'manifest';
-            link.href = manifestURL;
-            document.head.appendChild(link);
-
-            // ২. ইন-লাইন সার্ভিস ওয়ার্কার রেজিস্ট্রেশন
+            // ইন-লাইন সার্ভিস ওয়ার্কার রেজিস্ট্রেশন
             if ('serviceWorker' in navigator) {
                 const swCode = `
                     self.addEventListener('install', e => self.skipWaiting());
@@ -225,16 +204,16 @@
                 const swBlob = new Blob([swCode], {type: 'text/javascript'});
                 const swURL = URL.createObjectURL(swBlob);
                 navigator.serviceWorker.register(swURL).then(() => {
-                    console.log('PWA Service Worker Registered (Blob)');
+                    console.log('PWA Service Worker Registered');
                 }).catch(err => console.log('Service Worker Registration Failed', err));
             }
         })();
 
-        let db = [];
+        let db =[];
         const proxyURL = '/api/account';
         const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট
         let userPass = localStorage.getItem('app_pass') || "";
-        const monthsBN = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+        const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
         const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
 
@@ -364,7 +343,7 @@
             try {
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
                 const data = await res.json();
-                db = Array.isArray(data) ? data : [];
+                db = Array.isArray(data) ? data :[];
 
                 // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
                 const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
@@ -421,7 +400,7 @@
             let totalBal = 0, openingBal = 0, openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0, mSodh = 0, mLoan = 0;
 
-            const [selMonth, selYear] = currentMonthKey.split('-').map(Number);
+            const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
             const startOfSelMonth = new Date(selYear, selMonth, 1).getTime();
 
             db.sort((a,b) => b.ts - a.ts).forEach(i => {
@@ -481,7 +460,7 @@
 
         function renderLedger() {
             const container = document.getElementById('ledgerList'); container.innerHTML = '';
-            const persons = [...new Set(db.filter(i => i.person !== "সাধারণ").map(i => i.person))];
+            const persons =[...new Set(db.filter(i => i.person !== "সাধারণ").map(i => i.person))];
 
             persons.forEach(name => {
                 let lifetimeBal = 0;
