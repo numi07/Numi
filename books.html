@@ -1,5 +1,3 @@
---- START OF FILE Paste April 20, 2026 - 12:15AM ---
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -212,10 +210,11 @@
         .dark-mode .cat-icon-circle { border-color: #334155; }
         .cat-box:hover .cat-icon-circle { transform: scale(1.1); background: var(--primary); color: white; }
 
-        .author-box { display: flex; flex-direction: column; align-items: center; min-width: 95px; transition: 0.3s; margin-bottom: 10px; position: relative; }
-        .author-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: 0.3s; cursor: pointer; }
+        .author-box { display: flex; flex-direction: column; align-items: center; min-width: 95px; transition: 0.3s; margin-bottom: 15px; position: relative; text-align: center; }
+        .author-img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: 0.3s; cursor: pointer; }
         .dark-mode .author-img { border-color: #1e293b; }
         .author-box:hover .author-img { transform: scale(1.1); border-color: var(--primary); }
+        .author-name-text { font-size: 12px; line-height: 1.3; margin-top: 8px; font-weight: 700; display: block; width: 100%; min-height: 32px; }
 
         .admin-card { background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); padding: 30px 20px; border-radius: 30px; box-shadow: var(--shadow); text-align: center; margin-bottom: 20px; border: 1px solid #fff; }
         .dark-mode .admin-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-color: #334155; }
@@ -318,7 +317,7 @@
             <button id="authBackBtn" class="back-btn" onclick="navigate('home')"><i class="fas fa-chevron-left"></i></button>
             <h3 class="page-title" id="authPageTitle">সব লেখক</h3>
         </div>
-        <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
+        <div id="allAuth" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px 10px; justify-items: center;"></div>
     </div>
     <div id="gift-list-page" class="page">
         <div class="page-header">
@@ -715,7 +714,7 @@
         const h = allAuthors.slice(0, 8).map(a => `
             <div class="author-box" onclick="filterByAuth('${a.AuthorName}')">
                 <img src="${getImg(a.AuthorImage)}" class="author-img">
-                <div style="font-size:12px; text-align:center; font-weight:700">${a.AuthorName}</div>
+                <div class="author-name-text">${a.AuthorName}</div>
             </div>`).join('');
         document.getElementById('hAuth').innerHTML = h;
     }
@@ -725,10 +724,10 @@
             <div class="author-box">
                 <div onclick="filterByAuth('${a.AuthorName}')">
                     <img src="${getImg(a.AuthorImage)}" class="author-img">
-                    <div style="font-size:12px; text-align:center; font-weight:700">${a.AuthorName}</div>
+                    <div class="author-name-text">${a.AuthorName}</div>
                 </div>
                 ${isAdmin ? `
-                <div style="display:flex; gap:5px; margin-top:5px">
+                <div style="display:flex; gap:5px; margin-top:5px; justify-content: center;">
                     <button class="btn-small" style="background:#10b981; padding:2px 8px" onclick="editAuthor('${a.AuthorName}')"><i class="fas fa-edit"></i></button>
                     <button class="btn-small" style="background:var(--accent); padding:2px 8px" onclick="deleteAuthor('${a.AuthorName}')"><i class="fas fa-trash"></i></button>
                 </div>` : ''}
@@ -745,10 +744,10 @@
             return `<div class="author-box">
                 <div onclick="filterByAuth('${authName}', '${catName}')">
                     <img src="${getImg(a?.AuthorImage)}" class="author-img">
-                    <div style="font-size:12px; text-align:center; font-weight:700">${authName}</div>
+                    <div class="author-name-text">${authName}</div>
                 </div>
                 ${isAdmin ? `
-                <div style="display:flex; gap:5px; margin-top:5px">
+                <div style="display:flex; gap:5px; margin-top:5px; justify-content: center;">
                     <button class="btn-small" style="background:#10b981; padding:2px 8px" onclick="editAuthor('${authName}')"><i class="fas fa-edit"></i></button>
                     <button class="btn-small" style="background:var(--accent); padding:2px 8px" onclick="deleteAuthor('${authName}')"><i class="fas fa-trash"></i></button>
                 </div>` : ''}
@@ -842,14 +841,13 @@
 
             <div id="tab-spec" class="tab-pane">
                 <table class="spec-table">
-                    <tr><td class="spec-label">Title</td><td>${b.BookName}</td></tr>
-                    <tr><td class="spec-label">Author</td><td>${b.Author}</td></tr>
-                    <tr><td class="spec-label">Publisher</td><td>${b.Publisher || '-'}</td></tr>
-                    ${b.PublishYear ? `<tr><td class="spec-label">Publish Year</td><td>${toBN(b.PublishYear)}</td></tr>` : ''}
-                    <tr><td class="spec-label">Category</td><td>${b.Category || '-'}</td></tr>
-                    ${b.SeriesName ? `<tr><td class="spec-label">Series</td><td>${b.SeriesName} (${toBN(b.SeriesOrder)})</td></tr>` : ''}
-                    ${b.TranslatedBy ? `<tr><td class="spec-label">Translator</td><td>${b.TranslatedBy}</td></tr>` : ''}
-                    <tr><td class="spec-label">MRP</td><td>${toBN(b.MRP)} ৳</td></tr>
+                    <tr><td class="spec-label">বইয়ের নাম</td><td>${b.BookName}</td></tr>
+                    <tr><td class="spec-label">লেখক</td><td>${b.Author}</td></tr>
+                    <tr><td class="spec-label">প্রকাশনী</td><td>${b.Publisher || '-'}</td></tr>
+                    ${b.PublishYear ? `<tr><td class="spec-label">প্রকাশকাল</td><td>${toBN(b.PublishYear)}</td></tr>` : ''}
+                    <tr><td class="spec-label">ক্যাটাগরি</td><td>${b.Category || '-'}</td></tr>
+                    ${b.TranslatedBy ? `<tr><td class="spec-label">অনুবাদক</td><td>${b.TranslatedBy}</td></tr>` : ''}
+                    ${isAdmin ? `<tr><td class="spec-label">মুদ্রিত মূল্য</td><td>${toBN(b.MRP)} ৳</td></tr>` : ''}
                 </table>
             </div>
 
@@ -900,6 +898,7 @@
                 document.getElementById('loginArea').style.display='none';
                 document.getElementById('adminArea').style.display='block';
                 document.getElementById('fab').style.display='flex';
+                updateStats(); 
                 updateStats(); 
                 updateGiftMenuVisibility();
                 showToast("এডমিন লগিন সফল!");
