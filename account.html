@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags & Icons -->
+    <!-- PWA Meta Tags & Icons (App-like Install & No Background Browser) -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
 
-    <!-- Static Inline Manifest for Installation -->
+    <!-- Static Inline Manifest for App Installation -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -50,12 +50,12 @@
 
         #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
 
-        /* PDF / Print Mode Styles Updated */
+        /* PDF / Print Mode Styles */
         @media print {
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
             #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; color: black !important; background: white !important; }
-            nav, .app-header, main { display: none !important; }
+            nav, .app-header, main, #loginOverlay { display: none !important; }
         }
     </style>
 </head>
@@ -64,7 +64,7 @@
     <!-- Offline Status Indicator -->
     <div id="offlineBadge" class="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg">অফলাইন মোড: ডাটা পরে সিঙ্ক হবে</div>
 
-    <!-- Login Overlay -->
+    <!-- Login Overlay (Strict Password Form) -->
     <div id="loginOverlay" class="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-6">
         <div class="bg-white dark:bg-slate-900 p-8 rounded-[40px] w-full max-w-sm shadow-2xl text-center">
             <div id="loginAvatar" class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
@@ -195,11 +195,9 @@
     </div>
 
     <script>
-        // PWA Service Worker (Blob SW) removed to stop background browser persistence.
-
         let db =[];
         const proxyURL = '/api/account';
-        const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট
+        const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট সেশন লিমিট
         let userPass = localStorage.getItem('app_pass') || "";
         const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
@@ -230,10 +228,10 @@
                         queue.splice(i, 1);
                         i--; // অ্যারে রিসাইজ হ্যান্ডল করতে
                     }
-                } catch (e) { break; } // সার্ভার এরর হলে লুপ থামিয়ে দিবে
+                } catch (e) { break; } 
             }
             localStorage.setItem('offline_queue', JSON.stringify(queue));
-            if (queue.length === 0) fetchData(); // সিঙ্ক শেষে লেটেস্ট ডাটা আনবে
+            if (queue.length === 0 && userPass) fetchData(); 
         }
 
         function saveToOfflineQueue(payload) {
@@ -241,29 +239,40 @@
             queue.push(payload);
             localStorage.setItem('offline_queue', JSON.stringify(queue));
 
-            // তাৎক্ষণিক ইউআই আপডেট (ইন্টারনেট না থাকলেও যেন লিস্টে দেখা যায়)
             db.push(payload);
             renderApp();
         }
 
-        // --- অটো লগআউট ও সেশন লজিক ---
+        // --- কঠোর অটো লগআউট ও সেশন লজিক ---
         function updateActivity() {
-            if(userPass) localStorage.setItem('last_activity', Date.now());
+            if(userPass) {
+                localStorage.setItem('last_activity', Date.now());
+            }
         }
-
-        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
-            window.addEventListener(evt, updateActivity);
-        });
 
         function checkSession() {
             const lastActive = localStorage.getItem('last_activity');
             const now = Date.now();
+            
+            // ৫ মিনিট এক্টিভিটি না থাকলে কঠোরভাবে লগআউট করা হবে
             if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
-                logoutApp();
-                alert("৫ মিনিট কোনো কাজ না করায় অটোমেটিক লগআউট করা হয়েছে।");
+                userPass = "";
+                localStorage.removeItem('app_pass');
+                localStorage.removeItem('last_activity');
+                document.getElementById('loginOverlay').style.display = 'flex';
+                alert("নিরাপত্তার জন্য ৫ মিনিট নিষ্ক্রিয় থাকায় অটোমেটিক লগআউট করা হয়েছে।");
+                location.reload();
             }
         }
-        setInterval(checkSession, 10000);
+        setInterval(checkSession, 5000); // প্রতি ৫ সেকেন্ড পরপর চেক করবে['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                const lastActive = localStorage.getItem('last_activity');
+                // সেশন ভ্যালিড থাকলেই কেবল এক্টিভিটি টাইম আপডেট হবে
+                if (userPass && lastActive && (Date.now() - lastActive <= SESSION_LIMIT)) {
+                    updateActivity();
+                }
+            });
+        });
 
         document.getElementById('adminPassInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') attemptLogin(); });
 
@@ -314,7 +323,6 @@
                     fetchData();
                 } else { alert("ভুল পাসওয়ার্ড!"); }
             } catch (e) { 
-                // লগইন এর সময় অফলাইন থাকলে লোকাল পাসওয়ার্ড চেক (যদি আগে সেভ থাকে)
                 if (localStorage.getItem('app_pass') === pass) {
                     userPass = pass;
                     document.getElementById('loginOverlay').style.display = 'none';
@@ -333,7 +341,6 @@
                 const data = await res.json();
                 db = Array.isArray(data) ? data :[];
 
-                // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
                 const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
                 queue.forEach(q => {
                     if (!db.find(d => d.id == q.id)) db.push(q);
@@ -356,7 +363,6 @@
 
             const payload = { pass: userPass, id: editingId || Date.now(), desc, amount, person, type, loanCat, date, method, ts: new Date(date).getTime() };
 
-            // অফলাইন চেক
             if (!navigator.onLine) {
                 saveToOfflineQueue(payload);
                 closeModal();
@@ -603,14 +609,30 @@
             document.getElementById('saveBtn').innerText = "সেভ করুন";
         }
 
+        // --- Window OnLoad Strict Check ---
         window.onload = () => { 
             loadProfileData();
+            
+            // রিলোড করার সময় সবার আগে সেশন ভ্যালিডিটি চেক করা হচ্ছে 
+            const lastActive = localStorage.getItem('last_activity');
+            const now = Date.now();
+            
+            if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
+                userPass = "";
+                localStorage.removeItem('app_pass');
+                localStorage.removeItem('last_activity');
+            }
+
+            // সেশন ভ্যালিড থাকলে তবেই ড্যাশবোর্ড দেখাবে, না হলে লগিন স্ক্রিন
             if (userPass) { 
                 document.getElementById('loginOverlay').style.display = 'none'; 
                 fetchData(); 
-                syncOfflineData(); // অ্যাপ লোড হলে সিঙ্ক চেক করবে
+                syncOfflineData();
                 updateActivity();
-            } 
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+            }
+            
             updateClock();
             if(!navigator.onLine) document.getElementById('offlineBadge').style.display = 'block';
         };
