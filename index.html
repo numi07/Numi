@@ -32,26 +32,24 @@
             --primary-color: #2563eb;
             --secondary-color: #1e293b;
             --text-color: #334155;
-            --bg-light: #f8fafc;
-            --white: #ffffff;
+            /* উন্নত ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট */
+            --bg-light: radial-gradient(circle at top right, #e0e7ff 0%, #f8fafc 50%);
+            --white: rgba(255, 255, 255, 0.9);
             --accent-color: #f59e0b;
-            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.8);
             --nav-bg: rgba(255, 255, 255, 0.8);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
-            /* নতুন থিম এলিমেন্ট */
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
         }
 
         body.dark-mode {
-            --bg-light: #0f172a;
+            --bg-light: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%);
             --secondary-color: #f1f5f9;
             --text-color: #cbd5e1;
-            --white: #1e293b;
-            --card-bg: rgba(30, 41, 59, 0.6);
+            --white: rgba(30, 41, 59, 0.9);
+            --card-bg: rgba(30, 41, 59, 0.7);
             --nav-bg: rgba(15, 23, 42, 0.8);
-            --shadow: 0 4px 25px rgba(0,0,0,0.3);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -61,44 +59,31 @@
             font-family: 'Hind Siliguri', sans-serif;
         }
 
-        /* --- ইউনিক এনিমেটেড ব্যাকগ্রাউন্ড --- */
         body {
-            background-color: var(--bg-light);
+            background: var(--bg-light);
+            background-attachment: fixed; /* ব্যাকগ্রাউন্ড ফিক্সড থাকবে */
             color: var(--text-color);
             line-height: 1.6;
             scroll-behavior: smooth;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            position: relative;
-            overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
         }
 
+        /* ব্যাকগ্রাউন্ডে হালকা ব্লার ইফেক্ট যোগ করা */
         body::before {
             content: "";
             position: fixed;
-            top: -20%; left: -10%; width: 60%; height: 60%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* সূক্ষ্ম টেক্সচার */
+            opacity: 0.03;
+            pointer-events: none;
             z-index: -1;
-            animation: pulse 10s infinite alternate;
-        }
-        
-        body::after {
-            content: "";
-            position: fixed;
-            bottom: -10%; right: -10%; width: 50%; height: 50%;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
-            z-index: -1;
-            animation: pulse 12s infinite alternate-reverse;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.2) translate(5%, 5%); }
         }
 
         nav {
             background: var(--nav-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 0.8rem 8%;
             display: flex;
             justify-content: space-between;
@@ -108,7 +93,7 @@
             top: 0;
             box-shadow: var(--shadow);
             z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logo {
@@ -186,8 +171,6 @@
             border-radius: 3px;
             transition: var(--transition);
         }
-
-        /* --- Original Logic Preserved --- */
         #home {
             min-height: 100vh;
             display: flex;
@@ -227,6 +210,38 @@
             font-weight: 400;
         }
 
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            font-size: 1.05rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
         .hero-visual {
             position: relative;
             display: flex;
@@ -255,7 +270,6 @@
             50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
             100% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
         }
-
         section { padding: 90px 8%; }
 
         .section-title {
@@ -265,7 +279,6 @@
             border-left: 6px solid var(--primary-color);
             padding-left: 20px;
         }
-
         .experience-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -276,11 +289,12 @@
         .exp-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 35px;
             border-radius: 20px;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .exp-card:hover { 
@@ -300,7 +314,6 @@
             margin-bottom: 12px;
             color: var(--secondary-color);
         }
-
         .skills-showcase {
             margin-top: 50px;
             background: var(--card-bg);
@@ -308,7 +321,7 @@
             padding: 40px;
             border-radius: 24px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .skills {
@@ -318,7 +331,7 @@
         }
 
         .skill-tag {
-            background: var(--white);
+            background: rgba(37, 99, 235, 0.1);
             color: var(--primary-color);
             padding: 10px 24px;
             border-radius: 50px;
@@ -329,10 +342,7 @@
         .skill-tag:hover {
             background: var(--primary-color);
             color: white;
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
-
-        /* --- Form Styles Restored --- */
         .contact-container { max-width: 800px; margin: 0 auto; }
 
         form {
@@ -344,13 +354,13 @@
             flex-direction: column;
             gap: 20px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         input, textarea {
             padding: 16px;
-            border: 1px solid rgba(0,0,0,0.1);
-            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.5);
             color: var(--text-color);
             border-radius: 12px;
             outline: none;
@@ -358,21 +368,25 @@
             transition: var(--transition);
         }
 
+        body.dark-mode input, body.dark-mode textarea {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(255,255,255,0.05);
+        }
+
         input:focus, textarea:focus { 
             border-color: var(--primary-color); 
             background: var(--white);
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
-
         footer {
             padding: 18px;
             text-align: center;
-            background: var(--white);
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
             color: var(--secondary-color);
-            border-top: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.1);
             font-weight: 500;
         }
-
         @media (max-width: 992px) {
             nav { padding: 0.8rem 5%; }
             .menu-toggle { display: flex; }
@@ -397,7 +411,7 @@
             .nav-list.active {
                 max-height: 400px;
                 padding: 30px 0;
-                border-top: 1px solid rgba(0,0,0,0.05);
+                border-top: 1px solid rgba(255,255,255,0.1);
             }
 
             .nav-list li { margin: 15px 0; }
@@ -505,22 +519,23 @@
     </footer>
 
     <script>
-        /* --- All JavaScript Logic Restored --- */
         function updateYear() {
             const yearSpan = document.getElementById('current-year');
             const currentYear = new Date().getFullYear().toString();
+            
             const bengaliDigits = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
             const bengaliYear = currentYear.replace(/[0-9]/g, w => bengaliDigits[w]);
+            
             yearSpan.textContent = bengaliYear;
         }
         updateYear();
-
         const themeBtn = document.getElementById('theme-btn');
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
 
         themeBtn.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
+            
             if(body.classList.contains('dark-mode')) {
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
                 localStorage.setItem('theme', 'dark');
@@ -533,14 +548,13 @@
             body.classList.add('dark-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
-
         const menuBtn = document.getElementById('mobile-menu');
         const navMenu = document.getElementById('nav-menu');
+
         menuBtn.addEventListener('click', () => {
             menuBtn.classList.toggle('is-active');
             navMenu.classList.toggle('active');
         });
-
         document.querySelectorAll('.nav-list a').forEach(link => {
             link.addEventListener('click', () => {
                 menuBtn.classList.remove('is-active');
@@ -550,8 +564,8 @@
 
         const typingElement = document.getElementById('typing-element');
         const startYear = 2018;
-        const currentYearValue = new Date().getFullYear();
-        const experienceYearsBN = (currentYearValue - startYear).toLocaleString('bn-BD');
+        const currentYear = new Date().getFullYear();
+        const experienceYearsBN = (currentYear - startYear).toLocaleString('bn-BD');
         
         const professions = [
             "সহকারী ব্যবস্থাপক (হিসাব)।",
@@ -560,21 +574,31 @@
             "আর্থিক ও অভ্যন্তরীণ অডিট বিশ্লেষক।"
         ];
         
-        let proIndex = 0; let charIndex = 0; let isDeleting = false; let typeSpeed = 100;
+        let proIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
 
         function type() {
             const currentProf = professions[proIndex];
+            
             if (isDeleting) {
                 typingElement.textContent = currentProf.substring(0, charIndex - 1);
-                charIndex--; typeSpeed = 50; 
+                charIndex--;
+                typeSpeed = 50; 
             } else {
                 typingElement.textContent = currentProf.substring(0, charIndex + 1);
-                charIndex++; typeSpeed = 100;
+                charIndex++;
+                typeSpeed = 100;
             }
+
             if (!isDeleting && charIndex === currentProf.length) {
-                isDeleting = true; typeSpeed = 2000; 
+                isDeleting = true;
+                typeSpeed = 2000; 
             } else if (isDeleting && charIndex === 0) {
-                isDeleting = false; proIndex = (proIndex + 1) % professions.length; typeSpeed = 500;
+                isDeleting = false;
+                proIndex = (proIndex + 1) % professions.length;
+                typeSpeed = 500;
             }
             setTimeout(type, typeSpeed);
         }
