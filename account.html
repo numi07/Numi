@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags & Icons (App-like Install & No Background Browser) -->
+    <!-- PWA Meta Tags & Icons -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,6 +21,7 @@
 
     <!-- Static Inline Manifest for App Installation -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -64,7 +65,7 @@
     <!-- Offline Status Indicator -->
     <div id="offlineBadge" class="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg">অফলাইন মোড: ডাটা পরে সিঙ্ক হবে</div>
 
-    <!-- Login Overlay (Strict Password Form) -->
+    <!-- Login Overlay -->
     <div id="loginOverlay" class="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-6">
         <div class="bg-white dark:bg-slate-900 p-8 rounded-[40px] w-full max-w-sm shadow-2xl text-center">
             <div id="loginAvatar" class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
@@ -156,17 +157,47 @@
     <nav class="fixed bottom-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 px-6 py-2 flex justify-around items-center z-[100] rounded-t-[35px] shadow-2xl">
         <button onclick="switchTab('home')" class="nav-btn active-tab flex flex-col items-center p-2 text-emerald-600" id="btn-home"><i class="fas fa-receipt text-xl mb-1"></i><span class="text-[10px] font-bold">লেনদেন</span></button>
         <button onclick="switchTab('ledger')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-ledger"><i class="fas fa-history text-xl mb-1"></i><span class="text-[10px] font-bold">ইতিহাস</span></button>
-        <div class="mb-8"><button onclick="openEntryModal()" class="w-14 h-14 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fas fa-plus text-xl"></i></button></div>
+        
+        <!-- Updated: openTypeSelectionModal replaces openEntryModal directly -->
+        <div class="mb-8"><button onclick="openTypeSelectionModal()" class="w-14 h-14 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fas fa-plus text-xl"></i></button></div>
+        
         <button onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-profile"><i class="fas fa-user-circle text-xl mb-1"></i><span class="text-[10px] font-bold">প্রোফাইল</span></button>
     </nav>
 
     <!-- Modals -->
+
+    <!-- NEW: Type Selection Modal -->
+    <div id="typeSelectionModal" class="fixed inset-0 bg-black/60 hidden z-[600] items-end sm:items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate text-center mb-20 sm:mb-0">
+            <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-white">নতুন এন্ট্রি</h3>
+            <p class="text-xs text-slate-500 mb-8 font-semibold">কী যোগ করতে চান তা নির্বাচন করুন</p>
+            
+            <div class="flex flex-col gap-4">
+                <button onclick="proceedToEntry('Income')" class="w-full py-5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-[20px] shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-down"></i></div> 
+                    আয় (Income)
+                </button>
+                <button onclick="proceedToEntry('Expense')" class="w-full py-5 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-[20px] shadow-lg shadow-rose-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-up"></i></div> 
+                    ব্যয় (Expense)
+                </button>
+            </div>
+            
+            <button onclick="closeTypeSelection()" class="mt-8 text-slate-400 font-bold hover:text-slate-600 dark:hover:text-slate-300 w-full py-3 rounded-full bg-slate-100 dark:bg-slate-800">বাতিল করুন</button>
+        </div>
+    </div>
+
+    <!-- Entry Form Modal -->
     <div id="entryModal" class="fixed inset-0 bg-black/60 hidden z-[500] items-end">
         <div class="bg-white dark:bg-slate-900 w-full rounded-t-[40px] p-8 modal-animate max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center mb-6"><h3 id="modalHeadText" class="text-xl font-bold">নতুন এন্ট্রি</h3><button onclick="closeModal()" class="text-2xl opacity-40">&times;</button></div>
             <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3"><button onclick="setCatType('Income')" id="btnInc" class="py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-600">আয় (+)</button><button onclick="setCatType('Expense')" id="btnExp" class="py-3 rounded-2xl font-bold border-2 border-slate-100 text-slate-400">ব্যয় (-)</button></div>
-                <input type="hidden" id="mType" value="Income"><input type="hidden" id="editingId" value="">
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="setCatType('Income')" id="btnInc" class="py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-600">আয় (+)</button>
+                    <button type="button" onclick="setCatType('Expense')" id="btnExp" class="py-3 rounded-2xl font-bold border-2 border-slate-100 text-slate-400">ব্যয় (-)</button>
+                </div>
+                <input type="hidden" id="mType" value="Income">
+                <input type="hidden" id="editingId" value="">
                 <div class="grid grid-cols-2 gap-3">
                     <select id="loanCat" onchange="autoSelectType()" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold outline-none border-none">
                         <option value="General">সাধারণ</option><option value="Loan">লোন নিলাম</option><option value="Loan_Paid">লোন শোধ</option><option value="Dhaar">ধার দিলাম</option><option value="Dhaar_Back">ধার ফেরত পেলাম</option>
@@ -272,13 +303,11 @@
                 localStorage.removeItem('last_activity');
                 document.getElementById('loginOverlay').style.display = 'flex';
                 alert("নিরাপত্তার জন্য ৫ মিনিট নিষ্ক্রিয় থাকায় অটোমেটিক লগআউট করা হয়েছে।");
-                location.reload();
             }
         }
         setInterval(checkSession, 5000); // প্রতি ৫ সেকেন্ড পরপর চেক করবে['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, () => {
                 const lastActive = localStorage.getItem('last_activity');
-                // সেশন ভ্যালিড থাকলেই কেবল এক্টিভিটি টাইম আপডেট হবে
                 if (userPass && lastActive && (Date.now() - lastActive <= SESSION_LIMIT)) {
                     updateActivity();
                 }
@@ -319,27 +348,48 @@
             document.getElementById('profilePreview').src = img;
         }
 
-        // --- Auth ---
+        // --- Auth (Updated Robust Checking) ---
         async function attemptLogin() {
             const pass = document.getElementById('adminPassInput').value;
             if(!pass) return alert("পাসওয়ার্ড দিন");
             document.getElementById('loginBtn').innerText = "যাচাই...";
             try {
                 const res = await fetch(`${proxyURL}?pass=${pass}`);
-                if (res.ok) {
+                const text = await res.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(text);
+                } catch(err) {
+                    throw new Error("Invalid response format");
+                }
+                
+                if (Array.isArray(data) || data.success || data.length >= 0) { 
                     userPass = pass;
                     localStorage.setItem('app_pass', pass);
                     localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
-                    fetchData();
-                } else { alert("ভুল পাসওয়ার্ড!"); }
+                    
+                    db = Array.isArray(data) ? data :[];
+                    
+                    // Merge offline data instantly
+                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                    queue.forEach(q => {
+                        if (!db.find(d => d.id == q.id)) db.push(q);
+                    });
+
+                    renderApp();
+                    checkPeriodicNotifications();
+                } else { 
+                    alert("ভুল পাসওয়ার্ড!"); 
+                }
             } catch (e) { 
                 if (localStorage.getItem('app_pass') === pass) {
                     userPass = pass;
                     document.getElementById('loginOverlay').style.display = 'none';
                     renderApp(); 
                 } else {
-                    alert("ইন্টারনেট নেই এবং আগে লগইন করা হয়নি!");
+                    alert("ভুল পাসওয়ার্ড অথবা ইন্টারনেট সংযোগ নেই!");
                 }
             }
             document.getElementById('loginBtn').innerText = "লগইন";
@@ -349,16 +399,31 @@
             if (!userPass) return;
             try {
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
-                const data = await res.json();
-                db = Array.isArray(data) ? data :[];
+                const text = await res.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(text);
+                } catch(err) {
+                    console.log("Fetch format failed. Proceeding with cache.");
+                    return;
+                }
 
-                const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
-                queue.forEach(q => {
-                    if (!db.find(d => d.id == q.id)) db.push(q);
-                });
-
-                renderApp();
-                checkPeriodicNotifications();
+                if (Array.isArray(data)) {
+                    db = data;
+                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                    queue.forEach(q => {
+                        if (!db.find(d => d.id == q.id)) db.push(q);
+                    });
+                    renderApp();
+                    checkPeriodicNotifications();
+                } else if (data && data.error) {
+                    // Password changed or session invalidated remotely
+                    userPass = "";
+                    localStorage.removeItem('app_pass');
+                    document.getElementById('loginOverlay').style.display = 'flex';
+                    alert("সেশন বাতিল হয়েছে, পুনরায় লগিন করুন।");
+                }
             } catch (e) { 
                 console.error("Fetch failed, showing cached data");
                 renderApp();
@@ -537,12 +602,11 @@
             }, 100);
         }
 
-        // Hide the print area again after printing is complete or cancelled
         window.addEventListener("afterprint", () => {
             document.getElementById('printArea').classList.add('hidden');
         });
 
-        // --- UI ---
+        // --- UI Modal Controls & Type Selection ---
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-emerald-600'); b.classList.add('text-slate-400'); });
@@ -550,16 +614,38 @@
             document.getElementById(`btn-${tab}`).classList.replace('text-slate-400', 'text-emerald-600');
             if(tab === 'ledger') renderLedger();
         }
+        
+        function openTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').style.display = 'flex';
+        }
+        
+        function closeTypeSelection() {
+            document.getElementById('typeSelectionModal').style.display = 'none';
+        }
+        
+        function proceedToEntry(type) {
+            closeTypeSelection();
+            openEntryModal();
+            setCatType(type);
+        }
+        
         function autoSelectType() {
             const cat = document.getElementById('loanCat').value;
             if (cat === 'Loan' || cat === 'Dhaar_Back') setCatType('Income');
             else if (cat === 'Loan_Paid' || cat === 'Dhaar') setCatType('Expense');
         }
+        
         function setCatType(type) {
             document.getElementById('mType').value = type;
-            document.getElementById('btnInc').className = type === 'Income' ? "py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-600" : "py-3 rounded-2xl font-bold border-2 border-slate-100 text-slate-400";
-            document.getElementById('btnExp').className = type === 'Expense' ? "py-3 rounded-2xl font-bold border-2 border-rose-500 bg-rose-50 text-rose-600" : "py-3 rounded-2xl font-bold border-2 border-slate-100 text-slate-400";
+            if (type === 'Income') {
+                document.getElementById('btnInc').className = "py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
+                document.getElementById('btnExp').className = "py-3 rounded-2xl font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500";
+            } else {
+                document.getElementById('btnInc').className = "py-3 rounded-2xl font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500";
+                document.getElementById('btnExp').className = "py-3 rounded-2xl font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400";
+            }
         }
+        
         function editEntry(id) {
             const i = db.find(x => x.id == id); if(!i) return;
             openEntryModal(); document.getElementById('editingId').value = i.id;
@@ -569,6 +655,7 @@
             document.getElementById('mDate').value = i.date; setCatType(i.type);
             document.getElementById('saveBtn').innerText = "আপডেট করুন";
         }
+        
         function calculateNetSummary() {
             const summary = {};
             db.forEach(i => {
@@ -580,6 +667,7 @@
             });
             return summary;
         }
+        
         function showPeriodicNotif(isAuto = false) {
             const content = document.getElementById('notifContent'); content.innerHTML = '';
             const summary = calculateNetSummary();
@@ -593,26 +681,34 @@
             if(hasPending) document.getElementById('notifModal').style.display = 'flex';
             else if(!isAuto) alert("সব হিসাব পরিষ্কার!");
         }
+        
         function checkPeriodicNotifications() {
             const last = localStorage.getItem('last_notif_time');
             if (!last || (Date.now() - last) > (3 * 24 * 60 * 60 * 1000)) {
                 showPeriodicNotif(true); localStorage.setItem('last_notif_time', Date.now());
             }
         }
+        
         function updateNotifBadge() {
             const summary = calculateNetSummary();
             const hasPending = Object.values(summary).some(val => Math.abs(val) > 1);
             document.getElementById('notifBadge').style.display = hasPending ? 'block' : 'none';
         }
+        
         function logoutApp() { 
             localStorage.removeItem('app_pass'); 
             localStorage.removeItem('last_activity');
             location.reload(); 
         }
+        
         function toggleDarkMode() { document.body.classList.toggle('dark'); }
+        
         function closeModal() { document.getElementById('entryModal').style.display = 'none'; }
+        
         function openEntryModal() { document.getElementById('entryModal').style.display = 'flex'; clearModalInputs(); }
+        
         function closeNotifModal() { document.getElementById('notifModal').style.display = 'none'; }
+        
         function clearModalInputs() {
             document.getElementById('mDesc').value = ''; document.getElementById('mAmount').value = '';
             document.getElementById('mPerson').value = ''; document.getElementById('editingId').value = '';
@@ -620,11 +716,10 @@
             document.getElementById('saveBtn').innerText = "সেভ করুন";
         }
 
-        // --- Window OnLoad Strict Check ---
+        // --- Window OnLoad Check ---
         window.onload = () => { 
             loadProfileData();
             
-            // রিলোড করার সময় সবার আগে সেশন ভ্যালিডিটি চেক করা হচ্ছে 
             const lastActive = localStorage.getItem('last_activity');
             const now = Date.now();
             
@@ -634,7 +729,6 @@
                 localStorage.removeItem('last_activity');
             }
 
-            // সেশন ভ্যালিড থাকলে তবেই ড্যাশবোর্ড দেখাবে, না হলে লগিন স্ক্রিন
             if (userPass) { 
                 document.getElementById('loginOverlay').style.display = 'none'; 
                 fetchData(); 
