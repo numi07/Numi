@@ -50,8 +50,6 @@
 
         #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
 
-        .wallet-chip { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 12px; border-radius: 16px; min-width: 100px; }
-
         /* PDF / Print Mode Styles */
         @media print {
             body * { visibility: hidden !important; }
@@ -78,7 +76,7 @@
     </div>
 
     <!-- Header -->
-    <div class="app-header p-6 pb-8 text-white relative">
+    <div class="app-header p-6 pb-10 text-white relative">
         <div class="flex justify-between items-center mb-5">
             <div class="flex items-center gap-3">
                 <div onclick="switchTab('profile')" class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden cursor-pointer">
@@ -106,16 +104,18 @@
             <h2 id="mainBalance" class="text-4xl font-black">৳ ০</h2>
         </div>
 
-        <!-- Wallets Horizontal Scroll -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 text-center" id="walletBalancesArea">
-            <!-- Populated via JS -->
+        <!-- Past Month Carry Forward -->
+        <div class="bg-black/10 rounded-[28px] p-4 border border-white/5 backdrop-blur-sm grid grid-cols-3 gap-2 text-center mt-6">
+            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">স্থিতি</p><p id="openingBal" class="text-xs font-bold text-emerald-300">৳ ০</p></div>
+            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">বকেয়া লোন</p><p id="openingLoan" class="text-xs font-bold text-amber-300">৳ ০</p></div>
+            <div><p class="text-[8px] opacity-70">বকেয়া ধার</p><p id="openingDhaar" class="text-xs font-bold text-blue-300">৳ ০</p></div>
         </div>
     </div>
 
     <!-- Global Month Scroll -->
     <div class="px-4 mt-4"><div id="monthContainer" class="flex gap-2 overflow-x-auto no-scrollbar pb-2"></div></div>
 
-    <!-- Dashboard Cards -->
+    <!-- Monthly Summary Dashboard -->
     <div class="px-4 mt-2 grid grid-cols-2 gap-3">
         <div class="premium-card p-3 border-l-4 border-emerald-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
         <div class="premium-card p-3 border-l-4 border-rose-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
@@ -123,7 +123,24 @@
 
     <!-- Main Content -->
     <main class="mt-4 px-4">
-        <div id="home-tab" class="tab-content"><div id="appList" class="space-y-3"></div></div>
+        <div id="home-tab" class="tab-content">
+            
+            <!-- Account & Wallet Balances Dashboard -->
+            <div class="flex justify-between items-center mb-3 mt-4">
+                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200"><i class="fas fa-wallet text-emerald-500 mr-2"></i>অ্যাকাউন্ট ব্যালেন্স</h3>
+            </div>
+            
+            <!-- Grid for Wallets -->
+            <div id="walletBalancesArea" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                <!-- Populated via JS dynamically -->
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200"><i class="fas fa-list text-emerald-500 mr-2"></i>সাম্প্রতিক লেনদেন</h3>
+            </div>
+            <div id="appList" class="space-y-3"></div>
+        </div>
         
         <div id="ledger-tab" class="tab-content hidden"><div id="ledgerList" class="space-y-6 pb-10"></div></div>
         
@@ -198,7 +215,6 @@
             <input type="hidden" id="editingId" value="">
 
             <div class="space-y-4">
-                <!-- Account / Wallet Selection -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col">
                         <label id="lblFrom" class="text-[10px] font-bold text-slate-400 ml-1 mb-1">অ্যাকাউন্ট (যাতে লেনদেন হচ্ছে)</label>
@@ -211,7 +227,6 @@
                         </select>
                     </div>
 
-                    <!-- Appears only on Transfer -->
                     <div id="transferToArea" class="flex-col hidden">
                         <label class="text-[10px] font-bold text-slate-400 ml-1 mb-1">যেই অ্যাকাউন্টে টাকা যাবে</label>
                         <select id="toMethod" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border-none outline-none">
@@ -223,7 +238,6 @@
                         </select>
                     </div>
 
-                    <!-- Appears only on Income/Expense -->
                     <div id="loanCatArea" class="flex-col">
                         <label class="text-[10px] font-bold text-slate-400 ml-1 mb-1">ক্যাটাগরি</label>
                         <select id="loanCat" onchange="autoSelectType()" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold outline-none border-none">
@@ -289,7 +303,7 @@
             const minutes = String(d.getMinutes()).padStart(2, '0');
             const ampm = hours >= 12 ? 'পিএম' : 'এএম';
             hours = hours % 12;
-            hours = hours ? hours : 12; // 0 hour should be 12
+            hours = hours ? hours : 12; 
             
             const timeStr = `${toBN(hours)}:${toBN(minutes)} ${ampm}`;
             return `${day} ${month} ${year}, ${timeStr}`;
@@ -542,22 +556,39 @@
             // Update UI Totals
             let grandTotal = Object.values(wallets).reduce((sum, val) => sum + val, 0);
             document.getElementById('mainBalance').innerText = "৳ " + toBN(grandTotal);
-            document.getElementById('openingBal').innerText = "৳ " + toBN(grandTotal); // Current status based on wallets
+            document.getElementById('openingBal').innerText = "৳ " + toBN(grandTotal); 
             document.getElementById('openingLoan').innerText = "৳ " + toBN(openingLoan);
             document.getElementById('openingDhaar').innerText = "৳ " + toBN(openingDhaar);
             document.getElementById('topInc').innerText = "৳" + toBN(mInc);
             document.getElementById('topExp').innerText = "৳" + toBN(mExp);
-            document.getElementById('topSodh').innerText = "৳" + toBN(mSodh);
-            document.getElementById('topLoan').innerText = "৳" + toBN(mLoan);
 
-            // Populate Wallet Chips
+            // Populate Wallet Dashboard Grid
             const walletArea = document.getElementById('walletBalancesArea');
-            walletArea.innerHTML = Object.keys(wallets).map(w => `
-                <div class="wallet-chip">
-                    <p class="text-[8px] uppercase opacity-70 mb-1">${w}</p>
-                    <p class="text-xs font-black">৳ ${toBN(wallets[w])}</p>
-                </div>
-            `).join('');
+            if(walletArea) {
+                walletArea.innerHTML = Object.keys(wallets).map(w => {
+                    let icon = 'fa-wallet';
+                    let color = 'text-emerald-500';
+                    let borderClass = 'border-emerald-500';
+                    
+                    if(w === 'ক্যাশ') { icon = 'fa-money-bill-wave'; color = 'text-emerald-500'; borderClass = 'border-emerald-500'; }
+                    if(w === 'ব্যাংক') { icon = 'fa-university'; color = 'text-blue-500'; borderClass = 'border-blue-500'; }
+                    if(w === 'বিকাশ') { icon = 'fa-paper-plane'; color = 'text-pink-500'; borderClass = 'border-pink-500'; }
+                    if(w === 'নগদ') { icon = 'fa-fire'; color = 'text-orange-500'; borderClass = 'border-orange-500'; }
+                    if(w === 'ইসলামিক ওয়ালেট') { icon = 'fa-moon'; color = 'text-teal-600'; borderClass = 'border-teal-600'; }
+
+                    return `
+                        <div class="premium-card p-3 flex items-center gap-3 border-l-4 ${borderClass}">
+                            <div class="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center ${color}">
+                                <i class="fas ${icon} text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold opacity-60 text-slate-500 dark:text-slate-400">${w}</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-slate-100">৳ ${toBN(wallets[w])}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
 
             renderMonths(); updateNotifBadge();
         }
