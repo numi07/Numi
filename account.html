@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#064e3b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="পকেট হিসাব">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192">
+    <link rel="manifest" href="manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; transition: 0.3s; overflow-x: hidden; }
-        
+
         .app-header { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-radius: 0 0 45px 45px; box-shadow: 0 15px 30px -10px rgba(5, 150, 105, 0.4); }
         .premium-card { background: white; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02); }
-        
+
         .dark { background-color: #020617; color: #f8fafc; }
         .dark .premium-card { background: #0f172a; border-color: #1e293b; }
         .dark .app-header { background: #0f172a; border-bottom: 1px solid #1e293b; box-shadow: none; }
@@ -23,10 +32,10 @@
 
         .history-line { border-left: 3px solid #059669; padding-left: 15px; position: relative; margin-bottom: 12px; background: rgba(5, 150, 105, 0.05); border-radius: 12px; padding: 12px; }
         .dark .history-line { background: rgba(255, 255, 255, 0.03); }
-        
+
         .month-pill.active { background: #059669 !important; color: white !important; transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
+
         #loginOverlay { backdrop-filter: blur(15px); }
         .modal-animate { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -65,7 +74,7 @@
                     <img id="headerProfileImg" src="https://via.placeholder.com/100" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 id="headerAdminName" class="text-lg font-bold italic">দৈনিক হিসাব</h1>
+                    <h1 id="headerAdminName" class="text-lg font-bold italic">দৈনিক পকেট হিসাব</h1>
                     <div class="flex items-center text-[9px] opacity-80">
                         <span class="time-circle"></span><span id="liveClock">লোডিং...</span>
                     </div>
@@ -175,6 +184,15 @@
     </div>
 
     <script>
+        // --- PWA Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.log('Service Worker Error', err));
+            });
+        }
+
         let db = [];
         const proxyURL = '/api/account';
         const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট
@@ -218,7 +236,7 @@
             let queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
             queue.push(payload);
             localStorage.setItem('offline_queue', JSON.stringify(queue));
-            
+
             // তাৎক্ষণিক ইউআই আপডেট (ইন্টারনেট না থাকলেও যেন লিস্টে দেখা যায়)
             db.push(payload);
             renderApp();
@@ -310,7 +328,7 @@
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
                 const data = await res.json();
                 db = Array.isArray(data) ? data : [];
-                
+
                 // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
                 const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
                 queue.forEach(q => {
@@ -331,9 +349,9 @@
             const loanCat = document.getElementById('loanCat').value, date = document.getElementById('mDate').value;
             const method = document.getElementById('mMethod').value, editingId = document.getElementById('editingId').value;
             if(!desc || !amount) return alert("তথ্য দিন");
-            
+
             const payload = { pass: userPass, id: editingId || Date.now(), desc, amount, person, type, loanCat, date, method, ts: new Date(date).getTime() };
-            
+
             // অফলাইন চেক
             if (!navigator.onLine) {
                 saveToOfflineQueue(payload);
@@ -475,7 +493,7 @@
             <table style="width:100%; border-collapse:collapse; font-size:12px" border="1">
                 <thead><tr style="background:#f2f2f2;"><th>তারিখ</th><th>বিবরণ</th><th>ব্যক্তি</th><th>ধরণ</th><th>টাকা</th></tr></thead>
                 <tbody>`;
-            
+
             let tInc = 0, tExp = 0;
             filtered.sort((a,b) => a.ts - b.ts).forEach(i => {
                 const amt = parseFloat(i.amount);
@@ -488,7 +506,7 @@
                 <p>মোট আয়: ৳${tInc} | মোট ব্যয়: ৳${tExp}</p>
                 <p style="font-size:16px">নিট ব্যালেন্স: ৳${tInc - tExp}</p>
             </div>`;
-            
+
             const area = document.getElementById('printArea'); area.innerHTML = html;
             window.print();
         }
@@ -570,7 +588,7 @@
             document.getElementById('mDate').value = new Date().toISOString().slice(0, 16);
             document.getElementById('saveBtn').innerText = "সেভ করুন";
         }
-        
+
         window.onload = () => { 
             loadProfileData();
             if (userPass) { 
