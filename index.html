@@ -32,24 +32,27 @@
             --primary-color: #2563eb;
             --secondary-color: #1e293b;
             --text-color: #334155;
-            /* উন্নত ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট */
-            --bg-light: radial-gradient(circle at top right, #e0e7ff 0%, #f8fafc 50%);
-            --white: rgba(255, 255, 255, 0.9);
+            --bg-light: #f0f4ff;
+            --white: #ffffff;
             --accent-color: #f59e0b;
-            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.7);
             --nav-bg: rgba(255, 255, 255, 0.8);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --blob-color-1: rgba(37, 99, 235, 0.1);
+            --blob-color-2: rgba(245, 158, 11, 0.1);
         }
 
         body.dark-mode {
-            --bg-light: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%);
+            --bg-light: #0f172a;
             --secondary-color: #f1f5f9;
             --text-color: #cbd5e1;
-            --white: rgba(30, 41, 59, 0.9);
+            --white: #1e293b;
             --card-bg: rgba(30, 41, 59, 0.7);
             --nav-bg: rgba(15, 23, 42, 0.8);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow: 0 10px 40px rgba(0,0,0,0.3);
+            --blob-color-1: rgba(37, 99, 235, 0.15);
+            --blob-color-2: rgba(99, 102, 241, 0.15);
         }
 
         * {
@@ -60,26 +63,60 @@
         }
 
         body {
-            background: var(--bg-light);
-            background-attachment: fixed; /* ব্যাকগ্রাউন্ড ফিক্সড থাকবে */
+            background-color: var(--bg-light);
             color: var(--text-color);
             line-height: 1.6;
             scroll-behavior: smooth;
-            transition: background 0.4s ease, color 0.4s ease;
-            min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* ব্যাকগ্রাউন্ডে হালকা ব্লার ইফেক্ট যোগ করা */
-        body::before {
-            content: "";
+        /* --- উন্নত অ্যানিমেটেড ব্যাকগ্রাউন্ড ডিজাইন --- */
+        .bg-blobs {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* সূক্ষ্ম টেক্সচার */
-            opacity: 0.03;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
+            overflow: hidden;
+            filter: blur(80px);
         }
 
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: var(--blob-color-1);
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-2 {
+            background: var(--blob-color-2);
+            width: 400px;
+            height: 400px;
+            right: -100px;
+            top: -100px;
+            animation: move 25s infinite alternate-reverse;
+        }
+
+        .blob-3 {
+            background: var(--blob-color-1);
+            width: 300px;
+            height: 300px;
+            bottom: -50px;
+            left: 20%;
+            animation: move 30s infinite linear;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 100px) scale(1.2); }
+        }
+
+        /* --- নেভিগেশন ও অন্যান্য --- */
         nav {
             background: var(--nav-bg);
             backdrop-filter: blur(12px);
@@ -93,7 +130,7 @@
             top: 0;
             box-shadow: var(--shadow);
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .logo {
@@ -294,14 +331,15 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .exp-card:hover { 
             transform: translateY(-10px);
             border-color: var(--primary-color);
-            background: var(--white);
+            background: rgba(255, 255, 255, 0.9);
         }
+        body.dark-mode .exp-card:hover { background: rgba(30, 41, 59, 0.9); }
 
         .exp-card i {
             font-size: 2.5rem;
@@ -321,7 +359,7 @@
             padding: 40px;
             border-radius: 24px;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .skills {
@@ -342,41 +380,6 @@
         .skill-tag:hover {
             background: var(--primary-color);
             color: white;
-        }
-        .contact-container { max-width: 800px; margin: 0 auto; }
-
-        form {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        input, textarea {
-            padding: 16px;
-            border: 1px solid rgba(0,0,0,0.05);
-            background: rgba(255,255,255,0.5);
-            color: var(--text-color);
-            border-radius: 12px;
-            outline: none;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        body.dark-mode input, body.dark-mode textarea {
-            background: rgba(15, 23, 42, 0.5);
-            border-color: rgba(255,255,255,0.05);
-        }
-
-        input:focus, textarea:focus { 
-            border-color: var(--primary-color); 
-            background: var(--white);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
         footer {
             padding: 18px;
@@ -411,7 +414,7 @@
             .nav-list.active {
                 max-height: 400px;
                 padding: 30px 0;
-                border-top: 1px solid rgba(255,255,255,0.1);
+                border-top: 1px solid rgba(0,0,0,0.05);
             }
 
             .nav-list li { margin: 15px 0; }
@@ -429,6 +432,13 @@
     </style>
 </head>
 <body>
+
+    <!-- অ্যানিমেটেড ব্যাকগ্রাউন্ড এলিমেন্ট -->
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
     <nav>
         <a href="index.html" class="logo">আল নোমান <span>শিকদার</span></a>
@@ -522,20 +532,18 @@
         function updateYear() {
             const yearSpan = document.getElementById('current-year');
             const currentYear = new Date().getFullYear().toString();
-            
             const bengaliDigits = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
             const bengaliYear = currentYear.replace(/[0-9]/g, w => bengaliDigits[w]);
-            
             yearSpan.textContent = bengaliYear;
         }
         updateYear();
+
         const themeBtn = document.getElementById('theme-btn');
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
 
         themeBtn.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if(body.classList.contains('dark-mode')) {
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
                 localStorage.setItem('theme', 'dark');
@@ -548,24 +556,18 @@
             body.classList.add('dark-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
+
         const menuBtn = document.getElementById('mobile-menu');
         const navMenu = document.getElementById('nav-menu');
-
         menuBtn.addEventListener('click', () => {
             menuBtn.classList.toggle('is-active');
             navMenu.classList.toggle('active');
         });
-        document.querySelectorAll('.nav-list a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuBtn.classList.remove('is-active');
-                navMenu.classList.remove('active');
-            });
-        });
 
         const typingElement = document.getElementById('typing-element');
         const startYear = 2018;
-        const currentYear = new Date().getFullYear();
-        const experienceYearsBN = (currentYear - startYear).toLocaleString('bn-BD');
+        const currentYearValue = new Date().getFullYear();
+        const experienceYearsBN = (currentYearValue - startYear).toLocaleString('bn-BD');
         
         const professions = [
             "সহকারী ব্যবস্থাপক (হিসাব)।",
@@ -581,7 +583,6 @@
 
         function type() {
             const currentProf = professions[proIndex];
-            
             if (isDeleting) {
                 typingElement.textContent = currentProf.substring(0, charIndex - 1);
                 charIndex--;
@@ -591,7 +592,6 @@
                 charIndex++;
                 typeSpeed = 100;
             }
-
             if (!isDeleting && charIndex === currentProf.length) {
                 isDeleting = true;
                 typeSpeed = 2000; 
