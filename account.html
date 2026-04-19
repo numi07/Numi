@@ -195,6 +195,17 @@
     </div>
 
     <script>
+        // --- আগের জমে থাকা সব Service Worker চিরতরে আন-ইন্সটল করার কোড ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister().then(function(boolean) {
+                        console.log('Old background service worker successfully cleared!');
+                    });
+                }
+            });
+        }
+
         let db =[];
         const proxyURL = '/api/account';
         const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট সেশন লিমিট
@@ -394,7 +405,7 @@
             let totalBal = 0, openingBal = 0, openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0, mSodh = 0, mLoan = 0;
 
-            const [selMonth, selYear] = currentMonthKey.split('-').map(Number);
+            const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
             const startOfSelMonth = new Date(selYear, selMonth, 1).getTime();
 
             db.sort((a,b) => b.ts - a.ts).forEach(i => {
