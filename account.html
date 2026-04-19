@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags & Icons -->
+    <!-- PWA Meta Tags & Icons (App-like Install & No Background Browser) -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +21,6 @@
 
     <!-- Static Inline Manifest for App Installation -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -56,7 +55,7 @@
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
             #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; color: black !important; background: white !important; }
-            nav, .app-header, main, #loginOverlay { display: none !important; }
+            nav, .app-header, main, #loginOverlay, #typeSelectionModal, #entryModal { display: none !important; }
         }
     </style>
 </head>
@@ -158,7 +157,7 @@
         <button onclick="switchTab('home')" class="nav-btn active-tab flex flex-col items-center p-2 text-emerald-600" id="btn-home"><i class="fas fa-receipt text-xl mb-1"></i><span class="text-[10px] font-bold">লেনদেন</span></button>
         <button onclick="switchTab('ledger')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-ledger"><i class="fas fa-history text-xl mb-1"></i><span class="text-[10px] font-bold">ইতিহাস</span></button>
         
-        <!-- Updated: openTypeSelectionModal replaces openEntryModal directly -->
+        <!-- Open Type Selection Modal directly -->
         <div class="mb-8"><button onclick="openTypeSelectionModal()" class="w-14 h-14 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fas fa-plus text-xl"></i></button></div>
         
         <button onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-profile"><i class="fas fa-user-circle text-xl mb-1"></i><span class="text-[10px] font-bold">প্রোফাইল</span></button>
@@ -166,7 +165,7 @@
 
     <!-- Modals -->
 
-    <!-- NEW: Type Selection Modal -->
+    <!-- Type Selection Modal (Income/Expense Popup) -->
     <div id="typeSelectionModal" class="fixed inset-0 bg-black/60 hidden z-[600] items-end sm:items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate text-center mb-20 sm:mb-0">
             <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-white">নতুন এন্ট্রি</h3>
@@ -268,7 +267,7 @@
                     });
                     if (res.ok) {
                         queue.splice(i, 1);
-                        i--; // অ্যারে রিসাইজ হ্যান্ডল করতে
+                        i--; 
                     }
                 } catch (e) { break; } 
             }
@@ -285,7 +284,7 @@
             renderApp();
         }
 
-        // --- কঠোর অটো লগআউট ও সেশন লজিক ---
+        // --- অটো লগআউট ও সেশন লজিক ---
         function updateActivity() {
             if(userPass) {
                 localStorage.setItem('last_activity', Date.now());
@@ -296,7 +295,7 @@
             const lastActive = localStorage.getItem('last_activity');
             const now = Date.now();
             
-            // ৫ মিনিট এক্টিভিটি না থাকলে কঠোরভাবে লগআউট করা হবে
+            // ৫ মিনিট এক্টিভিটি না থাকলে লগআউট করা হবে
             if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
                 userPass = "";
                 localStorage.removeItem('app_pass');
@@ -305,7 +304,9 @@
                 alert("নিরাপত্তার জন্য ৫ মিনিট নিষ্ক্রিয় থাকায় অটোমেটিক লগআউট করা হয়েছে।");
             }
         }
-        setInterval(checkSession, 5000); // প্রতি ৫ সেকেন্ড পরপর চেক করবে['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
+        setInterval(checkSession, 5000); 
+        
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, () => {
                 const lastActive = localStorage.getItem('last_activity');
                 if (userPass && lastActive && (Date.now() - lastActive <= SESSION_LIMIT)) {
@@ -348,44 +349,28 @@
             document.getElementById('profilePreview').src = img;
         }
 
-        // --- Auth (Updated Robust Checking) ---
+        // --- Auth (Restored to simple robust check) ---
         async function attemptLogin() {
             const pass = document.getElementById('adminPassInput').value;
             if(!pass) return alert("পাসওয়ার্ড দিন");
             document.getElementById('loginBtn').innerText = "যাচাই...";
+            
             try {
                 const res = await fetch(`${proxyURL}?pass=${pass}`);
-                const text = await res.text();
-                let data;
-                
-                try {
-                    data = JSON.parse(text);
-                } catch(err) {
-                    throw new Error("Invalid response format");
-                }
-                
-                if (Array.isArray(data) || data.success || data.length >= 0) { 
+                if (res.ok) {
                     userPass = pass;
                     localStorage.setItem('app_pass', pass);
                     localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
-                    
-                    db = Array.isArray(data) ? data :[];
-                    
-                    // Merge offline data instantly
-                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
-                    queue.forEach(q => {
-                        if (!db.find(d => d.id == q.id)) db.push(q);
-                    });
-
-                    renderApp();
-                    checkPeriodicNotifications();
+                    fetchData();
                 } else { 
                     alert("ভুল পাসওয়ার্ড!"); 
                 }
             } catch (e) { 
+                // অফলাইনে থাকলে ক্যাশ চেক করবে
                 if (localStorage.getItem('app_pass') === pass) {
                     userPass = pass;
+                    localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
                     renderApp(); 
                 } else {
@@ -399,31 +384,17 @@
             if (!userPass) return;
             try {
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
-                const text = await res.text();
-                let data;
-                
-                try {
-                    data = JSON.parse(text);
-                } catch(err) {
-                    console.log("Fetch format failed. Proceeding with cache.");
-                    return;
-                }
+                const data = await res.json();
+                db = Array.isArray(data) ? data :[];
 
-                if (Array.isArray(data)) {
-                    db = data;
-                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
-                    queue.forEach(q => {
-                        if (!db.find(d => d.id == q.id)) db.push(q);
-                    });
-                    renderApp();
-                    checkPeriodicNotifications();
-                } else if (data && data.error) {
-                    // Password changed or session invalidated remotely
-                    userPass = "";
-                    localStorage.removeItem('app_pass');
-                    document.getElementById('loginOverlay').style.display = 'flex';
-                    alert("সেশন বাতিল হয়েছে, পুনরায় লগিন করুন।");
-                }
+                // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
+                const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                queue.forEach(q => {
+                    if (!db.find(d => d.id == q.id)) db.push(q);
+                });
+
+                renderApp();
+                checkPeriodicNotifications();
             } catch (e) { 
                 console.error("Fetch failed, showing cached data");
                 renderApp();
