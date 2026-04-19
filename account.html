@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags & Icons (App-like Install & No Background Browser) -->
+    <!-- PWA Meta Tags & Icons -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
 
-    <!-- Static Inline Manifest for App Installation -->
+    <!-- Static Inline Manifest -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -50,6 +50,8 @@
 
         #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
 
+        .wallet-chip { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 12px; border-radius: 16px; min-width: 100px; }
+
         /* PDF / Print Mode Styles */
         @media print {
             body * { visibility: hidden !important; }
@@ -61,7 +63,6 @@
 </head>
 <body class="pb-28">
 
-    <!-- Offline Status Indicator -->
     <div id="offlineBadge" class="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg">অফলাইন মোড: ডাটা পরে সিঙ্ক হবে</div>
 
     <!-- Login Overlay -->
@@ -77,7 +78,7 @@
     </div>
 
     <!-- Header -->
-    <div class="app-header p-6 pb-12 text-white relative">
+    <div class="app-header p-6 pb-8 text-white relative">
         <div class="flex justify-between items-center mb-5">
             <div class="flex items-center gap-3">
                 <div onclick="switchTab('profile')" class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden cursor-pointer">
@@ -92,7 +93,6 @@
             </div>
             <div class="flex gap-2">
                 <button onclick="toggleDarkMode()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition active:scale-90"><i class="fas fa-moon text-sm"></i></button>
-                <a href="https://shikdernumi.pro.bd" target="_blank" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition active:scale-90"><i class="fas fa-home text-sm"></i></a>
                 <button onclick="showPeriodicNotif(false)" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center relative transition active:scale-90">
                     <i class="fas fa-bell text-sm"></i>
                     <span id="notifBadge" class="absolute top-1 right-1 w-2 h-2 bg-red-500 border-2 border-emerald-700 rounded-full hidden"></span>
@@ -101,34 +101,32 @@
             </div>
         </div>
 
-        <div class="text-center mb-6">
+        <div class="text-center mb-4">
             <p class="text-[10px] opacity-75 uppercase tracking-[0.2em] mb-1 font-bold">মোট বর্তমান ব্যালেন্স</p>
             <h2 id="mainBalance" class="text-4xl font-black">৳ ০</h2>
         </div>
 
-        <!-- Past Month Carry Forward -->
-        <div class="bg-black/10 rounded-[28px] p-4 border border-white/5 backdrop-blur-sm grid grid-cols-3 gap-2 text-center">
-            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">স্থিতি</p><p id="openingBal" class="text-xs font-bold text-emerald-300">৳ ০</p></div>
-            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">বকেয়া লোন</p><p id="openingLoan" class="text-xs font-bold text-amber-300">৳ ০</p></div>
-            <div><p class="text-[8px] opacity-70">বকেয়া ধার</p><p id="openingDhaar" class="text-xs font-bold text-blue-300">৳ ০</p></div>
+        <!-- Wallets Horizontal Scroll -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 text-center" id="walletBalancesArea">
+            <!-- Populated via JS -->
         </div>
     </div>
 
     <!-- Global Month Scroll -->
     <div class="px-4 mt-4"><div id="monthContainer" class="flex gap-2 overflow-x-auto no-scrollbar pb-2"></div></div>
 
-    <!-- Dashboard -->
+    <!-- Dashboard Cards -->
     <div class="px-4 mt-2 grid grid-cols-2 gap-3">
-        <div class="premium-card p-3 border-l-4 border-emerald-500"><p class="text-[9px] font-bold uppercase opacity-60">আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
-        <div class="premium-card p-3 border-l-4 border-rose-500"><p class="text-[9px] font-bold uppercase opacity-60">ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
-        <div class="premium-card p-3 border-l-4 border-blue-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে শোধ</p><p id="topSodh" class="text-lg font-black text-blue-600">৳ ০</p></div>
-        <div class="premium-card p-3 border-l-4 border-amber-500"><p class="text-[9px] font-bold uppercase opacity-60">লোন নিলাম</p><p id="topLoan" class="text-lg font-black text-amber-600">৳ ০</p></div>
+        <div class="premium-card p-3 border-l-4 border-emerald-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
+        <div class="premium-card p-3 border-l-4 border-rose-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
     </div>
 
     <!-- Main Content -->
-    <main class="mt-6 px-4">
+    <main class="mt-4 px-4">
         <div id="home-tab" class="tab-content"><div id="appList" class="space-y-3"></div></div>
+        
         <div id="ledger-tab" class="tab-content hidden"><div id="ledgerList" class="space-y-6 pb-10"></div></div>
+        
         <div id="profile-tab" class="tab-content hidden">
             <div class="premium-card p-6 text-center">
                 <div class="relative w-24 h-24 mx-auto mb-4">
@@ -163,52 +161,91 @@
         <button onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-profile"><i class="fas fa-user-circle text-xl mb-1"></i><span class="text-[10px] font-bold">প্রোফাইল</span></button>
     </nav>
 
-    <!-- Modals -->
-
-    <!-- Type Selection Modal (Income/Expense Popup) -->
+    <!-- Type Selection Modal (Income/Expense/Transfer Popup) -->
     <div id="typeSelectionModal" class="fixed inset-0 bg-black/60 hidden z-[600] items-end sm:items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate text-center mb-20 sm:mb-0">
-            <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-white">নতুন এন্ট্রি</h3>
-            <p class="text-xs text-slate-500 mb-8 font-semibold">কী যোগ করতে চান তা নির্বাচন করুন</p>
+            <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-white">কী এন্ট্রি করবেন?</h3>
+            <p class="text-xs text-slate-500 mb-8 font-semibold">ক্যাটাগরি নির্বাচন করুন</p>
             
             <div class="flex flex-col gap-4">
-                <button onclick="proceedToEntry('Income')" class="w-full py-5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-[20px] shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-down"></i></div> 
-                    আয় (Income)
+                <button onclick="proceedToEntry('Income')" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-[20px] shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-down"></i></div> আয় (+)
                 </button>
-                <button onclick="proceedToEntry('Expense')" class="w-full py-5 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-[20px] shadow-lg shadow-rose-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-up"></i></div> 
-                    ব্যয় (Expense)
+                <button onclick="proceedToEntry('Expense')" class="w-full py-4 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-[20px] shadow-lg shadow-rose-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-arrow-up"></i></div> ব্যয় (-)
+                </button>
+                <button onclick="proceedToEntry('Transfer')" class="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-[20px] shadow-lg shadow-blue-500/30 flex items-center justify-center gap-3 text-lg transition-transform active:scale-95">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-exchange-alt"></i></div> ট্রান্সফার / মুভ
                 </button>
             </div>
             
-            <button onclick="closeTypeSelection()" class="mt-8 text-slate-400 font-bold hover:text-slate-600 dark:hover:text-slate-300 w-full py-3 rounded-full bg-slate-100 dark:bg-slate-800">বাতিল করুন</button>
+            <button onclick="closeTypeSelection()" class="mt-6 text-slate-400 font-bold hover:text-slate-600 dark:hover:text-slate-300 w-full py-3 rounded-full bg-slate-100 dark:bg-slate-800">বাতিল করুন</button>
         </div>
     </div>
 
     <!-- Entry Form Modal -->
     <div id="entryModal" class="fixed inset-0 bg-black/60 hidden z-[500] items-end">
-        <div class="bg-white dark:bg-slate-900 w-full rounded-t-[40px] p-8 modal-animate max-h-[90vh] overflow-y-auto no-scrollbar">
+        <div class="bg-white dark:bg-slate-900 w-full rounded-t-[40px] p-6 modal-animate max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center mb-6"><h3 id="modalHeadText" class="text-xl font-bold">নতুন এন্ট্রি</h3><button onclick="closeModal()" class="text-2xl opacity-40">&times;</button></div>
+            
+            <!-- Type Tabs in Form -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button type="button" onclick="setCatType('Income')" id="btnInc" class="py-2 rounded-xl text-sm font-bold border-2 transition-all">আয়</button>
+                <button type="button" onclick="setCatType('Expense')" id="btnExp" class="py-2 rounded-xl text-sm font-bold border-2 transition-all">ব্যয়</button>
+                <button type="button" onclick="setCatType('Transfer')" id="btnTrans" class="py-2 rounded-xl text-sm font-bold border-2 transition-all">মুভ</button>
+            </div>
+            
+            <input type="hidden" id="mType" value="Income">
+            <input type="hidden" id="editingId" value="">
+
             <div class="space-y-4">
+                <!-- Account / Wallet Selection -->
                 <div class="grid grid-cols-2 gap-3">
-                    <button type="button" onclick="setCatType('Income')" id="btnInc" class="py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-600">আয় (+)</button>
-                    <button type="button" onclick="setCatType('Expense')" id="btnExp" class="py-3 rounded-2xl font-bold border-2 border-slate-100 text-slate-400">ব্যয় (-)</button>
+                    <div class="flex flex-col">
+                        <label id="lblFrom" class="text-[10px] font-bold text-slate-400 ml-1 mb-1">অ্যাকাউন্ট (যাতে লেনদেন হচ্ছে)</label>
+                        <select id="mMethod" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border-none outline-none">
+                            <option value="ক্যাশ">ক্যাশ</option>
+                            <option value="ব্যাংক">ব্যাংক</option>
+                            <option value="বিকাশ">বিকাশ</option>
+                            <option value="নগদ">নগদ</option>
+                            <option value="ইসলামিক ওয়ালেট">ইসলামিক ওয়ালেট</option>
+                        </select>
+                    </div>
+
+                    <!-- Appears only on Transfer -->
+                    <div id="transferToArea" class="flex-col hidden">
+                        <label class="text-[10px] font-bold text-slate-400 ml-1 mb-1">যেই অ্যাকাউন্টে টাকা যাবে</label>
+                        <select id="toMethod" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border-none outline-none">
+                            <option value="ক্যাশ">ক্যাশ</option>
+                            <option value="ব্যাংক">ব্যাংক</option>
+                            <option value="বিকাশ">বিকাশ</option>
+                            <option value="নগদ">নগদ</option>
+                            <option value="ইসলামিক ওয়ালেট">ইসলামিক ওয়ালেট</option>
+                        </select>
+                    </div>
+
+                    <!-- Appears only on Income/Expense -->
+                    <div id="loanCatArea" class="flex-col">
+                        <label class="text-[10px] font-bold text-slate-400 ml-1 mb-1">ক্যাটাগরি</label>
+                        <select id="loanCat" onchange="autoSelectType()" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold outline-none border-none">
+                            <option value="General">সাধারণ</option><option value="Loan">লোন নিলাম</option><option value="Loan_Paid">লোন শোধ</option><option value="Dhaar">ধার দিলাম</option><option value="Dhaar_Back">ধার ফেরত পেলাম</option>
+                        </select>
+                    </div>
                 </div>
-                <input type="hidden" id="mType" value="Income">
-                <input type="hidden" id="editingId" value="">
+
+                <input type="text" id="mDesc" placeholder="লেনদেনের বিবরণ" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 outline-none border-none">
+                
                 <div class="grid grid-cols-2 gap-3">
-                    <select id="loanCat" onchange="autoSelectType()" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold outline-none border-none">
-                        <option value="General">সাধারণ</option><option value="Loan">লোন নিলাম</option><option value="Loan_Paid">লোন শোধ</option><option value="Dhaar">ধার দিলাম</option><option value="Dhaar_Back">ধার ফেরত পেলাম</option>
-                    </select>
-                    <select id="mMethod" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border-none outline-none">
-                        <option value="নগদ">নগদ</option><option value="বিকাশ">বিকাশ</option><option value="নগদ অ্যাপ">নগদ অ্যাপ</option><option value="ব্যাংক">ব্যাংক</option>
-                    </select>
+                    <input type="number" id="mAmount" placeholder="পরিমাণ (৳)" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 font-bold text-lg border-none">
+                    <input type="text" id="mPerson" placeholder="ব্যক্তি/খাত (ঐচ্ছিক)" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none">
                 </div>
-                <input type="text" id="mDesc" placeholder="বিবরণ" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 outline-none border-none">
-                <div class="grid grid-cols-2 gap-3"><input type="number" id="mAmount" placeholder="টাকা" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 font-bold text-lg border-none"><input type="text" id="mPerson" placeholder="নাম" class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none"></div>
+                
                 <input type="datetime-local" id="mDate" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none">
-                <div class="grid grid-cols-2 gap-3"><button onclick="clearModalInputs()" class="w-full bg-slate-500 text-white font-bold py-4 rounded-2xl">ক্লিয়ার</button><button id="saveBtn" onclick="saveData()" class="w-full bg-emerald-700 text-white font-bold py-4 rounded-2xl">সেভ করুন</button></div>
+                
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="clearModalInputs()" class="w-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-4 rounded-2xl">রিসেট</button>
+                    <button id="saveBtn" onclick="saveData()" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg">সেভ করুন</button>
+                </div>
             </div>
         </div>
     </div>
@@ -225,26 +262,24 @@
     </div>
 
     <script>
-        // --- আগের জমে থাকা সব Service Worker চিরতরে আন-ইন্সটল করার কোড ---
+        // আন-ইন্সটল ওল্ড সার্ভিস ওয়ার্কার
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
-                    registration.unregister().then(function(boolean) {
-                        console.log('Old background service worker successfully cleared!');
-                    });
+                    registration.unregister();
                 }
             });
         }
 
         let db =[];
         const proxyURL = '/api/account';
-        const SESSION_LIMIT = 5 * 60 * 1000; // ৫ মিনিট সেশন লিমিট
+        const SESSION_LIMIT = 5 * 60 * 1000; 
         let userPass = localStorage.getItem('app_pass') || "";
         const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
         const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
 
-        // --- ইন্টারনেট চেক ও অফলাইন সিঙ্ক লজিক ---
+        // অনলাইন/অফলাইন সিঙ্ক
         window.addEventListener('online', () => {
             document.getElementById('offlineBadge').style.display = 'none';
             syncOfflineData();
@@ -258,17 +293,10 @@
             const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
             if (queue.length === 0) return;
 
-            console.log("Syncing offline data...");
             for (let i = 0; i < queue.length; i++) {
                 try {
-                    const res = await fetch(proxyURL, { 
-                        method: 'POST', 
-                        body: new URLSearchParams(queue[i]) 
-                    });
-                    if (res.ok) {
-                        queue.splice(i, 1);
-                        i--; 
-                    }
+                    const res = await fetch(proxyURL, { method: 'POST', body: new URLSearchParams(queue[i]) });
+                    if (res.ok) { queue.splice(i, 1); i--; }
                 } catch (e) { break; } 
             }
             localStorage.setItem('offline_queue', JSON.stringify(queue));
@@ -279,53 +307,39 @@
             let queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
             queue.push(payload);
             localStorage.setItem('offline_queue', JSON.stringify(queue));
-
             db.push(payload);
             renderApp();
         }
 
-        // --- অটো লগআউট ও সেশন লজিক ---
-        function updateActivity() {
-            if(userPass) {
-                localStorage.setItem('last_activity', Date.now());
-            }
-        }
-
+        // অটো লগআউট
+        function updateActivity() { if(userPass) localStorage.setItem('last_activity', Date.now()); }
         function checkSession() {
             const lastActive = localStorage.getItem('last_activity');
-            const now = Date.now();
-            
-            // ৫ মিনিট এক্টিভিটি না থাকলে লগআউট করা হবে
-            if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
-                userPass = "";
-                localStorage.removeItem('app_pass');
-                localStorage.removeItem('last_activity');
+            if (userPass && lastActive && (Date.now() - lastActive > SESSION_LIMIT)) {
+                userPass = ""; localStorage.removeItem('app_pass'); localStorage.removeItem('last_activity');
                 document.getElementById('loginOverlay').style.display = 'flex';
-                alert("নিরাপত্তার জন্য ৫ মিনিট নিষ্ক্রিয় থাকায় অটোমেটিক লগআউট করা হয়েছে।");
+                alert("৫ মিনিট নিষ্ক্রিয় থাকায় লগআউট করা হয়েছে।");
             }
         }
-        setInterval(checkSession, 5000); 
-        
-        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
+        setInterval(checkSession, 5000);['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => {
             window.addEventListener(evt, () => {
                 const lastActive = localStorage.getItem('last_activity');
-                if (userPass && lastActive && (Date.now() - lastActive <= SESSION_LIMIT)) {
-                    updateActivity();
-                }
+                if (userPass && lastActive && (Date.now() - lastActive <= SESSION_LIMIT)) updateActivity();
             });
         });
 
         document.getElementById('adminPassInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') attemptLogin(); });
 
+        // ঘড়ি ও বার (দিন)
         function updateClock() {
             const d = new Date();
-            const dateStr = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
+            const dateStr = d.toLocaleDateString('bn-BD', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             let timeStr = d.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).replace('AM', 'এএম').replace('PM', 'পিএম');
             document.getElementById('liveClock').innerText = `${dateStr} | ${timeStr}`;
         }
         setInterval(updateClock, 1000);
 
-        // --- Profile ---
+        // প্রোফাইল
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -349,7 +363,7 @@
             document.getElementById('profilePreview').src = img;
         }
 
-        // --- Auth (Restored to simple robust check) ---
+        // লগিন ও ডাটা
         async function attemptLogin() {
             const pass = document.getElementById('adminPassInput').value;
             if(!pass) return alert("পাসওয়ার্ড দিন");
@@ -357,25 +371,27 @@
             
             try {
                 const res = await fetch(`${proxyURL}?pass=${pass}`);
-                if (res.ok) {
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); } catch(err) { throw new Error("Format error"); }
+                
+                if (Array.isArray(data) || data.success || data.length >= 0) { 
                     userPass = pass;
                     localStorage.setItem('app_pass', pass);
                     localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
-                    fetchData();
-                } else { 
-                    alert("ভুল পাসওয়ার্ড!"); 
-                }
+                    
+                    db = Array.isArray(data) ? data :[];
+                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                    queue.forEach(q => { if (!db.find(d => d.id == q.id)) db.push(q); });
+                    renderApp(); checkPeriodicNotifications();
+                } else { alert("ভুল পাসওয়ার্ড!"); }
             } catch (e) { 
-                // অফলাইনে থাকলে ক্যাশ চেক করবে
                 if (localStorage.getItem('app_pass') === pass) {
                     userPass = pass;
-                    localStorage.setItem('last_activity', Date.now());
                     document.getElementById('loginOverlay').style.display = 'none';
                     renderApp(); 
-                } else {
-                    alert("ভুল পাসওয়ার্ড অথবা ইন্টারনেট সংযোগ নেই!");
-                }
+                } else { alert("ভুল পাসওয়ার্ড অথবা ইন্টারনেট সংযোগ নেই!"); }
             }
             document.getElementById('loginBtn').innerText = "লগইন";
         }
@@ -384,46 +400,46 @@
             if (!userPass) return;
             try {
                 const res = await fetch(`${proxyURL}?pass=${userPass}`);
-                const data = await res.json();
-                db = Array.isArray(data) ? data :[];
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); } catch(err) { return; }
 
-                // অফলাইন ডাটা গুলো ইউআইতে মিশিয়ে দেখানো (সিঙ্ক না হওয়া পর্যন্ত)
-                const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
-                queue.forEach(q => {
-                    if (!db.find(d => d.id == q.id)) db.push(q);
-                });
-
-                renderApp();
-                checkPeriodicNotifications();
-            } catch (e) { 
-                console.error("Fetch failed, showing cached data");
-                renderApp();
-            }
+                if (Array.isArray(data)) {
+                    db = data;
+                    const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
+                    queue.forEach(q => { if (!db.find(d => d.id == q.id)) db.push(q); });
+                    renderApp(); checkPeriodicNotifications();
+                } else if (data && data.error) {
+                    userPass = ""; localStorage.removeItem('app_pass');
+                    document.getElementById('loginOverlay').style.display = 'flex';
+                }
+            } catch (e) { renderApp(); }
         }
 
         async function saveData() {
             const desc = document.getElementById('mDesc').value, amount = parseFloat(document.getElementById('mAmount').value);
-            const person = document.getElementById('mPerson').value.trim() || "সাধারণ", type = document.getElementById('mType').value;
-            const loanCat = document.getElementById('loanCat').value, date = document.getElementById('mDate').value;
-            const method = document.getElementById('mMethod').value, editingId = document.getElementById('editingId').value;
-            if(!desc || !amount) return alert("তথ্য দিন");
+            let person = document.getElementById('mPerson').value.trim();
+            const type = document.getElementById('mType').value;
+            const loanCat = type === 'Transfer' ? 'General' : document.getElementById('loanCat').value;
+            const date = document.getElementById('mDate').value;
+            const method = document.getElementById('mMethod').value;
+            const toMethod = document.getElementById('toMethod').value;
+            const editingId = document.getElementById('editingId').value;
 
-            const payload = { pass: userPass, id: editingId || Date.now(), desc, amount, person, type, loanCat, date, method, ts: new Date(date).getTime() };
+            if(!desc || !amount) return alert("বিবরণ এবং পরিমাণ উল্লেখ করুন");
+            if(type === 'Transfer') { person = "নিজস্ব ট্রান্সফার"; }
+            else if(!person) { person = "সাধারণ"; }
+
+            const payload = { pass: userPass, id: editingId || Date.now(), desc, amount, person, type, loanCat, date, method, toMethod: (type==='Transfer'?toMethod:''), ts: new Date(date).getTime() };
 
             if (!navigator.onLine) {
-                saveToOfflineQueue(payload);
-                closeModal();
-                return;
+                saveToOfflineQueue(payload); closeModal(); return;
             }
 
             try {
                 const res = await fetch(proxyURL, { method: 'POST', body: new URLSearchParams(payload) });
-                if(res.ok) { closeModal(); fetchData(); }
-                else { throw new Error(); }
-            } catch (e) { 
-                saveToOfflineQueue(payload);
-                closeModal();
-            }
+                if(res.ok) { closeModal(); fetchData(); } else { throw new Error(); }
+            } catch (e) { saveToOfflineQueue(payload); closeModal(); }
         }
 
         async function deleteEntry(id) {
@@ -435,10 +451,12 @@
             } catch (e) { alert("ডিলিট এরর"); }
         }
 
-        // --- Render ---
+        // --- Render UI ও Wallet Calculation ---
         function renderApp() {
             const list = document.getElementById('appList'); list.innerHTML = '';
-            let totalBal = 0, openingBal = 0, openingLoan = 0, openingDhaar = 0;
+            
+            let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
+            let openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0, mSodh = 0, mLoan = 0;
 
             const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
@@ -446,44 +464,85 @@
 
             db.sort((a,b) => b.ts - a.ts).forEach(i => {
                 const amt = parseFloat(i.amount);
-                const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
-                totalBal += isPlus ? amt : -amt;
+                const method = i.method || 'ক্যাশ';
+                if(wallets[method] === undefined) wallets[method] = 0;
 
+                // Wallet Calcs (All time)
+                if (i.type === 'Transfer') {
+                    const toMethod = i.toMethod || 'ক্যাশ';
+                    if(wallets[toMethod] === undefined) wallets[toMethod] = 0;
+                    wallets[method] -= amt;
+                    wallets[toMethod] += amt;
+                } else {
+                    const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
+                    if(isPlus) wallets[method] += amt; else wallets[method] -= amt;
+                }
+
+                // Carry Forward / Opening
                 if(i.ts < startOfSelMonth) {
-                    openingBal += isPlus ? amt : -amt;
                     if(i.loanCat === 'Loan') openingLoan += amt;
                     if(i.loanCat === 'Loan_Paid') openingLoan -= amt;
                     if(i.loanCat === 'Dhaar') openingDhaar += amt;
                     if(i.loanCat === 'Dhaar_Back') openingDhaar -= amt;
                 }
 
+                // Monthly Stats & List Rendering
                 if(new Date(i.date).getMonth() + "-" + new Date(i.date).getFullYear() === currentMonthKey) {
                     if(i.type === 'Income') mInc += amt;
                     if(i.type === 'Expense' && i.loanCat === 'General') mExp += amt;
                     if(i.loanCat === 'Loan_Paid' || i.loanCat === 'Dhaar_Back') mSodh += amt;
                     if(i.loanCat === 'Loan') mLoan += amt;
 
+                    let iconHtml, colorClass, amtPrefix;
+                    if(i.type === 'Transfer') {
+                        iconHtml = '<i class="fas fa-exchange-alt text-blue-500"></i>';
+                        colorClass = 'text-blue-500'; amtPrefix = '৳';
+                    } else {
+                        const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
+                        iconHtml = `<i class="fas ${isPlus ? 'fa-arrow-down text-emerald-500':'fa-arrow-up text-rose-500'}"></i>`;
+                        colorClass = isPlus ? 'text-emerald-600' : 'text-rose-600';
+                        amtPrefix = isPlus ? '+ ৳' : '- ৳';
+                    }
+
+                    let methodText = i.type === 'Transfer' ? `${i.method} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${i.toMethod}` : i.method;
+
                     list.innerHTML += `<div class="premium-card p-4 flex justify-between items-center mb-3 group">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-emerald-500"><i class="fas ${isPlus ? 'fa-arrow-down':'fa-arrow-up text-rose-500'}"></i></div>
-                            <div><div class="flex items-center gap-2"><h4 class="font-bold text-sm text-slate-700 dark:text-slate-200">${i.desc}</h4><span class="method-pill">${i.method}</span></div><p class="text-[9px] opacity-60">${i.person} • ${new Date(i.date).toLocaleDateString('bn-BD')}</p></div>
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">${iconHtml}</div>
+                            <div>
+                                <div class="flex items-center gap-2"><h4 class="font-bold text-sm text-slate-700 dark:text-slate-200">${i.desc}</h4></div>
+                                <p class="text-[9px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-1">${methodText}</p>
+                                <p class="text-[9px] opacity-60 mt-1">${i.person !== 'নিজস্ব ট্রান্সফার' ? i.person+' • ' : ''}${new Date(i.date).toLocaleDateString('bn-BD')}</p>
+                            </div>
                         </div>
                         <div class="text-right flex items-center gap-3">
-                            <p class="font-black ${isPlus ? 'text-emerald-600' : 'text-rose-600'}">৳${toBN(amt)}</p>
+                            <p class="font-black ${colorClass}">${amtPrefix}${toBN(amt)}</p>
                             <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"><i onclick="editEntry('${i.id}')" class="fas fa-edit text-blue-500 text-xs cursor-pointer"></i><i onclick="deleteEntry('${i.id}')" class="fas fa-trash text-rose-500 text-xs cursor-pointer"></i></div>
                         </div>
                     </div>`;
                 }
             });
 
-            document.getElementById('mainBalance').innerText = "৳ " + toBN(totalBal);
-            document.getElementById('openingBal').innerText = "৳ " + toBN(openingBal);
+            // Update UI Totals
+            let grandTotal = Object.values(wallets).reduce((sum, val) => sum + val, 0);
+            document.getElementById('mainBalance').innerText = "৳ " + toBN(grandTotal);
+            document.getElementById('openingBal').innerText = "৳ " + toBN(grandTotal); // Current status based on wallets
             document.getElementById('openingLoan').innerText = "৳ " + toBN(openingLoan);
             document.getElementById('openingDhaar').innerText = "৳ " + toBN(openingDhaar);
             document.getElementById('topInc').innerText = "৳" + toBN(mInc);
             document.getElementById('topExp').innerText = "৳" + toBN(mExp);
             document.getElementById('topSodh').innerText = "৳" + toBN(mSodh);
             document.getElementById('topLoan').innerText = "৳" + toBN(mLoan);
+
+            // Populate Wallet Chips
+            const walletArea = document.getElementById('walletBalancesArea');
+            walletArea.innerHTML = Object.keys(wallets).map(w => `
+                <div class="wallet-chip">
+                    <p class="text-[8px] uppercase opacity-70 mb-1">${w}</p>
+                    <p class="text-xs font-black">৳ ${toBN(wallets[w])}</p>
+                </div>
+            `).join('');
+
             renderMonths(); updateNotifBadge();
         }
 
@@ -501,7 +560,7 @@
 
         function renderLedger() {
             const container = document.getElementById('ledgerList'); container.innerHTML = '';
-            const persons =[...new Set(db.filter(i => i.person !== "সাধারণ").map(i => i.person))];
+            const persons =[...new Set(db.filter(i => i.person !== "সাধারণ" && i.person !== "নিজস্ব ট্রান্সফার").map(i => i.person))];
 
             persons.forEach(name => {
                 let lifetimeBal = 0;
@@ -533,7 +592,6 @@
             });
         }
 
-        // --- PDF Update ---
         function generatePDFReport() {
             const start = document.getElementById('reportStart').value;
             const end = document.getElementById('reportEnd').value;
@@ -541,41 +599,32 @@
 
             const st = new Date(start).getTime();
             const et = new Date(end).getTime() + 86400000;
-
             const filtered = db.filter(i => i.ts >= st && i.ts <= et);
+            
             let html = `<div style="text-align:center; padding:20px; font-family: sans-serif;">
-                <h2 style="margin:0">স্মার্ট লেজার রিপোর্ট</h2>
-                <p>তারিখ: ${new Date(start).toLocaleDateString('bn-BD')} হতে ${new Date(end).toLocaleDateString('bn-BD')}</p>
-            </div>
+                <h2 style="margin:0">স্মার্ট লেজার রিপোর্ট</h2><p>তারিখ: ${new Date(start).toLocaleDateString('bn-BD')} হতে ${new Date(end).toLocaleDateString('bn-BD')}</p></div>
             <table style="width:100%; border-collapse:collapse; font-size:12px" border="1">
-                <thead><tr style="background:#f2f2f2;"><th>তারিখ</th><th>বিবরণ</th><th>ব্যক্তি</th><th>ধরণ</th><th>টাকা</th></tr></thead>
-                <tbody>`;
+                <thead><tr style="background:#f2f2f2;"><th>তারিখ</th><th>বিবরণ</th><th>ব্যক্তি</th><th>ধরণ</th><th>টাকা</th></tr></thead><tbody>`;
 
             let tInc = 0, tExp = 0;
             filtered.sort((a,b) => a.ts - b.ts).forEach(i => {
                 const amt = parseFloat(i.amount);
-                const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
-                if(isPlus) tInc += amt; else tExp += amt;
-                html += `<tr><td>${new Date(i.date).toLocaleDateString('bn-BD')}</td><td>${i.desc}</td><td>${i.person}</td><td>${i.loanCat}</td><td>৳${i.amount}</td></tr>`;
+                if(i.type !== 'Transfer'){
+                    const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
+                    if(isPlus) tInc += amt; else tExp += amt;
+                }
+                const catText = i.type === 'Transfer' ? 'ট্রান্সফার' : i.loanCat;
+                html += `<tr><td>${new Date(i.date).toLocaleDateString('bn-BD')}</td><td>${i.desc}</td><td>${i.person}</td><td>${catText}</td><td>৳${i.amount}</td></tr>`;
             });
             html += `</tbody></table>
             <div style="margin-top:20px; text-align:right; font-weight:bold;">
-                <p>মোট আয়: ৳${tInc} | মোট ব্যয়: ৳${tExp}</p>
-                <p style="font-size:16px">নিট ব্যালেন্স: ৳${tInc - tExp}</p>
+                <p>মোট আয়: ৳${tInc} | মোট ব্যয়: ৳${tExp}</p><p style="font-size:16px">নিট ব্যালেন্স পরিবর্তন: ৳${tInc - tExp}</p>
             </div>`;
 
-            const area = document.getElementById('printArea');
-            area.innerHTML = html;
-            area.classList.remove('hidden'); // Show before print
-            
-            setTimeout(() => {
-                window.print();
-            }, 100);
+            const area = document.getElementById('printArea'); area.innerHTML = html; area.classList.remove('hidden');
+            setTimeout(() => { window.print(); }, 100);
         }
-
-        window.addEventListener("afterprint", () => {
-            document.getElementById('printArea').classList.add('hidden');
-        });
+        window.addEventListener("afterprint", () => { document.getElementById('printArea').classList.add('hidden'); });
 
         // --- UI Modal Controls & Type Selection ---
         function switchTab(tab) {
@@ -586,18 +635,11 @@
             if(tab === 'ledger') renderLedger();
         }
         
-        function openTypeSelectionModal() {
-            document.getElementById('typeSelectionModal').style.display = 'flex';
-        }
-        
-        function closeTypeSelection() {
-            document.getElementById('typeSelectionModal').style.display = 'none';
-        }
+        function openTypeSelectionModal() { document.getElementById('typeSelectionModal').style.display = 'flex'; }
+        function closeTypeSelection() { document.getElementById('typeSelectionModal').style.display = 'none'; }
         
         function proceedToEntry(type) {
-            closeTypeSelection();
-            openEntryModal();
-            setCatType(type);
+            closeTypeSelection(); openEntryModal(); setCatType(type);
         }
         
         function autoSelectType() {
@@ -608,12 +650,28 @@
         
         function setCatType(type) {
             document.getElementById('mType').value = type;
+            ['btnInc', 'btnExp', 'btnTrans'].forEach(id => {
+                document.getElementById(id).className = "py-2 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500 transition-all";
+            });
+
             if (type === 'Income') {
-                document.getElementById('btnInc').className = "py-3 rounded-2xl font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
-                document.getElementById('btnExp').className = "py-3 rounded-2xl font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500";
-            } else {
-                document.getElementById('btnInc').className = "py-3 rounded-2xl font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500";
-                document.getElementById('btnExp').className = "py-3 rounded-2xl font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400";
+                document.getElementById('btnInc').className = "py-2 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 transition-all";
+                document.getElementById('lblFrom').innerText = "অ্যাকাউন্ট (যাতে টাকা জমা হবে)";
+                document.getElementById('transferToArea').style.display = 'none';
+                document.getElementById('loanCatArea').style.display = 'flex';
+                document.getElementById('mPerson').style.display = 'block';
+            } else if (type === 'Expense') {
+                document.getElementById('btnExp').className = "py-2 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-all";
+                document.getElementById('lblFrom').innerText = "অ্যাকাউন্ট (যাতে টাকা খরচ হবে)";
+                document.getElementById('transferToArea').style.display = 'none';
+                document.getElementById('loanCatArea').style.display = 'flex';
+                document.getElementById('mPerson').style.display = 'block';
+            } else if (type === 'Transfer') {
+                document.getElementById('btnTrans').className = "py-2 rounded-xl text-sm font-bold border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-all";
+                document.getElementById('lblFrom').innerText = "অ্যাকাউন্ট (যেখান থেকে যাবে)";
+                document.getElementById('transferToArea').style.display = 'flex';
+                document.getElementById('loanCatArea').style.display = 'none';
+                document.getElementById('mPerson').style.display = 'none'; // Person needed only for loans
             }
         }
         
@@ -621,8 +679,10 @@
             const i = db.find(x => x.id == id); if(!i) return;
             openEntryModal(); document.getElementById('editingId').value = i.id;
             document.getElementById('mDesc').value = i.desc; document.getElementById('mAmount').value = i.amount;
-            document.getElementById('mPerson').value = i.person === "সাধারণ" ? "" : i.person;
-            document.getElementById('loanCat').value = i.loanCat; document.getElementById('mMethod').value = i.method;
+            document.getElementById('mPerson').value = i.person === "সাধারণ" || i.person === "নিজস্ব ট্রান্সফার" ? "" : i.person;
+            document.getElementById('loanCat').value = i.loanCat || 'General'; 
+            document.getElementById('mMethod').value = i.method;
+            if(i.toMethod) document.getElementById('toMethod').value = i.toMethod;
             document.getElementById('mDate').value = i.date; setCatType(i.type);
             document.getElementById('saveBtn').innerText = "আপডেট করুন";
         }
@@ -630,7 +690,7 @@
         function calculateNetSummary() {
             const summary = {};
             db.forEach(i => {
-                if(i.person === "সাধারণ") return;
+                if(i.person === "সাধারণ" || i.person === "নিজস্ব ট্রান্সফার") return;
                 if(!summary[i.person]) summary[i.person] = 0;
                 const amt = parseFloat(i.amount);
                 if(i.loanCat === 'Dhaar' || i.loanCat === 'Loan_Paid') summary[i.person] += amt;
@@ -659,25 +719,16 @@
                 showPeriodicNotif(true); localStorage.setItem('last_notif_time', Date.now());
             }
         }
-        
         function updateNotifBadge() {
             const summary = calculateNetSummary();
-            const hasPending = Object.values(summary).some(val => Math.abs(val) > 1);
-            document.getElementById('notifBadge').style.display = hasPending ? 'block' : 'none';
+            document.getElementById('notifBadge').style.display = Object.values(summary).some(val => Math.abs(val) > 1) ? 'block' : 'none';
         }
-        
         function logoutApp() { 
-            localStorage.removeItem('app_pass'); 
-            localStorage.removeItem('last_activity');
-            location.reload(); 
+            localStorage.removeItem('app_pass'); localStorage.removeItem('last_activity'); location.reload(); 
         }
-        
         function toggleDarkMode() { document.body.classList.toggle('dark'); }
-        
         function closeModal() { document.getElementById('entryModal').style.display = 'none'; }
-        
         function openEntryModal() { document.getElementById('entryModal').style.display = 'flex'; clearModalInputs(); }
-        
         function closeNotifModal() { document.getElementById('notifModal').style.display = 'none'; }
         
         function clearModalInputs() {
@@ -687,27 +738,18 @@
             document.getElementById('saveBtn').innerText = "সেভ করুন";
         }
 
-        // --- Window OnLoad Check ---
         window.onload = () => { 
             loadProfileData();
-            
             const lastActive = localStorage.getItem('last_activity');
             const now = Date.now();
             
             if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
-                userPass = "";
-                localStorage.removeItem('app_pass');
-                localStorage.removeItem('last_activity');
+                userPass = ""; localStorage.removeItem('app_pass'); localStorage.removeItem('last_activity');
             }
-
             if (userPass) { 
                 document.getElementById('loginOverlay').style.display = 'none'; 
-                fetchData(); 
-                syncOfflineData();
-                updateActivity();
-            } else {
-                document.getElementById('loginOverlay').style.display = 'flex';
-            }
+                fetchData(); syncOfflineData(); updateActivity();
+            } else { document.getElementById('loginOverlay').style.display = 'flex'; }
             
             updateClock();
             if(!navigator.onLine) document.getElementById('offlineBadge').style.display = 'block';
