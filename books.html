@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 20, 2026 - 12:15AM ---
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -185,6 +187,25 @@
             opacity: 0.35;
         }
 
+        /* --- New Tab Styles Start --- */
+        .details-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; gap: 5px; }
+        .dark-mode .details-tabs { border-color: #334155; }
+        .dt-tab { padding: 10px 15px; cursor: pointer; font-weight: 700; color: var(--text-sub); border-bottom: 3px solid transparent; transition: 0.3s; font-size: 14px; }
+        .dt-tab.active { color: #10b981; border-bottom-color: #10b981; }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .spec-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .spec-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .dark-mode .spec-table td { border-bottom-color: #334155; }
+        .spec-label { font-weight: 700; color: var(--text-sub); width: 40%; background: #f8fafc; }
+        .dark-mode .spec-label { background: #1e293b; }
+
+        .author-tab-content { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 0; }
+        .author-tab-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #10b981; }
+        /* --- New Tab Styles End --- */
+
         .chip-container { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; scrollbar-width: none; }
         .cat-box { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; }
         .cat-icon-circle { width: 60px; height: 60px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); box-shadow: var(--shadow); margin-bottom: 8px; transition: 0.3s; border: 1px solid #f1f5f9; }
@@ -324,7 +345,7 @@
             <h3 class="page-title">বইয়ের বিবরণ</h3>
         </div>
         <div class="slider" id="dSlid"></div>
-        <div id="dCnt" style="background:var(--card); padding:25px; border-radius:30px; box-shadow:var(--shadow)"></div>
+        <div id="dCnt" style="background:var(--card); padding:20px; border-radius:30px; box-shadow:var(--shadow)"></div>
     </div>
 
     <div id="profile" class="page">
@@ -779,6 +800,7 @@
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
     }
 
+    /* --- Updated showD function to include Tabs Start --- */
     function showD(id) {
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
@@ -791,9 +813,8 @@
             </div>`).join('');
         
         let adminSec = isAdmin ? `
-            <div style="background:rgba(79, 70, 229, 0.05); padding:15px; border-radius:15px; margin-top:15px; border:1px dashed var(--primary)">
-                <p><b>মুদ্রিত মূল্য:</b> ${toBN(b.MRP)} ৳ | <b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} ৳</p>
-                <p><b>স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
+            <div style="background:rgba(79, 70, 229, 0.05); padding:15px; border-radius:15px; margin-top:20px; border:1px dashed var(--primary)">
+                <p><b>ক্রয়মূল্য:</b> ${toBN(b.BuyPrice)} ৳ | <b>স্টক:</b> <b id="stkQty">${toBN(b.Quantity)}</b> কপি</p>
                 <button class="btn-main" onclick="openGiftM(${b.ID}, '${b.BookName}')" style="background:var(--accent); font-size:12px; padding:10px;">১টি গিফট করুন (মাইনাস হবে)</button>
                 <div style="display:flex; gap:10px; margin-top:10px">
                     <button class="btn-main" onclick="editB(${b.ID})" style="background:#10b981">এডিট</button>
@@ -802,31 +823,66 @@
             </div>` : '';
 
         document.getElementById('dCnt').innerHTML = `
-            <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
-                <img src="${getImg(a?.AuthorImage)}" style="width:55px; height:55px; border-radius:50%; object-fit:cover; border:2px solid var(--primary)">
-                <div><h2 style="margin:0; font-size:20px">${b.BookName}</h2><small style="color:var(--primary); font-weight:700">লেখক: ${b.Author}</small></div>
+            <div style="margin-bottom:20px">
+                <h2 style="margin:0 0 5px 0; font-size:22px">${b.BookName}</h2>
+                <span style="color:#10b981; font-weight:700">লেখক: ${b.Author}</span>
             </div>
-            <div style="line-height:1.8">
-                ${b.SeriesName ? `<p style="color:var(--primary)"><b>সিরিজ:</b> ${b.SeriesName} (${toBN(b.SeriesOrder)} তম বই)</p>` : ''}
-                ${(b.TranslatedBy && b.TranslatedBy.trim() !== '' && b.TranslatedBy !== '-') ? `<p><b>অনুবাদক:</b> ${b.TranslatedBy}</p>` : ''}
-                <p><b>প্রকাশনী:</b> ${b.Publisher || '-'}</p>
-                <p><b>প্রকাশকাল:</b> ${toBN(b.PublishYear)}</p>
-                <p><b>ক্যাটাগরি:</b> ${b.Category || '-'}</p>
-                
-                <div class="review-box">
-                    <h4 style="margin-top:0"><i class="fas fa-quote-left"></i> বইয়ের রিভিউ</h4>
-                    <p style="margin:0; font-size:14px; white-space: pre-line;">${b.Review || 'এখনো রিভিউ দেওয়া হয়নি।'}</p>
+
+            <div class="details-tabs">
+                <div class="dt-tab active" onclick="switchTab(this, 'tab-summary')">Summary</div>
+                <div class="dt-tab" onclick="switchTab(this, 'tab-spec')">Specification</div>
+                <div class="dt-tab" onclick="switchTab(this, 'tab-author')">Author</div>
+            </div>
+
+            <div id="tab-summary" class="tab-pane active">
+                <div class="review-box" style="margin-top:0; border:none; background:none; padding:0">
+                    <p style="margin:0; font-size:15px; white-space: pre-line; line-height:1.7">${b.Review || 'এই বইটির কোনো বর্ণনা পাওয়া যায়নি।'}</p>
                 </div>
-                ${adminSec}
-                <p style="font-size:12px; color:#999; border-top:1px solid #eee; margin-top:15px; padding-top:10px">
-                    <i class="far fa-clock"></i> চিলেকোঠায় আগমনের তারিখ: ${formatDate(b.EntryDate)}
-                </p>
             </div>
+
+            <div id="tab-spec" class="tab-pane">
+                <table class="spec-table">
+                    <tr><td class="spec-label">Title</td><td>${b.BookName}</td></tr>
+                    <tr><td class="spec-label">Author</td><td>${b.Author}</td></tr>
+                    <tr><td class="spec-label">Publisher</td><td>${b.Publisher || '-'}</td></tr>
+                    ${b.PublishYear ? `<tr><td class="spec-label">Publish Year</td><td>${toBN(b.PublishYear)}</td></tr>` : ''}
+                    <tr><td class="spec-label">Category</td><td>${b.Category || '-'}</td></tr>
+                    ${b.SeriesName ? `<tr><td class="spec-label">Series</td><td>${b.SeriesName} (${toBN(b.SeriesOrder)})</td></tr>` : ''}
+                    ${b.TranslatedBy ? `<tr><td class="spec-label">Translator</td><td>${b.TranslatedBy}</td></tr>` : ''}
+                    <tr><td class="spec-label">MRP</td><td>${toBN(b.MRP)} ৳</td></tr>
+                </table>
+            </div>
+
+            <div id="tab-author" class="tab-pane">
+                <div class="author-tab-content">
+                    <img src="${getImg(a?.AuthorImage)}" class="author-tab-img">
+                    <h3 style="margin:0">${b.Author}</h3>
+                    <p style="color:var(--text-sub); margin-top:5px">চিলেকোঠা লাইব্রেরির গর্বিত লেখক</p>
+                    <button class="btn-main" style="width:auto; padding:8px 25px; margin-top:10px; background:#10b981" onclick="filterByAuth('${b.Author}')">লেখকের সব বই</button>
+                </div>
+            </div>
+
+            ${adminSec}
+            
+            <p style="font-size:12px; color:#999; border-top:1px solid #eee; margin-top:20px; padding-top:10px">
+                <i class="far fa-clock"></i> চিলেকোঠায় আগমনের তারিখ: ${formatDate(b.EntryDate)}
+            </p>
         `;
         document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
         document.getElementById('details').classList.add('active');
         window.scrollTo(0,0);
     }
+
+    function switchTab(el, paneId) {
+        // Remove active class from all tabs and panes
+        document.querySelectorAll('.dt-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        
+        // Add active class to clicked tab and target pane
+        el.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+    /* --- Updated showD function to include Tabs End --- */
 
     async function login() {
         const inputPass = document.getElementById('pass').value;
