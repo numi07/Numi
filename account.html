@@ -32,6 +32,12 @@
         .text-slate-500 { color: #334155 !important; }
         .opacity-60 { opacity: 0.9 !important; }
 
+        /* --- Additional Bright Mode Text Clarity --- */
+        body:not(.dark) h3 { color: #064e3b !important; font-weight: 800; }
+        body:not(.dark) #walletBalancesArea .premium-card p { color: #475569 !important; font-weight: 700; }
+        body:not(.dark) #walletBalancesArea .premium-card .font-black { color: #020617 !important; }
+        body:not(.dark) .premium-card { border: 1px solid #e2e8f0; }
+
         .app-header { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-radius: 0 0 45px 45px; box-shadow: 0 15px 30px -10px rgba(5, 150, 105, 0.4); }
         .premium-card { background: white; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.02); }
 
@@ -293,6 +299,15 @@
                     <button id="saveBtn" onclick="saveData()" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg">সেভ করুন</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Debt status Modal -->
+    <div id="notifModal" class="fixed inset-0 bg-black/70 hidden z-[6000] items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl modal-animate">
+            <h3 class="text-xl font-black text-center mb-6 text-emerald-600">বকেয়া রিমাইন্ডার</h3>
+            <div id="notifContent" class="space-y-3 max-h-80 overflow-y-auto no-scrollbar"></div>
+            <button onclick="closeNotifModal()" class="w-full mt-6 py-4 bg-emerald-600 text-white font-bold rounded-2xl">ঠিক আছে</button>
         </div>
     </div>
 
