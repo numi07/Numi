@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>পকেট হিসাব | আল নোমান শিকদার</title>
 
-    <!-- PWA Meta Tags & Icons (Matched with books.html for App-like Install) -->
+    <!-- PWA Meta Tags & Icons -->
     <meta name="theme-color" content="#064e3b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="পকেট হিসাব">
     
-    <link rel="icon" type="image/x-icon" href="./favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="./android-chrome-512x512.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
 
     <!-- Static Inline Manifest for Installation -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%20%7C%20%E0%A6%86%E0%A6%B2%20%E0%A6%A8%E0%A7%8B%E0%A6%AE%E0%A6%BE%E0%A6%A8%22%2C%22short_name%22%3A%22%E0%A6%AA%E0%A6%95%E0%A7%87%E0%A6%9F%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A6%BE%E0%A6%AC%22%2C%22start_url%22%3A%22%2Faccount%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23064e3b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fandroid-chrome-192x192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22%2Fandroid-chrome-512x512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
@@ -50,10 +50,12 @@
 
         #offlineBadge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; }
 
+        /* PDF / Print Mode Styles Updated */
         @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; color: black !important; }
+            body * { visibility: hidden !important; }
+            #printArea, #printArea * { visibility: visible !important; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; color: black !important; background: white !important; }
+            nav, .app-header, main { display: none !important; }
         }
     </style>
 </head>
@@ -181,6 +183,7 @@
         </div>
     </div>
 
+    <!-- Print Area -->
     <div id="printArea" class="hidden"></div>
 
     <div id="notifModal" class="fixed inset-0 bg-black/70 hidden z-[600] items-center justify-center p-4">
@@ -192,21 +195,7 @@
     </div>
 
     <script>
-        // --- PWA Service Worker Setup ---
-        (function() {
-            // ইন-লাইন সার্ভিস ওয়ার্কার রেজিস্ট্রেশন
-            if ('serviceWorker' in navigator) {
-                const swCode = `
-                    self.addEventListener('install', e => self.skipWaiting());
-                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => {})));
-                `;
-                const swBlob = new Blob([swCode], {type: 'text/javascript'});
-                const swURL = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swURL).then(() => {
-                    console.log('PWA Service Worker Registered');
-                }).catch(err => console.log('Service Worker Registration Failed', err));
-            }
-        })();
+        // PWA Service Worker (Blob SW) removed to stop background browser persistence.
 
         let db =[];
         const proxyURL = '/api/account';
@@ -399,7 +388,7 @@
             let totalBal = 0, openingBal = 0, openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0, mSodh = 0, mLoan = 0;
 
-            const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
+            const [selMonth, selYear] = currentMonthKey.split('-').map(Number);
             const startOfSelMonth = new Date(selYear, selMonth, 1).getTime();
 
             db.sort((a,b) => b.ts - a.ts).forEach(i => {
@@ -491,7 +480,7 @@
             });
         }
 
-        // --- PDF ---
+        // --- PDF Update ---
         function generatePDFReport() {
             const start = document.getElementById('reportStart').value;
             const end = document.getElementById('reportEnd').value;
@@ -522,9 +511,19 @@
                 <p style="font-size:16px">নিট ব্যালেন্স: ৳${tInc - tExp}</p>
             </div>`;
 
-            const area = document.getElementById('printArea'); area.innerHTML = html;
-            window.print();
+            const area = document.getElementById('printArea');
+            area.innerHTML = html;
+            area.classList.remove('hidden'); // Show before print
+            
+            setTimeout(() => {
+                window.print();
+            }, 100);
         }
+
+        // Hide the print area again after printing is complete or cancelled
+        window.addEventListener("afterprint", () => {
+            document.getElementById('printArea').classList.add('hidden');
+        });
 
         // --- UI ---
         function switchTab(tab) {
