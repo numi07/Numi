@@ -185,7 +185,6 @@
             opacity: 0.35;
         }
 
-        /* --- New Tab Styles Start --- */
         .details-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; gap: 5px; }
         .dark-mode .details-tabs { border-color: #334155; }
         .dt-tab { padding: 10px 15px; cursor: pointer; font-weight: 700; color: var(--text-sub); border-bottom: 3px solid transparent; transition: 0.3s; font-size: 14px; }
@@ -202,7 +201,6 @@
 
         .author-tab-content { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 0; }
         .author-tab-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #10b981; }
-        /* --- New Tab Styles End --- */
 
         .chip-container { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; scrollbar-width: none; }
         .cat-box { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; }
@@ -799,7 +797,6 @@
         document.getElementById('bList').innerHTML = h || "<p style='text-align:center'>কোনো বই পাওয়া যায়নি!</p>";
     }
 
-    /* --- Updated showD function to include Tabs Start --- */
     function showD(id) {
         const b = allBooks.find(x => x.ID == id);
         const a = allAuthors.find(x => x.AuthorName == b.Author);
@@ -872,15 +869,12 @@
     }
 
     function switchTab(el, paneId) {
-        // Remove active class from all tabs and panes
         document.querySelectorAll('.dt-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         
-        // Add active class to clicked tab and target pane
         el.classList.add('active');
         document.getElementById(paneId).classList.add('active');
     }
-    /* --- Updated showD function to include Tabs End --- */
 
     async function login() {
         const inputPass = document.getElementById('pass').value;
