@@ -155,7 +155,6 @@
         <button onclick="switchTab('home')" class="nav-btn active-tab flex flex-col items-center p-2 text-emerald-600" id="btn-home"><i class="fas fa-receipt text-xl mb-1"></i><span class="text-[10px] font-bold">লেনদেন</span></button>
         <button onclick="switchTab('ledger')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-ledger"><i class="fas fa-history text-xl mb-1"></i><span class="text-[10px] font-bold">ইতিহাস</span></button>
         
-        <!-- Open Type Selection Modal directly -->
         <div class="mb-8"><button onclick="openTypeSelectionModal()" class="w-14 h-14 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fas fa-plus text-xl"></i></button></div>
         
         <button onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center p-2" id="btn-profile"><i class="fas fa-user-circle text-xl mb-1"></i><span class="text-[10px] font-bold">প্রোফাইল</span></button>
@@ -278,6 +277,23 @@
         const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
         const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+        // কাস্টম ডেট ও টাইম ফর্মেটার (Custom Date & Time Formatter)
+        function formatDateTime(dStr) {
+            const d = new Date(dStr);
+            const day = toBN(d.getDate());
+            const month = monthsBN[d.getMonth()];
+            const year = toBN(d.getFullYear());
+            
+            let hours = d.getHours();
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'পিএম' : 'এএম';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 hour should be 12
+            
+            const timeStr = `${toBN(hours)}:${toBN(minutes)} ${ampm}`;
+            return `${day} ${month} ${year}, ${timeStr}`;
+        }
 
         // অনলাইন/অফলাইন সিঙ্ক
         window.addEventListener('online', () => {
@@ -512,7 +528,7 @@
                             <div>
                                 <div class="flex items-center gap-2"><h4 class="font-bold text-sm text-slate-700 dark:text-slate-200">${i.desc}</h4></div>
                                 <p class="text-[9px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-1">${methodText}</p>
-                                <p class="text-[9px] opacity-60 mt-1">${i.person !== 'নিজস্ব ট্রান্সফার' ? i.person+' • ' : ''}${new Date(i.date).toLocaleDateString('bn-BD')}</p>
+                                <p class="text-[10px] opacity-60 mt-1">${i.person !== 'নিজস্ব ট্রান্সফার' ? i.person+' • ' : ''}<i class="far fa-clock"></i> ${formatDateTime(i.date)}</p>
                             </div>
                         </div>
                         <div class="text-right flex items-center gap-3">
@@ -578,7 +594,7 @@
 
                 let historyHtml = monthlyHistory.map(h => `
                     <div class="history-line"><div class="flex justify-between items-center">
-                        <div><span class="text-[10px] font-bold text-slate-400">${new Date(h.date).toLocaleDateString('bn-BD')}</span><br><span class="font-bold text-sm text-slate-700 dark:text-slate-200">${h.loanCat} (${h.method})</span></div>
+                        <div><span class="text-[10px] font-bold text-slate-500"><i class="far fa-clock"></i> ${formatDateTime(h.date)}</span><br><span class="font-bold text-sm text-slate-700 dark:text-slate-200">${h.loanCat} (${h.method})</span></div>
                         <div class="flex items-center gap-3"><span class="font-black text-base ${h.loanCat.includes('Paid') || h.loanCat.includes('Dhaar') ? 'text-emerald-500':'text-rose-500'}">৳${toBN(h.amount)}</span>
                         <i onclick="deleteEntry('${h.id}')" class="fas fa-trash-alt text-slate-300 hover:text-rose-500 cursor-pointer"></i></div>
                     </div></div>`).join('');
@@ -604,7 +620,7 @@
             let html = `<div style="text-align:center; padding:20px; font-family: sans-serif;">
                 <h2 style="margin:0">স্মার্ট লেজার রিপোর্ট</h2><p>তারিখ: ${new Date(start).toLocaleDateString('bn-BD')} হতে ${new Date(end).toLocaleDateString('bn-BD')}</p></div>
             <table style="width:100%; border-collapse:collapse; font-size:12px" border="1">
-                <thead><tr style="background:#f2f2f2;"><th>তারিখ</th><th>বিবরণ</th><th>ব্যক্তি</th><th>ধরণ</th><th>টাকা</th></tr></thead><tbody>`;
+                <thead><tr style="background:#f2f2f2;"><th>তারিখ ও সময়</th><th>বিবরণ</th><th>ব্যক্তি</th><th>ধরণ</th><th>টাকা</th></tr></thead><tbody>`;
 
             let tInc = 0, tExp = 0;
             filtered.sort((a,b) => a.ts - b.ts).forEach(i => {
@@ -614,7 +630,7 @@
                     if(isPlus) tInc += amt; else tExp += amt;
                 }
                 const catText = i.type === 'Transfer' ? 'ট্রান্সফার' : i.loanCat;
-                html += `<tr><td>${new Date(i.date).toLocaleDateString('bn-BD')}</td><td>${i.desc}</td><td>${i.person}</td><td>${catText}</td><td>৳${i.amount}</td></tr>`;
+                html += `<tr><td>${formatDateTime(i.date)}</td><td>${i.desc}</td><td>${i.person}</td><td>${catText}</td><td>৳${i.amount}</td></tr>`;
             });
             html += `</tbody></table>
             <div style="margin-top:20px; text-align:right; font-weight:bold;">
@@ -649,8 +665,7 @@
         }
         
         function setCatType(type) {
-            document.getElementById('mType').value = type;
-            ['btnInc', 'btnExp', 'btnTrans'].forEach(id => {
+            document.getElementById('mType').value = type;['btnInc', 'btnExp', 'btnTrans'].forEach(id => {
                 document.getElementById(id).className = "py-2 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500 transition-all";
             });
 
@@ -671,7 +686,7 @@
                 document.getElementById('lblFrom').innerText = "অ্যাকাউন্ট (যেখান থেকে যাবে)";
                 document.getElementById('transferToArea').style.display = 'flex';
                 document.getElementById('loanCatArea').style.display = 'none';
-                document.getElementById('mPerson').style.display = 'none'; // Person needed only for loans
+                document.getElementById('mPerson').style.display = 'none'; 
             }
         }
         
