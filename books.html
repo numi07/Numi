@@ -328,9 +328,9 @@
     <div id="books" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="goBackFromBooks()"><i class="fas fa-chevron-left"></i></button>
-            <h3 class="page-title" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0;">
+            <h3 class="page-title" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0; flex: 1;">
                 <span id="lTtl">বইয়ের তালিকা</span>
-                <span id="totalBooksBadge" style="background: linear-gradient(135deg, var(--primary), #8b5cf6); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; display: none; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);"></span>
+                <span id="totalBooksBadge" style="margin-left: auto; background: var(--card); color: var(--text-main); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; display: none; box-shadow: var(--shadow); border: 1px solid rgba(148, 163, 184, 0.2);"></span>
             </h3>
         </div>
         <div id="filterBtnArea" style="margin-bottom:15px; display:none">
@@ -458,7 +458,7 @@
         { t: "বই জ্ঞানের জাহাজ যা কালের প্রবাহে স্থির দাঁড়িয়ে থাকে।", a: "ফ্রান্সিস বেকন" },
         { t: "বই ছাড়া ঘর যেমন, আত্মা ছাড়া শরীর তেমন।", a: "মার্কুস সিসেরো" },
         { t: "প্রচুর বই পড়তে হবে, তাহলেই পৃথিবী তোমার কাছে ধরা দেবে।", a: "সৈয়দ মুজতবা আলী" },
-        { t: "পড়ুন, পড়ুন এবং আরও পড়ুন। এটিই সাফল্যের চাবিকাঠি।", a: "এ পি জে আব্দুল কালাম" },
+        { t: "পড়ুন, পড়ুন এবং আরও পড়ুন। এটিই সাফল্যের কুলকাঠি।", a: "এ পি জে আব্দুল কালাম" },
         { t: "ভালো বই পড়া আর ভালো মানুষের সাথে কথা বলা একই কথা।", a: "রেনে দেকার্ত" },
         { t: "বই হলো এমন এক মৌমাছি যা অন্যের মনের মধু সংগ্রহ করে আমাদের উপহার দেয়।", a: "জেমস রাসেল" },
         { t: "যে দেশে বই নেই, সে দেশে আকাশ নেই।", a: "হুমায়ুন আজাদ" },
@@ -700,7 +700,7 @@
     }
 
     function renderCategories() {
-        const cats = [...new Set(allBooks.map(b => b.Category).filter(c => c))];
+        const cats =[...new Set(allBooks.map(b => b.Category).filter(c => c))];
         const icons =["fa-book", "fa-feather", "fa-brain", "fa-history", "fa-user-graduate", "fa-atom", "fa-mask", "fa-landmark"];
         document.getElementById('hCats').innerHTML = cats.map((c, i) => `
             <div class="cat-box" onclick="filterByCat('${c}')">
