@@ -17,7 +17,7 @@
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Al Noman Shikder",
-      "alternateName": ["নোমান", "Noman", "নোমান শিকদার", "আল নোমান শিকদার", "Noman Shikder", "AL Noman Shikder"],
+      "alternateName":["নোমান", "Noman", "নোমান শিকদার", "আল নোমান শিকদার", "Noman Shikder", "AL Noman Shikder"],
       "url": "https://shikdernumi.pro.bd/books",
       "brand": {
         "@type": "Brand",
@@ -328,7 +328,10 @@
     <div id="books" class="page">
         <div class="page-header">
             <button class="back-btn" onclick="goBackFromBooks()"><i class="fas fa-chevron-left"></i></button>
-            <h3 class="page-title" id="lTtl">বইয়ের তালিকা</h3>
+            <h3 class="page-title" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0;">
+                <span id="lTtl">বইয়ের তালিকা</span>
+                <span id="totalBooksBadge" style="background: linear-gradient(135deg, var(--primary), #8b5cf6); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; display: none; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);"></span>
+            </h3>
         </div>
         <div id="filterBtnArea" style="margin-bottom:15px; display:none">
             <button id="showAllByAuthBtn" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:10px; border-radius:20px; font-size:13px; font-weight:700; width:100%"></button>
@@ -443,11 +446,11 @@
 
 <script>
     const API_URL = "/api/books";
-    let allBooks = [], allAuthors = [], allGifts = [], isAdmin = false, userPass = ""; 
+    let allBooks = [], allAuthors = [], allGifts =[], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
     const SESSION_TIMEOUT = 5 * 60 * 1000;
 
-    const quotes = [
+    const quotes =[
         { t: "পড়ার মতো বই যার কাছে আছে, তার মতো সুখী আর কেউ নেই।", a: "বিভূতিভূষণ বন্দ্যোপাধ্যায়" },
         { t: "একটি ভালো বই মানে একজন নিঃস্বার্থ বন্ধু।", a: "হুমায়ূন আহমেদ" },
         { t: "বই হচ্ছে এমন এক মাধ্যম যার সাহায্যে আমরা এক জগত থেকে অন্য জগতে পাড়ি দিতে পারি।", a: "সংগৃহীত" },
@@ -599,16 +602,14 @@
             });
 
             allAuthors = d.authors;
-            allGifts = (d.gifts || []).reverse();
+            allGifts = (d.gifts ||[]).reverse();
 
             renderCategories();
             renderTopAuthors();
             updateGiftMenuVisibility();
             populateAuthorList(); 
             document.getElementById('loader').style.display = 'none';
-        } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }
-
-        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
+        } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
             window.addEventListener(evt, updateActivity, true)
         );
         setInterval(checkInactivity, 10000);
@@ -700,7 +701,7 @@
 
     function renderCategories() {
         const cats = [...new Set(allBooks.map(b => b.Category).filter(c => c))];
-        const icons = ["fa-book", "fa-feather", "fa-brain", "fa-history", "fa-user-graduate", "fa-atom", "fa-mask", "fa-landmark"];
+        const icons =["fa-book", "fa-feather", "fa-brain", "fa-history", "fa-user-graduate", "fa-atom", "fa-mask", "fa-landmark"];
         document.getElementById('hCats').innerHTML = cats.map((c, i) => `
             <div class="cat-box" onclick="filterByCat('${c}')">
                 <div class="cat-icon-circle"><i class="fas ${icons[i % icons.length]}"></i></div>
@@ -734,7 +735,7 @@
     }
 
     function filterByCat(catName) {
-        const authorsInCat = [...new Set(allBooks.filter(b => b.Category === catName).map(b => b.Author))];
+        const authorsInCat =[...new Set(allBooks.filter(b => b.Category === catName).map(b => b.Author))];
         if(authorsInCat.length === 0) { showToast("এই ক্যাটাগরিতে কোনো বই নেই!"); return; }
         
         const h = authorsInCat.map(authName => {
@@ -780,6 +781,14 @@
 
     function renderBooks(list, title) {
         document.getElementById('lTtl').innerText = title;
+        
+        const totalCopies = list.reduce((sum, b) => sum + (!isNaN(parseInt(b.Quantity)) ? parseInt(b.Quantity) : 1), 0);
+        const badge = document.getElementById('totalBooksBadge');
+        if (badge) {
+            badge.innerText = `মোট: ${toBN(totalCopies)} কপি`;
+            badge.style.display = 'inline-block';
+        }
+
         const h = list.map(b => `
             <div class="book-card" onclick="showD(${b.ID})">
                 <div class="book-img-wrapper">
