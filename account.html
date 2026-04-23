@@ -383,18 +383,21 @@
         
         function formatDateTime(dStr) {
             const d = new Date(dStr);
-            const day = toBN(d.getDate()).split('.')[0];
+            const dayNum = d.getDate();
+            const day = dayNum.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
             const month = monthsBN[d.getMonth()];
-            const year = toBN(d.getFullYear()).split('.')[0];
+            const yearNum = d.getFullYear();
+            const year = yearNum.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
             
             let hours = d.getHours();
-            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const minutesNum = String(d.getMinutes()).padStart(2, '0');
+            const minutes = minutesNum.replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
             const ampm = hours >= 12 ? 'পিএম' : 'এএম';
             hours = hours % 12;
             hours = hours ? hours : 12; 
+            const hoursBN = hours.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
             
-            const timeStr = `${toBN(hours).split('.')[0]}:${toBN(minutes).split('.')[0]} ${ampm}`;
-            return `${day} ${month} ${year}, ${timeStr}`;
+            return `${day} ${month} ${year}, ${hoursBN}:${minutes} ${ampm}`;
         }
 
         window.addEventListener('online', () => {
@@ -752,6 +755,15 @@
             const end = document.getElementById('reportEnd').value;
             if(!start || !end) return showCustomAlert("তারিখ সিলেক্ট করুন", "সতর্কতা");
 
+            // Format BN Filter Dates
+            const getBNFullDate = (dStr) => {
+                const d = new Date(dStr);
+                const day = d.getDate().toString().replace(/\d/g, x => "০১২৩৪৫৬৭৮৯"[x]);
+                const month = monthsBN[d.getMonth()];
+                const year = d.getFullYear().toString().replace(/\d/g, x => "০১২৩৪৫৬৭৮৯"[x]);
+                return `${day} ${month} ${year}`;
+            };
+
             const st = new Date(start).getTime();
             const et = new Date(end).getTime() + 86400000;
             const filtered = db.filter(i => i.ts >= st && i.ts <= et);
@@ -809,7 +821,7 @@
                 </div>
 
                 <div style="background:#f8fafc; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #e2e8f0; font-size:12px; font-weight:bold; color:#475569;">
-                    ফিল্টার সময়কাল: <span style="color:#064e3b">${toBN(start).split('.')[0]}</span> হতে <span style="color:#064e3b">${toBN(end).split('.')[0]}</span> পর্যন্ত
+                    ফিল্টার সময়কাল: <span style="color:#064e3b">${getBNFullDate(start)}</span> হতে <span style="color:#064e3b">${getBNFullDate(end)}</span> পর্যন্ত
                 </div>
                 
                 <table style="width:100%; border-collapse:collapse; margin-bottom:40px;">
