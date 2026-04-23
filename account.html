@@ -479,6 +479,8 @@
                     document.getElementById('loginOverlay').style.display = 'none';
                     
                     db = Array.isArray(data) ? data :[];
+                    db.forEach(i => { if(i.type === 'Transfer' && !i.toMethod && i.loanCat && i.loanCat !== 'General') i.toMethod = i.loanCat; });
+                    
                     const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
                     queue.forEach(q => { if (!db.find(d => d.id == q.id)) db.push(q); });
                     renderApp(); checkPeriodicNotifications(); setupPushNotification();
@@ -503,6 +505,8 @@
 
                 if (Array.isArray(data)) {
                     db = data;
+                    db.forEach(i => { if(i.type === 'Transfer' && !i.toMethod && i.loanCat && i.loanCat !== 'General') i.toMethod = i.loanCat; });
+                    
                     const queue = JSON.parse(localStorage.getItem('offline_queue') || "[]");
                     queue.forEach(q => { if (!db.find(d => d.id == q.id)) db.push(q); });
                     renderApp(); checkPeriodicNotifications();
@@ -517,10 +521,10 @@
             const desc = document.getElementById('mDesc').value, amount = parseFloat(document.getElementById('mAmount').value);
             let person = document.getElementById('mPerson').value.trim();
             const type = document.getElementById('mType').value;
-            const loanCat = type === 'Transfer' ? 'General' : document.getElementById('loanCat').value;
+            const toMethod = document.getElementById('toMethod').value;
+            const loanCat = type === 'Transfer' ? toMethod : document.getElementById('loanCat').value;
             const date = document.getElementById('mDate').value;
             const method = document.getElementById('mMethod').value;
-            const toMethod = document.getElementById('toMethod').value;
             const editingId = document.getElementById('editingId').value;
 
             if(!desc || !amount) return showCustomAlert("বিবরণ এবং পরিমাণ উল্লেখ করুন", "সতর্কতা");
@@ -566,7 +570,7 @@
                 if(wallets[method] === undefined) wallets[method] = 0;
 
                 if (i.type === 'Transfer') {
-                    const toMethod = i.toMethod || 'ক্যাশ';
+                    const toMethod = i.toMethod || (i.loanCat && i.loanCat !== 'General' ? i.loanCat : 'ক্যাশ');
                     if(wallets[toMethod] === undefined) wallets[toMethod] = 0;
                     wallets[method] -= amt;
                     wallets[toMethod] += amt;
@@ -603,7 +607,7 @@
                     }
 
                     const displayMethod = i.method || 'ক্যাশ';
-                    const displayToMethod = i.toMethod || 'ক্যাশ';
+                    const displayToMethod = i.toMethod || (i.type === 'Transfer' && i.loanCat && i.loanCat !== 'General' ? i.loanCat : 'ক্যাশ');
                     let methodText = i.type === 'Transfer' ? `${displayMethod} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${displayToMethod}` : displayMethod;
 
                     list.innerHTML += `<div class="premium-card p-4 flex justify-between items-center mb-3 group">
@@ -851,6 +855,7 @@
             document.getElementById('loanCat').value = i.loanCat || 'General'; 
             document.getElementById('mMethod').value = i.method;
             if(i.toMethod) document.getElementById('toMethod').value = i.toMethod;
+            else if(i.type === 'Transfer' && i.loanCat && i.loanCat !== 'General') document.getElementById('toMethod').value = i.loanCat;
             document.getElementById('mDate').value = i.date; setCatType(i.type);
             document.getElementById('saveBtn').innerText = "আপডেট করুন";
         }
@@ -920,7 +925,7 @@
                     case 'বিকাশ':
                     case 'নগদ':
                     case 'ইসলামিক ওয়ালেট':
-                        return (i.method === filterType || (i.type === 'Transfer' && i.toMethod === filterType));
+                        return (i.method === filterType || (i.type === 'Transfer' && (i.toMethod === filterType || (i.loanCat === filterType && i.loanCat !== 'General'))));
                     case 'IncomeMonth':
                         return i.type === 'Income' && isCurrentMonth;
                     case 'ExpenseMonth':
@@ -946,7 +951,8 @@
                     let iconHtml, colorClass, amtPrefix;
                     
                     if(i.type === 'Transfer') {
-                        if(filterType && filterType === i.toMethod) {
+                        const targetMethod = i.toMethod || (i.loanCat !== 'General' ? i.loanCat : 'ক্যাশ');
+                        if(filterType && filterType === targetMethod) {
                             colorClass = 'text-emerald-600'; amtPrefix = '+ ৳';
                             iconHtml = '<i class="fas fa-arrow-down text-emerald-500"></i>';
                         } else if(filterType && filterType === i.method) {
@@ -964,7 +970,7 @@
                     }
 
                     const displayMethod = i.method || 'ক্যাশ';
-                    const displayToMethod = i.toMethod || 'ক্যাশ';
+                    const displayToMethod = i.toMethod || (i.type === 'Transfer' && i.loanCat && i.loanCat !== 'General' ? i.loanCat : 'ক্যাশ');
                     let methodText = i.type === 'Transfer' ? `${displayMethod} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${displayToMethod}` : displayMethod;
 
                     list.innerHTML += `<div class="premium-card p-4 flex justify-between items-center mb-3 group">
