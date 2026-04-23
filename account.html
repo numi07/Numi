@@ -379,13 +379,13 @@
         let userPass = localStorage.getItem('app_pass') || "";
         const monthsBN =["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
         let currentMonthKey = (new Date().getMonth()) + "-" + (new Date().getFullYear());
-        const toBN = (n) => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+        const toBN = (n) => (parseFloat(n) || 0).toFixed(2).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
         
         function formatDateTime(dStr) {
             const d = new Date(dStr);
-            const day = toBN(d.getDate());
+            const day = toBN(d.getDate()).split('.')[0];
             const month = monthsBN[d.getMonth()];
-            const year = toBN(d.getFullYear());
+            const year = toBN(d.getFullYear()).split('.')[0];
             
             let hours = d.getHours();
             const minutes = String(d.getMinutes()).padStart(2, '0');
@@ -393,7 +393,7 @@
             hours = hours % 12;
             hours = hours ? hours : 12; 
             
-            const timeStr = `${toBN(hours)}:${toBN(minutes)} ${ampm}`;
+            const timeStr = `${toBN(hours).split('.')[0]}:${toBN(minutes).split('.')[0]} ${ampm}`;
             return `${day} ${month} ${year}, ${timeStr}`;
         }
 
@@ -809,7 +809,7 @@
                 </div>
 
                 <div style="background:#f8fafc; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #e2e8f0; font-size:12px; font-weight:bold; color:#475569;">
-                    ফিল্টার সময়কাল: <span style="color:#064e3b">${toBN(start)}</span> হতে <span style="color:#064e3b">${toBN(end)}</span> পর্যন্ত
+                    ফিল্টার সময়কাল: <span style="color:#064e3b">${toBN(start).split('.')[0]}</span> হতে <span style="color:#064e3b">${toBN(end).split('.')[0]}</span> পর্যন্ত
                 </div>
                 
                 <table style="width:100%; border-collapse:collapse; margin-bottom:40px;">
