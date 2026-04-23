@@ -63,7 +63,7 @@
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
             #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; color: black !important; background: white !important; }
-            nav, .app-header, main, #loginOverlay, #typeSelectionModal, #entryModal { display: none !important; }
+            nav, .app-header, main, #loginOverlay, #typeSelectionModal, #entryModal, #categoryModal { display: none !important; }
         }
     </style>
 </head>
@@ -132,16 +132,16 @@
 
     <div class="px-4 mt-2 space-y-3">
         <div class="grid grid-cols-2 gap-3">
-            <div class="premium-card p-3 border-l-4 border-emerald-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
-            <div class="premium-card p-3 border-l-4 border-rose-500"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('IncomeMonth', 'এই মাসে আয়')" class="premium-card p-3 border-l-4 border-emerald-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে আয়</p><p id="topInc" class="text-lg font-black text-emerald-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('ExpenseMonth', 'এই মাসে ব্যয়')" class="premium-card p-3 border-l-4 border-rose-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">এই মাসে ব্যয়</p><p id="topExp" class="text-lg font-black text-rose-600">৳ ০</p></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="premium-card p-3 border-l-4 border-amber-500"><p class="text-[9px] font-bold uppercase opacity-60">লোন নিলাম</p><p id="summaryLoanTaken" class="text-lg font-black text-amber-600">৳ ০</p></div>
-            <div class="premium-card p-3 border-l-4 border-slate-500"><p class="text-[9px] font-bold uppercase opacity-60">লোন শোধ</p><p id="summaryLoanPaid" class="text-lg font-black text-slate-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('LoanTaken', 'লোন নিলাম')" class="premium-card p-3 border-l-4 border-amber-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">লোন নিলাম</p><p id="summaryLoanTaken" class="text-lg font-black text-amber-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('LoanPaid', 'লোন শোধ')" class="premium-card p-3 border-l-4 border-slate-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">লোন শোধ</p><p id="summaryLoanPaid" class="text-lg font-black text-slate-600">৳ ০</p></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="premium-card p-3 border-l-4 border-blue-500"><p class="text-[9px] font-bold uppercase opacity-60">ধার দিলাম</p><p id="summaryDhaarGiven" class="text-lg font-black text-blue-600">৳ ০</p></div>
-            <div class="premium-card p-3 border-l-4 border-indigo-500"><p class="text-[9px] font-bold uppercase opacity-60">ধার ফেরত পেলাম</p><p id="summaryDhaarBack" class="text-lg font-black text-indigo-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('DhaarGiven', 'ধার দিলাম')" class="premium-card p-3 border-l-4 border-blue-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">ধার দিলাম</p><p id="summaryDhaarGiven" class="text-lg font-black text-blue-600">৳ ০</p></div>
+            <div onclick="openCategoryModal('DhaarBack', 'ধার ফেরত পেলাম')" class="premium-card p-3 border-l-4 border-indigo-500 cursor-pointer hover:shadow-md transition-all"><p class="text-[9px] font-bold uppercase opacity-60">ধার ফেরত পেলাম</p><p id="summaryDhaarBack" class="text-lg font-black text-indigo-600">৳ ০</p></div>
         </div>
     </div>
 
@@ -283,6 +283,16 @@
             <h3 class="text-xl font-black text-center mb-6 text-emerald-600">বকেয়া রিমাইন্ডার</h3>
             <div id="notifContent" class="space-y-3 max-h-80 overflow-y-auto no-scrollbar"></div>
             <button onclick="closeNotifModal()" class="w-full mt-6 py-4 bg-emerald-600 text-white font-bold rounded-2xl">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="fixed inset-0 bg-black/60 hidden z-[6000] items-end sm:items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-6 shadow-2xl modal-animate flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="categoryModalTitle" class="text-xl font-bold"></h3>
+                <button onclick="closeCategoryModal()" class="text-2xl opacity-40">&times;</button>
+            </div>
+            <div id="categoryModalList" class="space-y-3 overflow-y-auto no-scrollbar pb-4"></div>
         </div>
     </div>
 
@@ -523,7 +533,7 @@
         function renderApp() {
             const list = document.getElementById('appList'); list.innerHTML = '';
             
-            let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
+            let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'ন নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
             let openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0;
             
@@ -574,7 +584,9 @@
                         amtPrefix = isPlus ? '+ ৳' : '- ৳';
                     }
 
-                    let methodText = i.type === 'Transfer' ? `${i.method} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${i.toMethod}` : i.method;
+                    const displayMethod = i.method || 'ক্যাশ';
+                    const displayToMethod = i.toMethod || 'ক্যাশ';
+                    let methodText = i.type === 'Transfer' ? `${displayMethod} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${displayToMethod}` : displayMethod;
 
                     list.innerHTML += `<div class="premium-card p-4 flex justify-between items-center mb-3 group">
                         <div class="flex items-center gap-3">
@@ -620,7 +632,7 @@
                     if(w === 'ইসলামিক ওয়ালেট') { icon = 'fa-moon'; color = 'text-teal-600'; borderClass = 'border-teal-600'; }
 
                     return `
-                        <div class="premium-card p-3 flex items-center gap-3 border-l-4 ${borderClass}">
+                        <div onclick="openCategoryModal('${w}', '${w} এর লেনদেন')" class="premium-card p-3 flex items-center gap-3 border-l-4 ${borderClass} cursor-pointer hover:shadow-md transition-all">
                             <div class="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center ${color}">
                                 <i class="fas ${icon} text-sm"></i>
                             </div>
@@ -668,7 +680,7 @@
 
                 let historyHtml = monthlyHistory.map(h => `
                     <div class="history-line"><div class="flex justify-between items-center">
-                        <div><span class="text-[10px] font-bold text-slate-500"><i class="far fa-clock"></i> ${formatDateTime(h.date)}</span><br><span class="font-bold text-sm text-slate-700 dark:text-slate-200">${h.loanCat} (${h.method})</span></div>
+                        <div><span class="text-[10px] font-bold text-slate-500"><i class="far fa-clock"></i> ${formatDateTime(h.date)}</span><br><span class="font-bold text-sm text-slate-700 dark:text-slate-200">${h.loanCat} (${h.method || 'ক্যাশ'})</span></div>
                         <div class="flex items-center gap-3"><span class="font-black text-base ${h.loanCat.includes('Paid') || h.loanCat.includes('Dhaar') ? 'text-emerald-500':'text-rose-500'}">৳${toBN(h.amount)}</span>
                         <i onclick="deleteEntry('${h.id}')" class="fas fa-trash-alt text-slate-300 hover:text-rose-500 cursor-pointer"></i></div>
                     </div></div>`).join('');
@@ -874,6 +886,85 @@
             document.getElementById('mPerson').value = ''; document.getElementById('editingId').value = '';
             document.getElementById('mDate').value = new Date().toISOString().slice(0, 16);
             document.getElementById('saveBtn').innerText = "সেভ করুন";
+        }
+
+        function openCategoryModal(filterType, title) {
+            document.getElementById('categoryModalTitle').innerText = title;
+            const list = document.getElementById('categoryModalList');
+            list.innerHTML = '';
+            
+            let filteredDb = db.filter(i => {
+                const isCurrentMonth = (new Date(i.date).getMonth() + "-" + new Date(i.date).getFullYear()) === currentMonthKey;
+                
+                switch(filterType) {
+                    case 'ক্যাশ':
+                    case 'ব্যাংক':
+                    case 'বিকাশ':
+                    case 'নগদ':
+                    case 'ইসলামিক ওয়ালেট':
+                        return (i.method === filterType || (i.type === 'Transfer' && i.toMethod === filterType));
+                    case 'IncomeMonth':
+                        return i.type === 'Income' && isCurrentMonth;
+                    case 'ExpenseMonth':
+                        return i.type === 'Expense' && i.loanCat === 'General' && isCurrentMonth;
+                    case 'LoanTaken':
+                        return i.loanCat === 'Loan' && isCurrentMonth;
+                    case 'LoanPaid':
+                        return i.loanCat === 'Loan_Paid' && isCurrentMonth;
+                    case 'DhaarGiven':
+                        return i.loanCat === 'Dhaar' && isCurrentMonth;
+                    case 'DhaarBack':
+                        return i.loanCat === 'Dhaar_Back' && isCurrentMonth;
+                    default:
+                        return false;
+                }
+            }).sort((a,b) => b.ts - a.ts);
+
+            if (filteredDb.length === 0) {
+                list.innerHTML = '<p class="text-center text-slate-500 text-sm mt-8 mb-8 font-bold">কোনো লেনদেন পাওয়া যায়নি</p>';
+            } else {
+                filteredDb.forEach(i => {
+                    const amt = parseFloat(i.amount);
+                    let iconHtml, colorClass, amtPrefix;
+                    
+                    if(i.type === 'Transfer') {
+                        iconHtml = '<i class="fas fa-exchange-alt text-blue-500"></i>';
+                        colorClass = 'text-blue-500'; amtPrefix = '৳';
+                    } else {
+                        const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
+                        iconHtml = `<i class="fas ${isPlus ? 'fa-arrow-down text-emerald-500':'fa-arrow-up text-rose-500'}"></i>`;
+                        colorClass = isPlus ? 'text-emerald-600' : 'text-rose-600';
+                        amtPrefix = isPlus ? '+ ৳' : '- ৳';
+                    }
+
+                    const displayMethod = i.method || 'ক্যাশ';
+                    const displayToMethod = i.toMethod || 'ক্যাশ';
+                    let methodText = i.type === 'Transfer' ? `${displayMethod} <i class="fas fa-long-arrow-alt-right mx-1"></i> ${displayToMethod}` : displayMethod;
+
+                    list.innerHTML += `<div class="premium-card p-4 flex justify-between items-center mb-3 group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">${iconHtml}</div>
+                            <div>
+                                <div class="flex items-center gap-2"><h4 class="font-bold text-sm text-slate-700 dark:text-slate-200">${i.desc}</h4></div>
+                                <p class="text-[9px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-1">${methodText}</p>
+                                <p class="text-[10px] opacity-60 mt-1">${i.person !== 'নিজস্ব ট্রান্সফার' ? i.person+' • ' : ''}<i class="far fa-clock"></i> ${formatDateTime(i.date)}</p>
+                            </div>
+                        </div>
+                        <div class="text-right flex items-center gap-3">
+                            <p class="font-black ${colorClass}">${amtPrefix}${toBN(amt)}</p>
+                            <div class="flex gap-2">
+                                <i onclick="editEntry('${i.id}'); closeCategoryModal();" class="fas fa-edit text-blue-500 text-xs cursor-pointer"></i>
+                                <i onclick="deleteEntry('${i.id}'); closeCategoryModal();" class="fas fa-trash text-rose-500 text-xs cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('categoryModal').style.display = 'flex';
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').style.display = 'none';
         }
 
         window.onload = () => { 
