@@ -134,15 +134,24 @@
             </div>
         </div>
 
-        <div class="text-center mb-4">
+        <div class="text-center mb-4 cursor-pointer" onclick="openCategoryModal('AllHistory', 'মোট লেনদেন ইতিহাস')">
             <p class="text-[10px] opacity-75 uppercase tracking-[0.2em] mb-1 font-bold">মোট বর্তমান ব্যালেন্স</p>
             <h2 id="mainBalance" class="text-4xl font-black">৳ ০</h2>
         </div>
 
         <div class="bg-black/10 rounded-[28px] p-4 border border-white/5 backdrop-blur-sm grid grid-cols-3 gap-2 text-center mt-6">
-            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">স্থিতি</p><p id="openingBal" class="text-xs font-bold text-emerald-300">৳ ০</p></div>
-            <div class="border-r border-white/10"><p class="text-[8px] opacity-70">বকেয়া লোন</p><p id="openingLoan" class="text-xs font-bold text-amber-300">৳ ০</p></div>
-            <div><p class="text-[8px] opacity-70">বকেয়া ধার</p><p id="openingDhaar" class="text-xs font-bold text-blue-300">৳ ০</p></div>
+            <div class="border-r border-white/10 cursor-pointer" onclick="openCategoryModal('AllHistory', 'মোট স্থিতি ইতিহাস')">
+                <p class="text-[8px] opacity-70">স্থিতি</p>
+                <p id="openingBal" class="text-xs font-bold text-emerald-300">৳ ০</p>
+            </div>
+            <div class="border-r border-white/10 cursor-pointer" onclick="openCategoryModal('AllLoanHistory', 'সকল লোনের ইতিহাস')">
+                <p class="text-[8px] opacity-70">বকেয়া লোন</p>
+                <p id="openingLoan" class="text-xs font-bold text-amber-300">৳ ০</p>
+            </div>
+            <div class="cursor-pointer" onclick="openCategoryModal('AllDhaarHistory', 'সকল ধারের ইতিহাস')">
+                <p class="text-[8px] opacity-70">বকেয়া ধার</p>
+                <p id="openingDhaar" class="text-xs font-bold text-blue-300">৳ ০</p>
+            </div>
         </div>
     </div>
 
@@ -556,9 +565,11 @@
             const list = document.getElementById('appList'); list.innerHTML = '';
             
             let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
-            let openingLoan = 0, openingDhaar = 0;
-            let mInc = 0, mExp = 0;
             
+            let totalLoanTaken = 0, totalLoanPaid = 0;
+            let totalDhaarGiven = 0, totalDhaarBack = 0;
+            
+            let mInc = 0, mExp = 0;
             let mLoanTaken = 0, mLoanPaid = 0, mDhaarGiven = 0, mDhaarBack = 0;
 
             const[selMonth, selYear] = currentMonthKey.split('-').map(Number);
@@ -579,12 +590,11 @@
                     if(isPlus) wallets[method] += amt; else wallets[method] -= amt;
                 }
 
-                if(i.ts < startOfSelMonth) {
-                    if(i.loanCat === 'Loan') openingLoan += amt;
-                    if(i.loanCat === 'Loan_Paid') openingLoan -= amt;
-                    if(i.loanCat === 'Dhaar') openingDhaar += amt;
-                    if(i.loanCat === 'Dhaar_Back') openingDhaar -= amt;
-                }
+                // Lifetime totals for calculation
+                if(i.loanCat === 'Loan') totalLoanTaken += amt;
+                if(i.loanCat === 'Loan_Paid') totalLoanPaid += amt;
+                if(i.loanCat === 'Dhaar') totalDhaarGiven += amt;
+                if(i.loanCat === 'Dhaar_Back') totalDhaarBack += amt;
 
                 if(new Date(i.date).getMonth() + "-" + new Date(i.date).getFullYear() === currentMonthKey) {
                     if(i.type === 'Income') mInc += amt;
@@ -630,14 +640,23 @@
             let grandTotal = Object.values(wallets).reduce((sum, val) => sum + val, 0);
             document.getElementById('mainBalance').innerText = "৳ " + toBN(grandTotal);
             document.getElementById('openingBal').innerText = "৳ " + toBN(grandTotal); 
-            document.getElementById('openingLoan').innerText = "৳ " + toBN(openingLoan);
-            document.getElementById('openingDhaar').innerText = "৳ " + toBN(openingDhaar);
+            
+            // Logic for net loan/dhaar
+            let netLoanOpening = totalLoanTaken - totalLoanPaid;
+            let netDhaarOpening = totalDhaarGiven - totalDhaarBack;
+            document.getElementById('openingLoan').innerText = "৳ " + toBN(netLoanOpening > 0 ? netLoanOpening : 0);
+            document.getElementById('openingDhaar').innerText = "৳ " + toBN(netDhaarOpening > 0 ? netDhaarOpening : 0);
+            
             document.getElementById('topInc').innerText = "৳" + toBN(mInc);
             document.getElementById('topExp').innerText = "৳" + toBN(mExp);
             
-            document.getElementById('summaryLoanTaken').innerText = "৳ " + toBN(mLoanTaken);
+            // Calculation for the 4 summary boxes based on your logic
+            let displayLoanTaken = mLoanTaken - mLoanPaid;
+            document.getElementById('summaryLoanTaken').innerText = "৳ " + toBN(displayLoanTaken > 0 ? displayLoanTaken : 0);
             document.getElementById('summaryLoanPaid').innerText = "৳ " + toBN(mLoanPaid);
-            document.getElementById('summaryDhaarGiven').innerText = "৳ " + toBN(mDhaarGiven);
+            
+            let displayDhaarGiven = mDhaarGiven - mDhaarBack;
+            document.getElementById('summaryDhaarGiven').innerText = "৳ " + toBN(displayDhaarGiven > 0 ? displayDhaarGiven : 0);
             document.getElementById('summaryDhaarBack').innerText = "৳ " + toBN(mDhaarBack);
 
             const walletArea = document.getElementById('walletBalancesArea');
@@ -938,6 +957,12 @@
                         return i.loanCat === 'Dhaar' && isCurrentMonth;
                     case 'DhaarBack':
                         return i.loanCat === 'Dhaar_Back' && isCurrentMonth;
+                    case 'AllHistory':
+                        return true;
+                    case 'AllLoanHistory':
+                        return (i.loanCat === 'Loan' || i.loanCat === 'Loan_Paid');
+                    case 'AllDhaarHistory':
+                        return (i.loanCat === 'Dhaar' || i.loanCat === 'Dhaar_Back');
                     default:
                         return false;
                 }
@@ -1004,9 +1029,11 @@
             const lastActive = localStorage.getItem('last_activity');
             const now = Date.now();
             
+            // Check session on load
             if (userPass && lastActive && (now - lastActive > SESSION_LIMIT)) {
                 userPass = ""; localStorage.removeItem('app_pass'); localStorage.removeItem('last_activity');
             }
+            
             if (userPass) { 
                 document.getElementById('loginOverlay').style.display = 'none'; 
                 fetchData(); syncOfflineData(); updateActivity(); setupPushNotification();
