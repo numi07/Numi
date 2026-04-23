@@ -33,6 +33,24 @@
         body:not(.dark) #walletBalancesArea .premium-card .font-black { color: #020617 !important; }
         body:not(.dark) .premium-card { border: 1px solid #e2e8f0; }
 
+        /* Normal (Light) Mode Readability Enhancements */
+        body:not(.dark) { background-color: #f1f5f9; color: #0f172a; }
+        body:not(.dark) input, body:not(.dark) select { 
+            background: #ffffff !important; 
+            color: #0f172a !important; 
+            border: 1px solid #cbd5e1 !important; 
+            font-weight: bold !important;
+        }
+        body:not(.dark) input::placeholder { color: #94a3b8 !important; }
+        body:not(.dark) .bg-slate-100 { background-color: #e2e8f0 !important; } 
+        body:not(.dark) .text-slate-400 { color: #64748b !important; font-weight: bold; }
+        body:not(.dark) .text-slate-500 { color: #475569 !important; font-weight: bold; }
+        body:not(.dark) .text-slate-700 { color: #1e293b !important; font-weight: bold; }
+        body:not(.dark) h3, body:not(.dark) h4 { color: #020617 !important; font-weight: 800; }
+        body:not(.dark) .premium-card { background: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        body:not(.dark) .nav-btn.text-slate-400 { color: #64748b !important; }
+        body:not(.dark) #modalHeadText, body:not(.dark) #categoryModalTitle { color: #0f172a !important; }
+
         .app-header { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-radius: 0 0 45px 45px; box-shadow: 0 15px 30px -10px rgba(5, 150, 105, 0.4); }
         .premium-card { background: white; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.02); }
 
@@ -533,7 +551,7 @@
         function renderApp() {
             const list = document.getElementById('appList'); list.innerHTML = '';
             
-            let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'ন নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
+            let wallets = { 'ক্যাশ': 0, 'ব্যাংক': 0, 'বিকাশ': 0, 'নগদ': 0, 'ইসলামিক ওয়ালেট': 0 };
             let openingLoan = 0, openingDhaar = 0;
             let mInc = 0, mExp = 0;
             
@@ -928,8 +946,16 @@
                     let iconHtml, colorClass, amtPrefix;
                     
                     if(i.type === 'Transfer') {
-                        iconHtml = '<i class="fas fa-exchange-alt text-blue-500"></i>';
-                        colorClass = 'text-blue-500'; amtPrefix = '৳';
+                        if(filterType && filterType === i.toMethod) {
+                            colorClass = 'text-emerald-600'; amtPrefix = '+ ৳';
+                            iconHtml = '<i class="fas fa-arrow-down text-emerald-500"></i>';
+                        } else if(filterType && filterType === i.method) {
+                            colorClass = 'text-rose-600'; amtPrefix = '- ৳';
+                            iconHtml = '<i class="fas fa-arrow-up text-rose-500"></i>';
+                        } else {
+                            iconHtml = '<i class="fas fa-exchange-alt text-blue-500"></i>';
+                            colorClass = 'text-blue-500'; amtPrefix = '৳';
+                        }
                     } else {
                         const isPlus = (i.type === 'Income' || i.loanCat === 'Dhaar_Back' || i.loanCat === 'Loan');
                         iconHtml = `<i class="fas ${isPlus ? 'fa-arrow-down text-emerald-500':'fa-arrow-up text-rose-500'}"></i>`;
