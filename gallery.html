@@ -144,160 +144,135 @@
     </section>
 
     <script>
-        const GALLERY_API_URL = "/api/gallery"; 
-        const rotLog = { flower: 0, fruit: 0, nature: 0 };
+    const GALLERY_API_URL = "/api/gallery"; 
+    const rotLog = { flower: 0, fruit: 0, nature: 0 };
 
-        // ১. ডাটা লোড ও ডামি ডাটা (যাতে খালি না দেখায়)
-        async function loadGallery() {
-            try {
-                const res = await fetch(GALLERY_API_URL);
-                const data = await res.json();
-                renderCategory('flower', data.filter(i => i.category === 'ফুল'));
-                renderCategory('fruit', data.filter(i => i.category === 'ফল'));
-                renderCategory('nature', data.filter(i => i.category === 'ন্যাচার'));
-            } catch (e) { 
-                console.log("লাইভ ডাটা নেই, স্যাম্পল দেখাচ্ছি...");
-                // স্যাম্পল ডাটা যদি API না থাকে
-                const sample = [
-                    {url: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500', category: 'ফুল'},
-                    {url: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=500', category: 'ফল'},
-                    {url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500', category: 'ন্যাচার'}
-                ];
-                renderCategory('flower', sample); 
-                renderCategory('fruit', sample); 
-                renderCategory('nature', sample); 
-            }
-        }
-
-        function renderCategory(cat, images) {
-            const container = document.getElementById(`${cat}-drum`);
-            if(!images.length) return;
+    // ১. ডাটা লোড করা
+    async function loadGallery() {
+        try {
+            const res = await fetch(GALLERY_API_URL);
+            const data = await res.json();
             
-            // ছবি সংখ্যা কম হলে ৩ডি ইফেক্ট বুঝা যায় না, তাই লুপ করে বাড়ানো হয়েছে
-            let displayImages = [...images];
-            while(displayImages.length < 6) displayImages = [...displayImages, ...images];
-
-            container.innerHTML = displayImages.map(img => `<div class="card"><img src="${img.url}"></div>`).join('');
-            setTimeout(() => rotateDrum(cat, 0), 100); 
+            // ডাটা রেন্ডার (ধরে নিচ্ছি API থেকে [{url, category}, ...] ফরম্যাটে ডাটা আসবে)
+            renderCategory('flower', data.filter(i => i.category === 'ফুল'));
+            renderCategory('fruit', data.filter(i => i.category === 'ফল'));
+            renderCategory('nature', data.filter(i => i.category === 'ন্যাচার'));
+        } catch (e) { 
+            console.error("ডাটা লোড করতে সমস্যা হয়েছে");
         }
+    }
 
-        // ২. ৩ডি ড্রাম এনিমেশন
-        function rotateDrum(cat, dir) {
-            const drum = document.getElementById(`${cat}-drum`);
-            const cards = drum.querySelectorAll('.card');
-            const total = cards.length;
-            if(!total) return;
+    // ২. অ্যাডমিন লগিন (ব্যাকএন্ড ভেরিফিকেশন সহ)
+    async function checkPass() {
+        const passInput = document.getElementById('adminPassInput');
+        const pass = passInput.value;
+        const msg = document.getElementById('msg');
+        
+        if(!pass) return;
 
-            const angleStep = 360 / total;
-            rotLog[cat] += angleStep * dir;
+        msg.innerText = "যাচাই করা হচ্ছে...";
+        
+        try {
+            // ব্যাকএন্ডে লগিন চেক রিকোয়েস্ট পাঠানো
+            const res = await fetch(`${GALLERY_API_URL}?action=login&pass=${encodeURIComponent(pass)}`);
+            const result = await res.json();
 
-            cards.forEach((card, i) => {
-                const currentAngle = (i * angleStep) + rotLog[cat];
-                const radius = 450; // স্লাইডার ব্যাসার্ধ
-                
-                const rad = currentAngle * Math.PI / 180;
-                const x = Math.sin(rad) * radius;
-                const z = Math.cos(rad) * radius;
-
-                gsap.to(card, {
-                    x: x,
-                    z: z,
-                    rotationY: currentAngle,
-                    duration: 1.2,
-                    ease: "expo.out",
-                    opacity: z > -100 ? 1 : 0.2, // পেছনের কার্ড হালকা দেখাবে
-                    filter: z > 0 ? "blur(0px)" : "blur(2px)"
-                });
-            });
-        }
-
-        // ৩. অ্যাডমিন ফাংশনালিটি
-        function toggleAdmin() {
-            const b = document.getElementById('adminBox');
-            b.style.display = b.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // এন্টার কি প্রেস হ্যান্ডলার
-        function handleEnter(e) {
-            if (e.key === "Enter") {
-                checkPass();
-            }
-        }
-
-        function checkPass() {
-            const pass = document.getElementById('adminPassInput').value;
-            const msg = document.getElementById('msg');
-            
-            if(pass === "123") { // আপনার পাসওয়ার্ড এখানে দিন
+            if(res.ok && result.success) {
                 document.getElementById('authArea').style.display = 'none';
                 document.getElementById('uploadForm').style.display = 'block';
                 msg.innerText = "লগিন সফল!";
                 msg.style.color = "#00d2ff";
+                // সেশন স্টোরেজে পাসওয়ার্ড রাখা যেতে পারে যদি পরে দরকার হয়
+                sessionStorage.setItem('admin_verified', 'true');
             } else {
-                msg.innerText = "ভুল পাসওয়ার্ড!";
-                msg.style.color = "#ff4d4d";
-                gsap.to("#adminBox", { x: 10, repeat: 3, yoyo: true, duration: 0.05 });
+                throw new Error("ভুল পাসওয়ার্ড");
             }
+        } catch (err) {
+            msg.innerText = "ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।";
+            msg.style.color = "#ff4d4d";
+            gsap.to("#adminBox", { x: 10, repeat: 3, yoyo: true, duration: 0.05 });
+            passInput.value = "";
         }
+    }
 
-        // ৪. প্রিভিউ এবং আপলোড
-        document.getElementById('fileInp').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    document.getElementById('imgPreview').src = ev.target.result;
-                    document.getElementById('previewBox').style.display = 'block';
-                    document.getElementById('fileMeta').innerText = `Size: ${(file.size/1024).toFixed(2)} KB`;
-                };
-                reader.readAsDataURL(file);
+    // এন্টার কী প্রেস হ্যান্ডলার
+    function handleEnter(e) {
+        if (e.key === "Enter") {
+            checkPass();
+        }
+    }
+
+    // ৩. ফাইল আপলোড লজিক
+    document.getElementById('uploadForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('subBtn');
+        const msg = document.getElementById('msg');
+        const file = document.getElementById('fileInp').files[0];
+        const category = document.getElementById('fileCat').value;
+
+        btn.disabled = true;
+        btn.innerText = "আপলোড হচ্ছে...";
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            try {
+                // Vercel API তে POST রিকোয়েস্ট
+                const res = await fetch(GALLERY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fileData: reader.result,
+                        filename: file.name,
+                        category: category
+                    })
+                });
+
+                if(res.ok) {
+                    msg.innerText = "সফলভাবে ড্রাইভে সেভ হয়েছে!";
+                    msg.style.color = "#00ff88";
+                    document.getElementById('uploadForm').reset();
+                    document.getElementById('previewBox').style.display = 'none';
+                    loadGallery(); // নতুন ছবি দেখাতে রিফ্রেশ
+                } else {
+                    msg.innerText = "আপলোড ব্যর্থ হয়েছে।";
+                }
+            } catch (err) {
+                msg.innerText = "সার্ভার এরর!";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "ড্রাইভে পাঠান";
             }
         };
+    };
 
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('subBtn');
-            const msg = document.getElementById('msg');
-            const file = document.getElementById('fileInp').files[0];
+    // ৪. ৩ডি ড্রাম রোটেশন লজিক (স্মুথ এনিমেশন)
+    function rotateDrum(cat, dir) {
+        const drum = document.getElementById(`${cat}-drum`);
+        const cards = drum.querySelectorAll('.card');
+        if(!cards.length) return;
 
-            btn.disabled = true;
-            btn.innerText = "আপলোড হচ্ছে...";
-            msg.innerText = "";
+        const step = 360 / cards.length;
+        rotLog[cat] += step * dir;
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                try {
-                    // এখানে আপনার সার্ভার বা ভেরসেল ব্যাকএন্ড কল হবে
-                    const response = await fetch(GALLERY_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams({
-                            fileData: reader.result,
-                            category: document.getElementById('fileCat').value
-                        })
-                    });
+        cards.forEach((card, i) => {
+            const angle = (i * step) + rotLog[cat];
+            const rad = angle * Math.PI / 180;
+            const x = Math.sin(rad) * 500;
+            const z = Math.cos(rad) * 500;
 
-                    if(response.ok) {
-                        msg.innerText = "ছবি সফলভাবে সেভ হয়েছে!";
-                        msg.style.color = "#00ff88";
-                        document.getElementById('uploadForm').reset();
-                        document.getElementById('previewBox').style.display = 'none';
-                        loadGallery(); // গ্যালারি রিফ্রেশ
-                    } else {
-                        throw new Error();
-                    }
-                } catch (err) {
-                    msg.innerText = "আপলোড ব্যর্থ হয়েছে!";
-                    msg.style.color = "#ff4d4d";
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = "সার্ভারে সেভ করুন";
-                }
-            };
-        };
+            gsap.to(card, {
+                x: x,
+                z: z,
+                rotationY: angle,
+                duration: 1.5,
+                ease: "power4.out",
+                opacity: z > 0 ? 1 : 0.2
+            });
+        });
+    }
 
-        window.onload = loadGallery;
-    </script>
+    window.onload = loadGallery;
+</script>
 </body>
 </html>
