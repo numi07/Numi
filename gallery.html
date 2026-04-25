@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফটো গ্যালারি - আল নোমান শিকদার</title>
+    <title>প্রিমিয়াম ৩ডি গ্যালারি - আল নোমান শিকদার</title>
     
+    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
@@ -14,335 +15,322 @@
         :root {
             --primary: #00d2ff;
             --secondary: #00ff88;
-            --bg: #050505;
+            --bg: #030303;
             --border: rgba(255, 255, 255, 0.1);
             --glass: rgba(255, 255, 255, 0.05);
-            --neon-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+            --neon-glow: 0 0 20px rgba(0, 210, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
         body { background: var(--bg); color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
 
+        /* Background Visuals */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0a1520 0%, #030303 100%);
+            z-index: -1;
+        }
+
         header {
             position: fixed; top: 0; width: 100%; padding: 15px 50px;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
             border-bottom: 1px solid var(--border);
         }
-        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-shadow: var(--neon-shadow); }
+        .logo { font-size: 22px; font-weight: 700; color: var(--primary); text-shadow: var(--neon-glow); letter-spacing: 1px; }
+        nav span { cursor: pointer; margin-left: 20px; font-weight: 500; transition: 0.3s; }
+        nav span:hover { color: var(--primary); }
 
-        /* স্লাইডার সেকশন */
-        section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sec-bg { font-size: 10rem; opacity: 0.02; position: absolute; pointer-events: none; font-weight: 900; text-transform: uppercase; letter-spacing: 20px; }
+        /* Section Layout */
+        section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .sec-bg { font-size: 10vw; opacity: 0.03; position: absolute; pointer-events: none; font-weight: 900; letter-spacing: 30px; text-transform: uppercase; }
 
-        .slider-viewport { height: 450px; width: 100%; perspective: 2000px; display: flex; justify-content: center; align-items: center; }
-        .drum { position: relative; width: 250px; height: 350px; transform-style: preserve-3d; }
+        /* 3D Drum Styles */
+        .slider-viewport { 
+            height: 450px; width: 100%; 
+            perspective: 2000px; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+
+        .drum { 
+            position: relative; width: 220px; height: 320px; 
+            transform-style: preserve-3d; 
+            will-change: transform;
+        }
         
         .card { 
-            position: absolute; width: 100%; height: 100%; border-radius: 20px; 
+            position: absolute; width: 220px; height: 320px; border-radius: 15px; 
             overflow: hidden; border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); backface-visibility: hidden;
-            transition: transform 0.5s; cursor: pointer;
+            background: #111; backface-visibility: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            cursor: pointer; transition: border 0.3s;
         }
-        .card:hover { border-color: var(--primary); box-shadow: 0 0 25px rgba(0, 210, 255, 0.3); }
-        .card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover img { scale: 1.1; }
+        .card:hover { border-color: var(--primary); box-shadow: var(--neon-glow); }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
         
         .card-caption {
-            position: absolute; bottom: 0; width: 100%; padding: 20px 10px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.95));
-            color: #fff; font-size: 14px; text-align: center; font-weight: 500;
+            position: absolute; bottom: 0; width: 100%; padding: 15px 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: #fff; font-size: 13px; text-align: center; font-weight: 300;
         }
 
-        .comment-trigger {
-            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6);
-            padding: 5px 10px; border-radius: 15px; font-size: 11px; border: 1px solid var(--primary);
-            color: var(--primary); opacity: 0; transition: 0.3s;
+        .comment-btn-tag {
+            position: absolute; top: 10px; right: 10px; background: var(--primary);
+            color: #000; padding: 3px 8px; border-radius: 8px; font-size: 10px;
+            font-weight: bold; opacity: 0; transform: translateY(-5px); transition: 0.3s;
         }
-        .card:hover .comment-trigger { opacity: 1; }
+        .card:hover .comment-btn-tag { opacity: 1; transform: translateY(0); }
 
-        .controls { display: flex; gap: 30px; margin-top: 50px; z-index: 10; }
+        /* Navigation Controls */
+        .controls { display: flex; gap: 30px; margin-top: 40px; z-index: 10; }
         .btn-slide { 
             width: 55px; height: 55px; border-radius: 50%; 
-            background: var(--glass); color: var(--primary); 
+            background: var(--glass); color: var(--primary); border: 1px solid var(--primary);
             display: flex; justify-content: center; align-items: center; 
-            cursor: pointer; border: 1px solid var(--primary); 
-            transition: 0.4s; font-size: 20px;
+            cursor: pointer; transition: 0.4s; font-size: 22px;
         }
-        .btn-slide:hover { background: var(--primary); color: #000; box-shadow: var(--neon-shadow); transform: scale(1.1); }
+        .btn-slide:hover { background: var(--primary); color: #000; transform: scale(1.1); box-shadow: var(--neon-glow); }
 
-        /* অ্যাডমিন প্যানেল */
+        /* Admin & Forms */
         .admin-nav { position: fixed; top: 80px; right: 20px; z-index: 1100; }
-        .admin-toggle { 
-            background: rgba(0, 210, 255, 0.1); color: var(--primary); 
-            border: 1px solid var(--primary); padding: 10px 22px; 
-            border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .glass-box {
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(30px);
-            padding: 30px; border-radius: 25px; border: 1px solid var(--border);
-            width: 350px; position: absolute; right: 0; top: 60px;
-            display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.9);
-            max-height: 80vh; overflow-y: auto;
+        .admin-toggle { background: var(--glass); color: var(--primary); border: 1px solid var(--primary); padding: 8px 18px; border-radius: 25px; cursor: pointer; backdrop-filter: blur(15px); font-weight: bold; }
+        
+        .glass-box { 
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(30px); 
+            padding: 25px; border-radius: 20px; border: 1px solid var(--border); 
+            width: 330px; position: absolute; right: 0; top: 55px; 
+            display: none; box-shadow: 0 25px 60px rgba(0,0,0,0.9); 
+            max-height: 85vh; overflow-y: auto;
         }
         
-        .upload-form-ui { display: flex; flex-direction: column; gap: 15px; }
-        input, select, textarea, button { 
-            width: 100%; padding: 14px; border-radius: 12px; 
-            border: 1px solid var(--border); background: var(--glass); 
-            color: #fff; outline: none; transition: 0.3s; font-size: 14px;
-        }
-        input:focus, textarea:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
+        .form-ui { display: flex; flex-direction: column; gap: 12px; }
+        input, select, textarea, button { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--glass); color: #fff; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        .up-btn { background: var(--primary); color: #000; font-weight: bold; cursor: pointer; border: none; }
         
-        .up-btn { background: var(--primary); color: #000; font-weight: 700; cursor: pointer; border: none; margin-top: 5px; }
-        .up-btn:hover { background: #fff; transform: translateY(-2px); }
+        /* Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: #111; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 1px solid var(--primary); box-shadow: var(--neon-glow); }
 
-        /* কমেন্ট সেকশন ডিজাইন */
-        #adminComments { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; }
-        .comment-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid var(--secondary); }
-        .comment-item small { color: var(--primary); display: block; margin-bottom: 4px; font-size: 11px; }
-        .comment-item p { font-size: 13px; color: #ddd; }
-
-        /* কমেন্ট মোডাল */
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
-        }
-        .modal-content {
-            background: #111; padding: 30px; border-radius: 25px;
-            width: 100%; max-width: 400px; border: 1px solid var(--primary);
-            box-shadow: var(--neon-shadow);
-        }
-
-        #msg { font-size: 13px; text-align: center; margin-top: 10px; color: var(--primary); }
+        /* Comments List */
+        .comment-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid var(--secondary); }
+        .comment-item small { color: var(--primary); font-size: 11px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">আল নোমান শিকদার</div>
+        <div class="logo">নোমান শিকদার</div>
         <nav>
-            <span style="cursor:pointer; margin-right:15px; font-weight:500;" onclick="gsap.to(window, {scrollTo: '#self-sec'})">নিজ</span>
-            <span style="cursor:pointer; margin-right:15px; font-weight:500;" onclick="gsap.to(window, {scrollTo: '#flower-sec'})">ফুল</span>
-            <span style="cursor:pointer; font-weight:500;" onclick="gsap.to(window, {scrollTo: '#nature-sec'})">প্রকৃতি</span>
+            <span onclick="gsap.to(window, {scrollTo: '#self-sec'})">নিজ</span>
+            <span onclick="gsap.to(window, {scrollTo: '#flower-sec'})">ফুল</span>
+            <span onclick="gsap.to(window, {scrollTo: '#nature-sec'})">প্রকৃতি</span>
         </nav>
     </header>
 
-    <!-- অ্যাডমিন সেকশন -->
+    <!-- Admin Panel -->
     <div class="admin-nav">
         <button class="admin-toggle" id="adminBtn" onclick="toggleAdmin()">লগিন</button>
-        
         <div class="glass-box" id="adminBox">
             <div id="authArea">
-                <p style="text-align:center; font-weight:bold; margin-bottom:15px;">অ্যাডমিন এক্সেস</p>
-                <input type="password" id="adminPassInput" placeholder="পাসওয়ার্ড...">
-                <button onclick="checkPass()" style="background:var(--primary); color:#000; margin-top:10px;">ভেরিফাই</button>
+                <p style="text-align:center; margin-bottom:15px; font-weight:bold;">অ্যাডমিন এক্সেস</p>
+                <input type="password" id="adminPassInput" placeholder="পাসওয়ার্ড লিখুন...">
+                <button onclick="checkPass()" style="background:var(--primary); color:#000; margin-top:10px; font-weight:bold;">ভেরিফাই</button>
             </div>
-
-            <form id="uploadForm" class="upload-form-ui" style="display:none;">
-                <p style="text-align:center; font-weight:bold; color:var(--primary);">নতুন ফটো আপলোড</p>
+            
+            <form id="uploadForm" class="form-ui" style="display:none;">
+                <p style="text-align:center; color:var(--primary); font-weight:bold;">নতুন ছবি আপলোড</p>
                 <input type="file" id="fileInp" accept="image/*" required>
-                <div id="previewBox" style="display:none;"><img id="imgPreview" style="width:100%; border-radius:10px; margin-bottom:10px;"></div>
                 <input type="text" id="fileCaption" placeholder="ছবির ক্যাপশন...">
                 <select id="fileCat">
-                    <option value="নিজ">নিজ</option>
-                    <option value="ফুল">ফুল</option>
-                    <option value="প্রকৃতি">প্রকৃতি</option>
+                    <option value="নিজ">নিজ (Personal)</option>
+                    <option value="ফুল">ফুল (Flower)</option>
+                    <option value="প্রকৃতি">প্রকৃতি (Nature)</option>
                 </select>
-                <button type="submit" class="up-btn" id="subBtn">আপলোড করুন</button>
+                <button type="submit" class="up-btn" id="subBtn">সার্ভারে সেভ করুন</button>
                 
-                <div id="adminComments">
-                    <p style="font-size:14px; margin-bottom:10px; color:var(--secondary);">সাম্প্রতিক কমেন্টসমূহ:</p>
-                    <div id="commentList">লোডিং...</div>
-                </div>
+                <hr style="opacity:0.1; margin: 10px 0;">
+                <p style="font-size:14px; color:var(--secondary);">সব কমেন্ট দেখুন:</p>
+                <div id="adminCommentList" style="margin-top:10px;">লোডিং...</div>
 
-                <button type="button" onclick="logout()" style="background:transparent; border-color:#ff4d4d; color:#ff4d4d; margin-top:10px;">লগআউট</button>
+                <button type="button" onclick="logout()" style="background:none; border:1px solid #ff4d4d; color:#ff4d4d; margin-top:10px;">লগআউট</button>
             </form>
-            <p id="msg"></p>
+            <p id="msg" style="text-align:center; margin-top:10px; font-size:12px;"></p>
         </div>
     </div>
 
-    <!-- গ্যালারি সেকশন -->
-    <section id="self-sec"><div class="sec-bg">PERSONAL</div><div class="slider-viewport"><div class="drum" id="self-drum"></div></div>
-        <div class="controls"><div class="btn-slide" onclick="rotateDrum('self', 1)">←</div><div class="btn-slide" onclick="rotateDrum('self', -1)">→</div></div>
+    <!-- Sections -->
+    <section id="self-sec">
+        <div class="sec-bg">PERSONAL</div>
+        <div class="slider-viewport"><div class="drum" id="self-drum"></div></div>
+        <div class="controls">
+            <div class="btn-slide" onclick="rotateDrum('self', 1)">←</div>
+            <div class="btn-slide" onclick="rotateDrum('self', -1)">→</div>
+        </div>
     </section>
 
-    <section id="flower-sec"><div class="sec-bg">FLOWERS</div><div class="slider-viewport"><div class="drum" id="flower-drum"></div></div>
-        <div class="controls"><div class="btn-slide" onclick="rotateDrum('flower', 1)">←</div><div class="btn-slide" onclick="rotateDrum('flower', -1)">→</div></div>
+    <section id="flower-sec">
+        <div class="sec-bg">FLOWERS</div>
+        <div class="slider-viewport"><div class="drum" id="flower-drum"></div></div>
+        <div class="controls">
+            <div class="btn-slide" onclick="rotateDrum('flower', 1)">←</div>
+            <div class="btn-slide" onclick="rotateDrum('flower', -1)">→</div>
+        </div>
     </section>
 
-    <section id="nature-sec"><div class="sec-bg">NATURE</div><div class="slider-viewport"><div class="drum" id="nature-drum"></div></div>
-        <div class="controls"><div class="btn-slide" onclick="rotateDrum('nature', 1)">←</div><div class="btn-slide" onclick="rotateDrum('nature', -1)">→</div></div>
+    <section id="nature-sec">
+        <div class="sec-bg">NATURE</div>
+        <div class="slider-viewport"><div class="drum" id="nature-drum"></div></div>
+        <div class="controls">
+            <div class="btn-slide" onclick="rotateDrum('nature', 1)">←</div>
+            <div class="btn-slide" onclick="rotateDrum('nature', -1)">→</div>
+        </div>
     </section>
 
-    <!-- কমেন্ট মোডাল -->
+    <!-- Comment Modal -->
     <div class="modal" id="commentModal">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px; color:var(--primary);">মতামত দিন</h3>
-            <p id="targetImgName" style="font-size:12px; margin-bottom:10px; opacity:0.7;"></p>
+            <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">মতামত দিন</h3>
             <input type="text" id="visitorName" placeholder="আপনার নাম" style="margin-bottom:10px;">
-            <textarea id="visitorText" placeholder="কমেন্ট লিখুন..." rows="3" style="margin-bottom:15px;"></textarea>
-            <div style="display:flex; gap:10px;">
-                <button onclick="submitComment()" style="background:var(--primary); color:#000;">পাঠিয়ে দিন</button>
-                <button onclick="closeModal()" style="background:rgba(255,255,255,0.1);">বাতিল</button>
+            <textarea id="visitorText" placeholder="কমেন্ট লিখুন..." rows="4"></textarea>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="submitComment()" style="background:var(--primary); color:#000; font-weight:bold;">পোস্ট করুন</button>
+                <button onclick="closeModal()" style="background:rgba(255,255,255,0.05);">বাতিল</button>
             </div>
         </div>
     </div>
 
     <script>
-        // আপনার গুগল অ্যাপস স্ক্রিপ্ট ইউআরএল এখানে দিন
-        const GALLERY_API_URL = "/api/gallery"; 
-        
-        const rotLog = { self: 0, flower: 0, nature: 0 };
+        const GALLERY_API_URL = "/api/gallery"; // আপনার Vercel/Apps Script URL এখানে দিন
+        const rotState = { self: 0, flower: 0, nature: 0 };
         let activeImgUrl = "";
 
+        // ১. অ্যাডমিন প্যানেল লজিক
         function toggleAdmin() {
             const box = document.getElementById('adminBox');
             box.style.display = (box.style.display === "block") ? "none" : "block";
-            if(box.style.display === "block" && localStorage.getItem('nomans_auth')) loadAllComments();
+            if(box.style.display === "block" && localStorage.getItem('nomans_auth')) loadComments();
         }
 
         async function checkPass() {
             const pass = document.getElementById('adminPassInput').value;
-            if(!pass) return;
+            const msg = document.getElementById('msg');
+            msg.innerText = "যাচাই হচ্ছে...";
             try {
                 const res = await fetch(`${GALLERY_API_URL}?action=login&pass=${encodeURIComponent(pass)}`);
                 const result = await res.json();
                 if(result.success) {
                     localStorage.setItem('nomans_auth', 'true');
-                    showUploadForm();
-                    loadAllComments();
-                } else { alert("ভুল পাসওয়ার্ড!"); }
-            } catch (e) { alert("সার্ভার কানেকশন এরর!"); }
+                    showLoggedInUI();
+                    loadComments();
+                } else { msg.innerText = "ভুল পাসওয়ার্ড!"; msg.style.color = "#ff4d4d"; }
+            } catch (e) { msg.innerText = "সার্ভার এরর!"; }
         }
 
-        function showUploadForm() {
+        function showLoggedInUI() {
             document.getElementById('authArea').style.display = 'none';
             document.getElementById('uploadForm').style.display = 'flex';
             document.getElementById('adminBtn').innerText = "অ্যাডমিন প্যানেল";
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        // কমেন্ট হ্যান্ডলিং
-        function openCommentModal(url, caption) {
-            activeImgUrl = url;
-            document.getElementById('targetImgName').innerText = "ছবি: " + (caption || "শিরোনামহীন");
-            document.getElementById('commentModal').style.display = "flex";
-            gsap.from(".modal-content", {scale: 0.8, opacity: 0, duration: 0.3});
-        }
-
-        function closeModal() { document.getElementById('commentModal').style.display = "none"; }
-
-        async function submitComment() {
-            const name = document.getElementById('visitorName').value;
-            const text = document.getElementById('visitorText').value;
-            if(!name || !text) return alert("সব ঘর পূরণ করুন");
-
-            try {
-                const res = await fetch(GALLERY_API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'addComment',
-                        imgUrl: activeImgUrl,
-                        visitor: name,
-                        comment: text
-                    })
-                });
-                if(res.ok) {
-                    alert("কমেন্ট সফলভাবে জমা হয়েছে!");
-                    closeModal();
-                    document.getElementById('visitorText').value = "";
-                }
-            } catch (e) { alert("ব্যর্থ হয়েছে!"); }
-        }
-
-        async function loadAllComments() {
-            const list = document.getElementById('commentList');
-            try {
-                const res = await fetch(`${GALLERY_API_URL}?action=getComments`);
-                const data = await res.json();
-                list.innerHTML = data.reverse().map(c => `
-                    <div class="comment-item">
-                        <small>${c.visitor} (${c.date})</small>
-                        <p>${c.comment}</p>
-                    </div>
-                `).join('');
-            } catch (e) { list.innerText = "কমেন্ট লোড করা যায়নি।"; }
-        }
-
-        // গ্যালারি ফাংশনালিটি
+        // ২. ৩ডি ড্রাম রেন্ডারিং (সিলিন্ডার ম্যাথমেটিক্স)
         async function loadGallery() {
             try {
                 const res = await fetch(GALLERY_API_URL);
                 const data = await res.json();
-                renderCategory('self', data.filter(i => i.category === 'নিজ'));
-                renderCategory('flower', data.filter(i => i.category === 'ফুল'));
-                renderCategory('nature', data.filter(i => i.category === 'প্রকৃতি'));
-            } catch (e) { console.log("Load error"); }
+                renderDrum('self', data.filter(i => i.category === 'নিজ'));
+                renderDrum('flower', data.filter(i => i.category === 'ফুল'));
+                renderDrum('nature', data.filter(i => i.category === 'প্রকৃতি'));
+            } catch (e) { console.error("Gallery failed to load"); }
         }
 
-        function renderCategory(cat, images) {
+        function renderDrum(cat, images) {
             const drum = document.getElementById(`${cat}-drum`);
-            if(!images.length) { drum.innerHTML = "<p style='font-size:12px;opacity:0.5;'>ছবি নেই</p>"; return; }
-            
-            drum.innerHTML = images.map(img => `
-                <div class="card" onclick="openCommentModal('${img.url}', '${img.caption}')">
-                    <img src="${img.url}">
-                    <div class="comment-trigger">কমেন্ট করুন</div>
-                    ${img.caption ? `<div class="card-caption">${img.caption}</div>` : ''}
-                </div>
-            `).join('');
-            rotateDrum(cat, 0);
+            if(!images.length) { drum.innerHTML = "<p style='font-size:12px;opacity:0.5;'>কোন ছবি নেই</p>"; return; }
+
+            const count = images.length;
+            const radius = Math.round( (230 / 2) / Math.tan( Math.PI / count ) ) + 60; // কার্ড অনুযায়ী ব্যাসার্ধ
+
+            drum.innerHTML = images.map((img, i) => {
+                const angle = i * (360 / count);
+                return `
+                    <div class="card" 
+                         onclick="openCommentModal('${img.url}', '${img.caption}')"
+                         style="transform: rotateY(${angle}deg) translateZ(${radius}px);">
+                        <img src="${img.url}">
+                        <div class="comment-btn-tag">কমেন্ট করুন</div>
+                        ${img.caption ? `<div class="card-caption">${img.caption}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
         }
 
         function rotateDrum(cat, dir) {
             const drum = document.getElementById(`${cat}-drum`);
             const cards = drum.querySelectorAll('.card');
             if(!cards.length) return;
+            
             const step = 360 / cards.length;
-            rotLog[cat] += step * dir;
-            cards.forEach((card, i) => {
-                const angle = (i * step) + rotLog[cat];
-                const rad = angle * Math.PI / 180;
-                gsap.to(card, {
-                    x: Math.sin(rad) * 450,
-                    z: Math.cos(rad) * 450,
-                    rotationY: angle,
-                    duration: 1.5,
-                    ease: "power3.out"
-                });
+            rotState[cat] += (step * dir);
+
+            gsap.to(drum, {
+                rotationY: rotState[cat],
+                duration: 1.5,
+                ease: "power4.out"
             });
         }
 
-        document.getElementById('fileInp').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    document.getElementById('imgPreview').src = ev.target.result;
-                    document.getElementById('previewBox').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        };
+        // ৩. কমেন্ট হ্যান্ডলিং
+        function openCommentModal(url, caption) {
+            activeImgUrl = url;
+            document.getElementById('commentModal').style.display = "flex";
+            gsap.from(".modal-content", { scale: 0.7, opacity: 0, duration: 0.4, ease: "back.out(1.7)" });
+        }
+        function closeModal() { document.getElementById('commentModal').style.display = "none"; }
 
+        async function submitComment() {
+            const name = document.getElementById('visitorName').value;
+            const text = document.getElementById('visitorText').value;
+            if(!name || !text) return alert("ঘরগুলো পূরণ করুন");
+
+            try {
+                await fetch(GALLERY_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'addComment', imgUrl: activeImgUrl, visitor: name, comment: text })
+                });
+                alert("আপনার মতামত সফলভাবে জমা হয়েছে!"); 
+                closeModal();
+            } catch (e) { alert("ব্যর্থ হয়েছে!"); }
+        }
+
+        async function loadComments() {
+            const list = document.getElementById('adminCommentList');
+            try {
+                const res = await fetch(`${GALLERY_API_URL}?action=getComments`);
+                const data = await res.json();
+                list.innerHTML = data.length ? data.reverse().map(c => `
+                    <div class="comment-item">
+                        <small>${c.visitor} (${c.date})</small>
+                        <p style="font-size:12px;">${c.comment}</p>
+                    </div>
+                `).join('') : "কোন কমেন্ট নেই।";
+            } catch (e) { list.innerText = "কমেন্ট লোড করতে সমস্যা হয়েছে।"; }
+        }
+
+        // ৪. আপলোড লজিক
         document.getElementById('uploadForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('subBtn');
             const file = document.getElementById('fileInp').files[0];
-            btn.disabled = true; btn.innerText = "আপলোড হচ্ছে...";
-            
+            btn.innerText = "প্রসেস হচ্ছে..."; btn.disabled = true;
+
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
                 try {
-                    await fetch(GALLERY_API_URL, {
+                    const res = await fetch(GALLERY_API_URL, {
                         method: 'POST',
                         body: JSON.stringify({
                             fileData: reader.result,
@@ -351,14 +339,16 @@
                             category: document.getElementById('fileCat').value
                         })
                     });
-                    location.reload();
-                } catch (err) { alert("ব্যর্থ!"); btn.disabled = false; }
+                    if(res.ok) { alert("আপলোড সফল হয়েছে!"); location.reload(); }
+                } catch (err) { alert("আপলোড ব্যর্থ হয়েছে!"); btn.disabled = false; btn.innerText = "আবার চেষ্টা করুন"; }
             };
         };
 
         window.onload = () => {
             loadGallery();
-            if(localStorage.getItem('nomans_auth')) showUploadForm();
+            if(localStorage.getItem('nomans_auth') === 'true') {
+                showLoggedInUI();
+            }
         };
     </script>
 </body>
