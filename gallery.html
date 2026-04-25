@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আল নোমান শিকদার - নান্দনিক গ্যালারি</title>
+    <title>আল নোমান শিকদার - ৩ডি গ্যালারি</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
@@ -13,223 +13,224 @@
 
         :root {
             --accent: #00d2ff;
-            --bg: #05070a;
-            --card-bg: rgba(22, 27, 34, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #020508;
+            --card-border: rgba(255, 255, 255, 0.2);
+            --neon-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
-        body { background: var(--bg); color: #fff; overflow-x: hidden; scroll-behavior: smooth; padding-bottom: 100px; }
+        body { background: var(--bg); color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* ইউনিক ব্যাকগ্রাউন্ড এফেক্ট */
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #003a4d 0%, #05070a 100%);
-            z-index: -1; opacity: 0.5;
+        /* ব্যাকগ্রাউন্ড গ্লো */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #081b29 0%, #020508 100%);
+            z-index: -1;
         }
 
         header {
-            padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; background: rgba(5, 7, 10, 0.8); backdrop-filter: blur(20px); z-index: 1000;
-            border-bottom: 1px solid var(--border);
+            padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(2, 5, 8, 0.9); backdrop-filter: blur(15px); z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .logo { font-size: 22px; font-weight: 700; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo { font-size: 22px; font-weight: 700; color: var(--accent); text-shadow: var(--neon-shadow); }
+        .admin-btn { background: var(--accent); color: #000; padding: 5px 15px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px; }
 
-        .admin-btn { background: var(--accent); color: #000; padding: 6px 15px; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        /* সেকশন ডিজাইন */
+        section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        
+        .sec-info { position: absolute; top: 100px; left: 30px; }
+        .sec-info h2 { font-size: 35px; color: #fff; position: relative; display: inline-block; }
+        .sec-info h2::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 50%; height: 3px; background: var(--accent); box-shadow: var(--neon-shadow); }
 
-        /* সেকশন স্টাইল */
-        .sec-container { padding: 40px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sec-title-wrap { padding: 0 20px 20px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .sec-title-wrap h2 { font-size: 28px; position: relative; }
-        .sec-title-wrap h2::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 40px; height: 3px; background: var(--accent); }
-        .btn-view-all { color: var(--accent); font-size: 14px; cursor: pointer; text-decoration: underline; }
+        .view-all-btn { color: var(--accent); cursor: pointer; font-size: 14px; margin-top: 10px; display: block; text-decoration: none; }
 
-        /* ৩ডি ভিউপোর্ট */
-        .viewport { height: 450px; display: flex; justify-content: center; align-items: center; perspective: 1000px; }
-        .drum { position: relative; width: 200px; height: 280px; transform-style: preserve-3d; }
+        /* ৩ডি ড্রাম কন্টেইনার */
+        .slider-viewport { 
+            width: 100%; height: 450px; 
+            display: flex; justify-content: center; align-items: center; 
+            perspective: 1500px; overflow: visible;
+        }
+
+        .drum { 
+            position: relative; width: 220px; height: 320px; 
+            transform-style: preserve-3d; 
+            will-change: transform;
+        }
         
         .card { 
-            position: absolute; width: 200px; height: 280px; border-radius: 20px; 
-            overflow: hidden; border: 1px solid var(--border); background: var(--card-bg);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5); backface-visibility: hidden; cursor: pointer;
+            position: absolute; width: 220px; height: 320px; border-radius: 12px; 
+            overflow: hidden; border: 1.5px solid var(--card-border); 
+            background: #000; backface-visibility: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: border 0.3s;
         }
+        .card:hover { border-color: var(--accent); box-shadow: var(--neon-shadow); }
         .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-caption { position: absolute; bottom: 0; width: 100%; padding: 15px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); font-size: 12px; text-align: center; }
+        .card-caption { 
+            position: absolute; bottom: 0; width: 100%; padding: 15px 5px; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
+            text-align: center; font-size: 12px; 
+        }
 
-        .nav-controls { display: flex; justify-content: center; gap: 40px; margin-top: -30px; }
-        .nav-c-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 20px; transition: 0.3s; }
-        .nav-c-btn:hover { background: var(--accent); color: #000; transform: scale(1.1); }
-
-        /* গ্রিড ভিউ (সব ছবি) */
-        .grid-overlay { position: fixed; inset: 0; background: #05070a; z-index: 2000; display: none; overflow-y: auto; padding: 25px; }
-        .grid-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .grid-card { border-radius: 15px; overflow: hidden; background: var(--card-bg); border: 1px solid var(--border); }
-        .grid-card img { width: 100%; height: auto; display: block; } /* অটো হাইট যাতে ফটো সম্পূর্ণ দেখা যায় */
-        .grid-card p { padding: 10px; font-size: 12px; text-align: center; opacity: 0.8; }
-
-        /* লাইটবক্স (ফুল ফটো ভিউ) */
-        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 10px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        .close-lb { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; }
+        /* কন্ট্রোল বাটন */
+        .controls { display: flex; gap: 30px; margin-top: 50px; }
+        .c-btn { 
+            width: 50px; height: 50px; border-radius: 50%; 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+            display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; font-size: 20px; transition: 0.3s; 
+        }
+        .c-btn:hover { background: var(--accent); color: #000; transform: scale(1.1); box-shadow: var(--neon-shadow); }
 
         /* বটম বার */
         .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; height: 65px;
-            background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(20px);
-            border-radius: 50px; border: 1px solid var(--border);
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 320px; height: 60px; background: rgba(10, 20, 30, 0.8); 
+            backdrop-filter: blur(20px); border-radius: 50px; border: 1px solid var(--card-border);
             display: flex; justify-content: space-around; align-items: center; z-index: 1000;
         }
-        .b-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; opacity: 0.6; cursor: pointer; transition: 0.3s; }
-        .b-item.active { opacity: 1; color: var(--accent); }
-        .b-icon { font-size: 20px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; opacity: 0.5; cursor: pointer; }
+        .nav-item.active { opacity: 1; color: var(--accent); }
+        .nav-item span { margin-top: 2px; }
+
+        /* গ্রিড ভিউ (সব ছবি) */
+        .grid-view { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; overflow-y: auto; padding: 40px 20px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
+        .grid-card { border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); }
+        .grid-card img { width: 100%; height: auto; display: block; }
+        .grid-close { position: fixed; top: 20px; right: 20px; background: var(--accent); color: #000; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         /* অ্যাডমিন প্যানেল */
-        .admin-panel { position: fixed; bottom: -100%; left: 0; width: 100%; background: #161b22; border-radius: 30px 30px 0 0; padding: 30px; z-index: 2100; transition: 0.5s; box-shadow: 0 -10px 50px rgba(0,0,0,0.5); }
-        .admin-panel.open { bottom: 0; }
-        input, select, button { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; }
-        .sub-btn { background: var(--accent); color: #000; font-weight: 700; border: none; cursor: pointer; }
+        .admin-box { position: fixed; bottom: -100%; left: 0; width: 100%; background: #0a141e; padding: 30px; border-radius: 30px 30px 0 0; z-index: 2100; transition: 0.5s; }
+        .admin-box.active { bottom: 0; }
+        input, select, button { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.05); color: #fff; }
+        .up-btn { background: var(--accent); color: #000; font-weight: bold; border: none; }
     </style>
 </head>
 <body>
-
-    <div class="bg-glow"></div>
 
     <header>
         <div class="logo">নোমান শিকদার</div>
         <div class="admin-btn" onclick="openAdmin()">অ্যাডমিন</div>
     </header>
 
-    <!-- ক্যাটাগরি ১: নিজ -->
-    <div class="sec-container" id="sec-self">
-        <div class="sec-title-wrap">
+    <!-- অ্যালবাম ১: নিজ -->
+    <section id="sec-self">
+        <div class="sec-info">
             <h2>নিজ</h2>
-            <div class="btn-view-all" onclick="showGrid('নিজ')">সব দেখুন →</div>
+            <span class="view-all-btn" onclick="showGrid('নিজ')">সব দেখুন →</span>
         </div>
-        <div class="viewport">
+        <div class="slider-viewport">
             <div class="drum" id="drum-self"></div>
         </div>
-        <div class="nav-controls">
-            <div class="nav-c-btn" onclick="rotateDrum('self', 1)">←</div>
-            <div class="nav-c-btn" onclick="rotateDrum('self', -1)">→</div>
+        <div class="controls">
+            <div class="c-btn" onclick="rotate('self', 1)">←</div>
+            <div class="c-btn" onclick="rotate('self', -1)">→</div>
         </div>
-    </div>
+    </section>
 
-    <!-- ক্যাটাগরি ২: ফুল -->
-    <div class="sec-container" id="sec-flower">
-        <div class="sec-title-wrap">
+    <!-- অ্যালবাম ২: ফুল -->
+    <section id="sec-flower">
+        <div class="sec-info">
             <h2>ফুল</h2>
-            <div class="btn-view-all" onclick="showGrid('ফুল')">সব দেখুন →</div>
+            <span class="view-all-btn" onclick="showGrid('ফুল')">সব দেখুন →</span>
         </div>
-        <div class="viewport">
+        <div class="slider-viewport">
             <div class="drum" id="drum-flower"></div>
         </div>
-        <div class="nav-controls">
-            <div class="nav-c-btn" onclick="rotateDrum('flower', 1)">←</div>
-            <div class="nav-c-btn" onclick="rotateDrum('flower', -1)">→</div>
+        <div class="controls">
+            <div class="c-btn" onclick="rotate('flower', 1)">←</div>
+            <div class="c-btn" onclick="rotate('flower', -1)">→</div>
         </div>
-    </div>
+    </section>
 
-    <!-- ক্যাটাগরি ৩: ন্যাচার -->
-    <div class="sec-container" id="sec-nature">
-        <div class="sec-title-wrap">
+    <!-- অ্যালবাম ৩: ন্যাচার -->
+    <section id="sec-nature">
+        <div class="sec-info">
             <h2>ন্যাচার</h2>
-            <div class="btn-view-all" onclick="showGrid('ন্যাচার')">সব দেখুন →</div>
+            <span class="view-all-btn" onclick="showGrid('ন্যাচার')">সব দেখুন →</span>
         </div>
-        <div class="viewport">
+        <div class="slider-viewport">
             <div class="drum" id="drum-nature"></div>
         </div>
-        <div class="nav-controls">
-            <div class="nav-c-btn" onclick="rotateDrum('nature', 1)">←</div>
-            <div class="nav-c-btn" onclick="rotateDrum('nature', -1)">→</div>
+        <div class="controls">
+            <div class="c-btn" onclick="rotate('nature', 1)">←</div>
+            <div class="c-btn" onclick="rotate('nature', -1)">→</div>
         </div>
-    </div>
+    </section>
 
     <!-- গ্রিড ওভারলে -->
-    <div class="grid-overlay" id="gridOverlay">
-        <div class="grid-header">
-            <h2 id="gridTitle">সব ছবি</h2>
-            <div class="admin-btn" onclick="closeGrid()">বন্ধ করুন</div>
-        </div>
+    <div class="grid-view" id="gridView">
+        <div class="grid-close" onclick="closeGrid()">বন্ধ করুন</div>
+        <h2 id="gridTitle" style="text-align: center; color: var(--accent);"></h2>
         <div class="grid-container" id="gridContainer"></div>
     </div>
 
-    <!-- লাইটবক্স -->
-    <div class="lightbox" id="lightbox" onclick="this.style.display='none'">
-        <span class="close-lb">&times;</span>
-        <img id="lbImg" src="">
+    <!-- বটম নেভিগেশন -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="scrollToSec('sec-self')">🏠<span>নিজ</span></div>
+        <div class="nav-item" onclick="scrollToSec('sec-flower')">🌸<span>ফুল</span></div>
+        <div class="nav-item" onclick="scrollToSec('sec-nature')">🌿<span>ন্যাচার</span></div>
     </div>
 
     <!-- অ্যাডমিন প্যানেল -->
-    <div class="admin-panel" id="adminPanel">
-        <div id="loginSection">
-            <h3 style="margin-bottom:20px">অ্যাডমিন লগিন</h3>
-            <input type="password" id="pass" placeholder="পাসওয়ার্ড...">
-            <button class="sub-btn" onclick="login()">লগিন করুন</button>
-            <button onclick="closeAdmin()" style="background:none">বন্ধ করুন</button>
+    <div class="admin-box" id="adminBox">
+        <div id="loginForm">
+            <h3>অ্যাডমিন লগিন</h3>
+            <input type="password" id="passInput" placeholder="পাসওয়ার্ড...">
+            <button class="up-btn" onclick="login()">লগিন</button>
+            <button onclick="closeAdmin()">বন্ধ করুন</button>
         </div>
-        <div id="uploadSection" style="display:none">
-            <h3 style="margin-bottom:20px; color:var(--accent)">নতুন ছবি যোগ করুন</h3>
-            <input type="file" id="fInp" accept="image/*">
-            <input type="text" id="capInp" placeholder="ছবির ক্যাপশন...">
+        <div id="uploadForm" style="display:none">
+            <h3 style="color:var(--accent)">নতুন ফটো আপলোড</h3>
+            <input type="file" id="fileInp">
+            <input type="text" id="capInp" placeholder="ক্যাপশন লিখুন...">
             <select id="catInp">
                 <option value="নিজ">নিজ</option>
                 <option value="ফুল">ফুল</option>
                 <option value="ন্যাচার">ন্যাচার</option>
             </select>
-            <button class="sub-btn" id="upBtn" onclick="upload()">আপলোড করুন</button>
-            <button onclick="logout()" style="color:#ff4d4d">লগআউট</button>
-        </div>
-    </div>
-
-    <!-- বটম নেভিগেশন -->
-    <div class="bottom-nav">
-        <div class="b-item active" onclick="scrollToSec('top')">
-            <span class="b-icon">🏠</span>
-            <span>হোম</span>
-        </div>
-        <div class="b-item" onclick="scrollToSec('sec-self')">
-            <span class="b-icon">👤</span>
-            <span>নিজ</span>
-        </div>
-        <div class="b-item" onclick="scrollToSec('sec-flower')">
-            <span class="b-icon">🌸</span>
-            <span>ফুল</span>
-        </div>
-        <div class="b-item" onclick="scrollToSec('sec-nature')">
-            <span class="b-icon">🌿</span>
-            <span>ন্যাচার</span>
+            <button class="up-btn" id="subBtn" onclick="upload()">আপলোড করুন</button>
+            <button onclick="logout()">লগআউট</button>
         </div>
     </div>
 
     <script>
         gsap.registerPlugin(ScrollToPlugin);
-        const API_URL = "/api/gallery"; // আপনার Vercel/Apps Script URL
-        let allData = [];
-        const rot = { self: 0, flower: 0, nature: 0 };
+        const API = "/api/gallery"; // আপনার API URL এখানে দিন
+        let dataStore = [];
+        const rotationState = { self: 0, flower: 0, nature: 0 };
 
-        // ১. ডাটা লোড ও ড্রাম রেন্ডার
-        async function load() {
+        // ১. ডাটা লোড ও ড্রাম সেটআপ
+        async function loadGallery() {
             try {
-                const res = await fetch(API_URL);
-                allData = await res.json();
+                const res = await fetch(API);
+                dataStore = await res.json();
+                
+                // ৩টি ক্যাটাগরিই রেন্ডার করা
                 renderDrum('নিজ', 'self');
                 renderDrum('ফুল', 'flower');
                 renderDrum('ন্যাচার', 'nature');
-            } catch (e) { console.error("Load failed"); }
+            } catch (e) { console.error("Data load failed"); }
         }
 
-        function renderDrum(catName, id) {
-            const drum = document.getElementById('drum-' + id);
-            const filtered = allData.filter(d => d.category === catName);
-            if(!filtered.length) { drum.innerHTML = "ফটো নেই"; return; }
+        function renderDrum(catName, drumId) {
+            const drum = document.getElementById('drum-' + drumId);
+            const filtered = dataStore.filter(item => item.category === catName);
+            
+            if(!filtered.length) {
+                drum.innerHTML = `<p style="opacity:0.3; width:200px; text-align:center;">ফটো নেই</p>`;
+                return;
+            }
 
-            const radius = Math.round( (210 / 2) / Math.tan( Math.PI / filtered.length ) ) + 50;
+            // ৩ডি রেডিয়াস ক্যালকুলেশন
+            const radius = Math.round( (220 / 2) / Math.tan( Math.PI / filtered.length ) ) + 60;
+
             drum.innerHTML = filtered.map((img, i) => {
                 const angle = i * (360 / filtered.length);
                 return `
-                    <div class="card" onclick="fullView('${img.url}')" style="transform: rotateY(${angle}deg) translateZ(${radius}px)">
+                    <div class="card" style="transform: rotateY(${angle}deg) translateZ(${radius}px)">
                         <img src="${img.url}">
                         <div class="card-caption">${img.caption || '...'}</div>
                     </div>
@@ -237,85 +238,74 @@
             }).join('');
         }
 
-        function rotateDrum(id, dir) {
+        // ২. GSAP রোটেশন ফাংশন
+        function rotate(id, dir) {
             const drum = document.getElementById('drum-' + id);
             const cat = (id === 'self' ? 'নিজ' : id === 'flower' ? 'ফুল' : 'ন্যাচার');
-            const count = allData.filter(d => d.category === cat).length;
-            if(!count) return;
-            rot[id] += (360 / count) * dir;
-            gsap.to(drum, { rotationY: rot[id], duration: 1, ease: "power2.out" });
-        }
-
-        // ২. নেভিগেশন ও স্ক্রল
-        function scrollToSec(id) {
-            if(id === 'top') {
-                gsap.to(window, {scrollTo: 0, duration: 0.8});
-            } else {
-                gsap.to(window, {scrollTo: {y: "#" + id, offsetY: 80}, duration: 0.8});
-            }
-            // একটিভ ক্লাস আপডেট
-            document.querySelectorAll('.b-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        // ৩. সব দেখুন গ্রিড
-        function showGrid(cat) {
-            const overlay = document.getElementById('gridOverlay');
-            const container = document.getElementById('gridContainer');
-            document.getElementById('gridTitle').innerText = cat + " - সব ছবি";
+            const count = dataStore.filter(d => d.category === cat).length;
             
-            const filtered = allData.filter(d => d.category === cat);
+            if(count < 1) return;
+            
+            rotationState[id] += (360 / count) * dir;
+            gsap.to(drum, {
+                rotationY: rotationState[id],
+                duration: 1.2,
+                ease: "power3.out"
+            });
+        }
+
+        // ৩. নেভিগেশন ও গ্রিড ভিউ
+        function scrollToSec(id) {
+            gsap.to(window, {scrollTo: {y: "#" + id, offsetY: 70}, duration: 1});
+        }
+
+        function showGrid(cat) {
+            const container = document.getElementById('gridContainer');
+            document.getElementById('gridTitle').innerText = cat + " অ্যালবাম";
+            const filtered = dataStore.filter(d => d.category === cat);
+            
             container.innerHTML = filtered.map(img => `
-                <div class="grid-card" onclick="fullView('${img.url}')">
-                    <img src="${img.url}">
-                    <p>${img.caption || '...'}</p>
-                </div>
+                <div class="grid-card"><img src="${img.url}"></div>
             `).join('');
             
-            overlay.style.display = "block";
-            gsap.from(overlay, {opacity: 0, y: 50, duration: 0.4});
+            document.getElementById('gridView').style.display = 'block';
+            gsap.from('#gridView', { opacity: 0, y: 100, duration: 0.5 });
         }
-        function closeGrid() { document.getElementById('gridOverlay').style.display = "none"; }
+        function closeGrid() { document.getElementById('gridView').style.display = 'none'; }
 
-        // ৪. লাইটবক্স
-        function fullView(url) {
-            document.getElementById('lbImg').src = url;
-            document.getElementById('lightbox').style.display = "flex";
-        }
-
-        // ৫. অ্যাডমিন প্যানেল
-        function openAdmin() { document.getElementById('adminPanel').classList.add('open'); }
-        function closeAdmin() { document.getElementById('adminPanel').classList.remove('open'); }
+        // ৪. অ্যাডমিন প্যানেল লজিক
+        function openAdmin() { document.getElementById('adminBox').classList.add('active'); }
+        function closeAdmin() { document.getElementById('adminBox').classList.remove('active'); }
 
         async function login() {
-            const pass = document.getElementById('pass').value;
-            const res = await fetch(`${API_URL}?action=login&pass=${pass}`);
-            const data = await res.json();
-            if(data.success) {
-                localStorage.setItem('noman_admin', '1');
-                checkStatus();
+            const pass = document.getElementById('passInput').value;
+            const res = await fetch(`${API}?action=login&pass=${pass}`);
+            const json = await res.json();
+            if(json.success) {
+                localStorage.setItem('noman_auth', '1');
+                toggleAdminView();
             } else { alert("ভুল পাসওয়ার্ড!"); }
         }
 
-        function checkStatus() {
-            if(localStorage.getItem('noman_admin')) {
-                document.getElementById('loginSection').style.display = "none";
-                document.getElementById('uploadSection').style.display = "block";
+        function toggleAdminView() {
+            if(localStorage.getItem('noman_auth')) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('uploadForm').style.display = 'block';
             }
         }
 
-        function logout() { localStorage.removeItem('noman_admin'); location.reload(); }
+        function logout() { localStorage.removeItem('noman_auth'); location.reload(); }
 
         async function upload() {
-            const file = document.getElementById('fInp').files[0];
-            const btn = document.getElementById('upBtn');
-            if(!file) return alert("ফাইল বাছুন");
+            const file = document.getElementById('fileInp').files[0];
+            const btn = document.getElementById('subBtn');
+            if(!file) return alert("ফাইল সিলেক্ট করুন");
             
             btn.innerText = "আপলোড হচ্ছে..."; btn.disabled = true;
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
-                await fetch(API_URL, {
+                await fetch(API, {
                     method: 'POST',
                     body: JSON.stringify({
                         fileData: reader.result,
@@ -328,7 +318,7 @@
             };
         }
 
-        window.onload = () => { load(); checkStatus(); };
+        window.onload = () => { loadGallery(); toggleAdminView(); };
     </script>
 </body>
 </html>
