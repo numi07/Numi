@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     const scriptURL = process.env.GALLERY_SCRIPT_URL;
     const adminPass = process.env.GALLERY_ADMIN_PASSWORD;
     
-    const allowedDomains = ["shikdernumi.pro.bd"];
+    const allowedDomains = ["shikdernumi.pro.bd", "localhost"]; // localhost রাখলে টেস্টিং সুবিধা হবে
     const referer = req.headers.referer || "";
     const isAllowedSource = allowedDomains.some(domain => referer.includes(domain));
 
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
         const { pass, action, id } = req.query;
 
-        // লগিন ভেরিফিকেশন লজিক
+        // লগিন ভেরিফিকেশন
         if (action === 'login') {
             if (pass === adminPass) {
                 return res.status(200).json({ success: true, message: "লগিন সফল" });
@@ -28,14 +28,12 @@ export default async function handler(req, res) {
             }
         }
 
-        // সিকিউরিটি চেক
+        // সিকিউরিটি চেক (আপনার আগের লজিক বজায় রাখা হয়েছে)
         if (!isAllowedSource && pass !== adminPass) {
             return res.status(403).json({ error: "Forbidden", message: "সরাসরি এক্সেস নিষিদ্ধ!" });
         }
 
-        const effectivePass = isAllowedSource ? adminPass : pass;
-        let url = `${scriptURL}?pass=${effectivePass}`;
-        
+        let url = `${scriptURL}?pass=${adminPass}`;
         if (action === 'delete') url += `&action=delete&id=${id}`;
 
         try {
@@ -47,23 +45,22 @@ export default async function handler(req, res) {
         }
     }
 
-    // ২. POST মেথড: আপলোড
+    // ২. POST মেথড: আপলোড (এখানে URLSearchParams এর বদলে JSON ব্যবহার করা হয়েছে)
     if (req.method === 'POST') {
         try {
-            if (!isAllowedSource) return res.status(403).json({ error: "Access denied" });
+            if (!isAllowedSource && req.body.pass !== adminPass) {
+                return res.status(403).json({ error: "Access denied" });
+            }
 
-            // Google Script-এ পাঠানোর জন্য বডি তৈরি
-            // এখানে Vercel-এর req.body যদি অবজেক্ট হয় তবে সেটিকে URLSearchParams এ রূপান্তর করতে হবে
-            const bodyParams = new URLSearchParams(req.body);
-            bodyParams.append('pass', adminPass); // ব্যাকএন্ড থেকে সিক্রেট পাসওয়ার্ড যোগ করা হলো
-
+            // Google Script-এ JSON ডাটা পাঠানো সবচেয়ে নিরাপদ
             const response = await fetch(scriptURL, {
                 method: 'POST',
-                body: bodyParams.toString(),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                body: JSON.stringify(req.body), // URLSearchParams এর বদলে JSON.stringify
+                headers: { 'Content-Type': 'application/json' }
             });
 
-            return res.status(200).json({ success: true });
+            const result = await response.json();
+            return res.status(200).json(result);
         } catch (error) {
             return res.status(500).json({ error: "Failed to post data" });
         }
