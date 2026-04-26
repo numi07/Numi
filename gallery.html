@@ -166,6 +166,46 @@
 
         .close-panel-top { position: absolute; top: 20px; right: 25px; font-size: 26px; color: #ff0055; cursor: pointer; z-index: 3000; transition: 0.3s; }
         .close-panel-top:hover { transform: scale(1.2); text-shadow: 0 0 15px var(--secondary); }
+
+        /* --- নতুন সংযোজন: ডিজাইন উন্নত করার জন্য ওভাররাইড কোড --- */
+        .logo { text-decoration: none !important; } /* আন্ডারলাইন রিমুভ */
+        .nav-home-btn { 
+            text-decoration: none; 
+            color: #fff; 
+            border: 1px solid var(--border); 
+            padding: 6px 18px; 
+            border-radius: 30px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            transition: 0.3s; 
+            background: rgba(255,255,255,0.03); 
+        }
+        .nav-home-btn:hover { 
+            background: var(--primary); 
+            color: #000; 
+            box-shadow: var(--glow); 
+            border-color: var(--primary); 
+            transform: translateY(-2px);
+        }
+        .theme-ico { 
+            font-size: 18px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+        }
+        .theme-ico:hover { 
+            transform: scale(1.1) rotate(15deg); 
+            text-shadow: 0 0 10px var(--primary); 
+            border-color: var(--primary);
+            background: rgba(0, 240, 255, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -558,6 +598,75 @@
                 if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
         }
+
+        // --- নতুন সংযোজন: ৫ মিনিট নিষ্ক্রিয়তা, ডার্ক মুড ও হোম বাটন লজিক ---
+        
+        // ১. ৫ মিনিট এক্টিভ না থাকলে অটো লগআউট
+        let logoutTimer;
+        function resetLogoutTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(() => {
+                if (localStorage.getItem('noman_auth')) {
+                    localStorage.removeItem('noman_auth');
+                    alert("নিষ্ক্রিয়তার কারণে অটো লগআউট করা হয়েছে!");
+                    location.reload();
+                }
+            }, 5 * 60 * 1000); // ৫ মিনিট = ৩০০০০০ মিলি সেকেন্ড
+        }
+        
+        // কোনো অ্যাক্টিভিটি হলে টাইমার রিসেট হবে
+        window.addEventListener('mousemove', resetLogoutTimer);
+        window.addEventListener('keydown', resetLogoutTimer);
+        window.addEventListener('click', resetLogoutTimer);
+        window.addEventListener('scroll', resetLogoutTimer);
+        
+        // ২. সেশন ব্রেক হলে বা নতুন ব্রাউজার দিয়ে ভিজিট করলে লগআউট করা
+        if (!sessionStorage.getItem('visited_session')) {
+            localStorage.removeItem('noman_auth');
+            sessionStorage.setItem('visited_session', 'true');
+        }
+
+        // ৩. ডোম লোড হওয়ার পর বাটনগুলো অ্যাড করা এবং আন্ডারলাইন রিমুভ করা
+        document.addEventListener('DOMContentLoaded', () => {
+            resetLogoutTimer();
+            
+            // আন্ডারলাইন রিমুভ (লোগো থেকে)
+            const logoEl = document.querySelector('.logo');
+            if (logoEl) logoEl.style.textDecoration = 'none';
+
+            // হোম এবং ডার্কমুড আইকন অ্যাড করা (অ্যাডমিন বাটন এর বা পাশে)
+            const header = document.querySelector('header');
+            const adminBtn = document.querySelector('.admin-btn');
+            
+            if (header && adminBtn) {
+                const navWrapper = document.createElement('div');
+                navWrapper.style.display = 'flex';
+                navWrapper.style.alignItems = 'center';
+                navWrapper.style.gap = '15px';
+
+                const themeIco = document.createElement('div');
+                themeIco.className = 'theme-ico';
+                themeIco.innerHTML = '🌙'; // ডার্ক মুডের আইকন
+                themeIco.title = 'ডার্ক মুড';
+                themeIco.onclick = () => {
+                    alert("সাইটটি ইতিমধ্যে ডার্ক থিমে সুন্দরভাবে সাজানো রয়েছে!");
+                };
+
+                const homeBtn = document.createElement('a');
+                homeBtn.href = 'index.html';
+                homeBtn.className = 'nav-home-btn';
+                homeBtn.innerText = 'হোম';
+
+                // অ্যাডমিন বাটনটিকে মূল হেডার থেকে সরিয়ে নতুন র‍্যাপার-এ নিয়ে আসা
+                adminBtn.parentNode.removeChild(adminBtn);
+                
+                navWrapper.appendChild(themeIco);
+                navWrapper.appendChild(homeBtn);
+                navWrapper.appendChild(adminBtn);
+                
+                header.appendChild(navWrapper);
+            }
+        });
     </script>
 </body>
 </html>
