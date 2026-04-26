@@ -161,6 +161,19 @@
         
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
         .logo { animation: float 4s ease-in-out infinite; }
+
+        /* --- নতুন অ্যাডমিন ম্যানেজমেন্ট লিস্ট ডিজাইন --- */
+        .admin-list-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .admin-list-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid var(--primary); }
+        .admin-list-info { flex: 1; font-size: 14px; color: #fff; }
+        .admin-list-info span { font-size: 12px; color: #aaa; }
+        .admin-list-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .admin-list-actions button { padding: 6px; font-size: 11px; border-radius: 6px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-update-img { background: #00f0ff; color: #000; }
+        .btn-edit-cap { background: #ffea00; color: #000; }
+        .btn-del-cap { background: #ffaa00; color: #000; }
+        .btn-del-photo { background: #ff0055; color: #fff; }
+        .admin-list-actions button:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -232,7 +245,7 @@
         <div class="nav-item" onclick="navTo('sec-nature')"><span class="icon">🌿</span><span>ন্যাচার</span></div>
     </div>
 
-    <!-- এডমিন মোডাল (অক্ষুণ্ণ কোড, নতুন ডিজাইন ক্লাস সহ) -->
+    <!-- এডমিন মোডাল -->
     <div class="admin-panel" id="adminPanel">
         <div id="loginBox">
             <h3>সিস্টেম লগিন</h3>
@@ -250,6 +263,18 @@
                 <option value="ন্যাচার">অ্যালবাম: ন্যাচার</option>
             </select>
             <button class="up-btn" id="upBtn" onclick="upload()">সার্ভারে আপলোড করুন</button>
+            
+            <!-- নতুন যোগ করা ম্যানেজ বাটন -->
+            <button class="up-btn" style="background:var(--secondary); color:#fff; box-shadow: 0 0 15px rgba(255,0,85,0.4);" onclick="showManageBox()">⚙️ ফটো ও ক্যাপশন ম্যানেজ করুন</button>
+
+            <button class="close-admin-btn" onclick="logout()" style="color:#ff0055; border-color: rgba(255,0,85,0.3);">লগআউট করুন</button>
+        </div>
+
+        <!-- নতুন যোগ করা ম্যানেজ প্যানেল -->
+        <div id="manageBox" style="display:none; width:100%; max-width:500px; margin:0 auto; text-align:center;">
+            <h3 style="color:var(--primary); margin-bottom: 20px;">গ্যালারি ম্যানেজমেন্ট ⚙️</h3>
+            <div id="adminPhotoList" style="max-height: 45vh; overflow-y: auto; text-align: left; margin-bottom:20px; padding-right:10px;"></div>
+            <button class="up-btn" onclick="hideManageBox()">🔙 আপলোডে ফিরে যান</button>
             <button class="close-admin-btn" onclick="logout()" style="color:#ff0055; border-color: rgba(255,0,85,0.3);">লগআউট করুন</button>
         </div>
     </div>
@@ -326,15 +351,25 @@
             const container = document.getElementById('gridContainer');
             document.getElementById('gridTitle').innerText = cat + " অ্যালবাম";
             const filtered = galleryData.filter(d => d.category === cat);
+            
+            const isAdmin = localStorage.getItem('noman_auth'); // অ্যাডমিন চেক
+
             container.innerHTML = filtered.map(img => `
-                <div class="grid-card" onclick="openLightbox('${img.url}', '${img.caption || ''}')">
-                    <img src="${img.url}">
-                    <p style="padding:15px 10px; font-size:13px; text-align:center; color:#ddd;">${img.caption || '...'}</p>
+                <div class="grid-card">
+                    <img src="${img.url}" onclick="openLightbox('${img.url}', '${img.caption || ''}')">
+                    <p style="padding:15px 10px; font-size:14px; text-align:center; color:#fff;">${img.caption || '...'}</p>
+                    ${isAdmin ? `
+                    <div class="admin-action-btns">
+                        <button class="action-btn btn-edit" onclick="editPhotoCap('${img.url}', '${img.caption || ''}')">✏️ এডিট</button>
+                        <button class="action-btn btn-del" onclick="deletePhotoRecord('${img.url}')">🗑️ ডিলিট</button>
+                    </div>
+                    ` : ''}
                 </div>
             `).join('');
             overlay.style.display = "block";
-            gsap.from(overlay, {opacity: 0, y: 100, duration: 0.5});
-        }
+            gsap.from(overlay, {opacity: 0, y: 100, duration: 0.5, ease: "power3.out"});
+        };
+        
         function closeGrid() { document.getElementById('gridOverlay').style.display = "none"; }
 
         function navTo(id) {
@@ -386,8 +421,6 @@
 
         window.onload = () => { load(); checkAuth(); };
 
-        // --- নতুন ফিচার: 3D Auto Carousel Slide, Swipe & Admin Controls ---
-        
         // ১. Auto Play Carousel 
         let carouselInterval = setInterval(() => {
             rotate('self', -1); rotate('flower', -1); rotate('nature', -1);
@@ -401,7 +434,6 @@
                 carouselInterval = setInterval(() => { rotate('self', -1); rotate('flower', -1); rotate('nature', -1); }, 3000);
             });
             
-            // মাউস ড্র্যাগ
             vp.addEventListener('mousedown', (e) => {
                 isDragging = true; startX = e.clientX;
                 currentId = vp.querySelector('.drum').id.replace('drum-', '');
@@ -414,7 +446,6 @@
                 else if(diff < -50) rotate(currentId, -1);
             });
 
-            // টাচ সোয়াইপ
             vp.addEventListener('touchstart', (e) => {
                 clearInterval(carouselInterval);
                 isDragging = true; startX = e.touches[0].clientX;
@@ -430,70 +461,120 @@
             });
         });
 
-        // ৩. আগের showGrid ওভাররাইড করে এডিট ও ডিলিট বাটন যুক্ত করা হলো
-        showGrid = function(cat) {
-            const overlay = document.getElementById('gridOverlay');
-            const container = document.getElementById('gridContainer');
-            document.getElementById('gridTitle').innerText = cat + " অ্যালবাম";
-            const filtered = galleryData.filter(d => d.category === cat);
-            
-            const isAdmin = localStorage.getItem('noman_auth'); // অ্যাডমিন চেক
+        // ৩. অ্যাডমিন ম্যানেজমেন্ট প্যানেল ফাংশনালিটি (নতুন যুক্ত করা হলো)
+        function showManageBox() {
+            document.getElementById('uploadBox').style.display = 'none';
+            document.getElementById('manageBox').style.display = 'block';
+            renderAdminList();
+        }
+        function hideManageBox() {
+            document.getElementById('manageBox').style.display = 'none';
+            document.getElementById('uploadBox').style.display = 'block';
+        }
 
-            container.innerHTML = filtered.map(img => `
-                <div class="grid-card">
-                    <img src="${img.url}" onclick="openLightbox('${img.url}', '${img.caption || ''}')">
-                    <p style="padding:15px 10px; font-size:14px; text-align:center; color:#fff;">${img.caption || '...'}</p>
-                    ${isAdmin ? `
-                    <div class="admin-action-btns">
-                        <button class="action-btn btn-edit" onclick="editPhotoCap('${img.url}', '${img.caption || ''}')">✏️ এডিট</button>
-                        <button class="action-btn btn-del" onclick="deletePhotoRecord('${img.url}')">🗑️ ডিলিট</button>
+        function renderAdminList() {
+            const list = document.getElementById('adminPhotoList');
+            if(!galleryData.length) {
+                list.innerHTML = "<p style='text-align:center; color:#888;'>কোনো ফটো নেই</p>"; return;
+            }
+            list.innerHTML = galleryData.map(img => `
+                <div class="admin-list-item">
+                    <img src="${img.url}">
+                    <div class="admin-list-info">
+                        <strong>অ্যালবাম: ${img.category}</strong><br>
+                        <span>${img.caption || 'কোনো ক্যাপশন নেই'}</span>
                     </div>
-                    ` : ''}
+                    <div class="admin-list-actions">
+                        <button class="btn-update-img" onclick="updatePhotoFile('${img.url}')">🖼️ ছবি বদল</button>
+                        <button class="btn-edit-cap" onclick="editPhotoCap('${img.url}', '${img.caption || ''}')">✏️ ক্যাপশন এডিট</button>
+                        <button class="btn-del-cap" onclick="deleteCaption('${img.url}')">🚫 ক্যাপশন ডিলিট</button>
+                        <button class="btn-del-photo" onclick="deletePhotoRecord('${img.url}')">🗑️ ছবি ডিলিট</button>
+                    </div>
                 </div>
             `).join('');
-            overlay.style.display = "block";
-            gsap.from(overlay, {opacity: 0, y: 100, duration: 0.5, ease: "power3.out"});
-        };
+        }
 
-        // ৪. এডিট এবং ডিলিট ফাংশন
+        // ৪. এডিট এবং ডিলিট ফাংশনসমূহ (পূর্ণাঙ্গ কন্ট্রোল)
+        async function updatePhotoFile(imgUrl) {
+            const fileInp = document.createElement('input');
+            fileInp.type = 'file'; fileInp.accept = 'image/*';
+            fileInp.onchange = async (e) => {
+                const file = e.target.files[0];
+                if(!file) return;
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async () => {
+                    const img = galleryData.find(d => d.url === imgUrl);
+                    if(img) img.url = reader.result;
+                    try {
+                        await fetch(API_URL, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: 'updateImage', url: imgUrl, newFileData: reader.result })
+                        });
+                    } catch(err) {}
+                    alert("ছবি সফলভাবে পরিবর্তন করা হয়েছে!");
+                    renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                    if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
+                }
+            };
+            fileInp.click();
+        }
+
         async function editPhotoCap(imgUrl, oldCap) {
             const newCap = prompt("নতুন ক্যাপশন লিখুন:", oldCap);
             if (newCap !== null && newCap !== oldCap) {
-                // লোকাল ডাটা আপডেট
                 const img = galleryData.find(d => d.url === imgUrl);
                 if(img) img.caption = newCap;
-                
                 try {
                     await fetch(API_URL, {
-                        method: 'PUT', // এডিটের জন্য API Call
+                        method: 'PUT', 
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'edit', url: imgUrl, caption: newCap })
                     });
-                } catch(e) { console.log("API এডিট রিকুয়েস্ট এরর"); }
+                } catch(e) { console.log("API Error"); }
                 
                 alert("ক্যাপশন সফলভাবে পরিবর্তন করা হয়েছে!");
-                closeGrid(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                if(document.getElementById('manageBox').style.display === 'block') renderAdminList();
+                if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
+            }
+        }
+
+        async function deleteCaption(imgUrl) {
+            if(confirm("আপনি কি নিশ্চিত যে শুধু ক্যাপশনটি মুছে ফেলতে চান?")) {
+                const img = galleryData.find(d => d.url === imgUrl);
+                if(img) img.caption = "";
+                try {
+                    await fetch(API_URL, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'edit', url: imgUrl, caption: "" })
+                    });
+                } catch(err) {}
+                alert("ক্যাপশন মুছে ফেলা হয়েছে!");
+                renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
         }
 
         async function deletePhotoRecord(imgUrl) {
             if (confirm("আপনি কি নিশ্চিত যে এই ছবিটি ডিলিট করতে চান?")) {
-                // লোকাল ডাটা আপডেট
                 galleryData = galleryData.filter(d => d.url !== imgUrl); 
-                
                 try {
                     await fetch(API_URL, {
-                        method: 'DELETE', // ডিলিট এর জন্য API Call
+                        method: 'DELETE', 
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'delete', url: imgUrl })
                     });
-                } catch(e) { console.log("API ডিলিট রিকুয়েস্ট এরর"); }
+                } catch(e) { console.log("API Error"); }
                 
                 alert("ছবিটি ডিলিট করা হয়েছে!");
-                closeGrid(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                if(document.getElementById('manageBox').style.display === 'block') renderAdminList();
+                if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
         }
-
     </script>
 </body>
 </html>
