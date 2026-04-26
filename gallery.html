@@ -202,7 +202,7 @@
     
     <section id="sec-nature">
         <div class="sec-title">
-            <h2>ন্যাচার</h2>
+            <h2>প্রকৃতি</h2>
             <div class="line"></div>
             <span class="view-all-btn" onclick="showGrid('ন্যাচার')">সব দেখুন →</span>
         </div>
@@ -227,7 +227,7 @@
     <div class="bottom-nav">
         <div class="nav-item active" onclick="navTo('sec-self')"><span class="icon">🏠</span><span>নিজ</span></div>
         <div class="nav-item" onclick="navTo('sec-flower')"><span class="icon">🌸</span><span>ফুল</span></div>
-        <div class="nav-item" onclick="navTo('sec-nature')"><span class="icon">🌿</span><span>ন্যাচার</span></div>
+        <div class="nav-item" onclick="navTo('sec-nature')"><span class="icon">🌿</span><span>প্রকৃতি</span></div>
     </div>
 
     <div class="admin-panel" id="adminPanel">
@@ -246,7 +246,7 @@
             <select id="catInp">
                 <option value="নিজ">অ্যালবাম: নিজ</option>
                 <option value="ফুল">অ্যালবাম: ফুল</option>
-                <option value="ন্যাচার">অ্যালবাম: ন্যাচার</option>
+                <option value="ন্যাচার">অ্যালবাম: প্রকৃতি</option>
             </select>
             <button class="up-btn" id="upBtn" onclick="upload()">সার্ভারে আপলোড করুন</button>
             
@@ -279,7 +279,7 @@
                 
                 renderDrum('নিজ', 'self');
                 renderDrum('ফুল', 'flower');
-                renderDrum('ন্যাচার', 'nature');
+                renderDrum('প্রকৃতি', 'nature');
             } catch (e) { console.error("Load failed"); }
         }
 
@@ -311,7 +311,7 @@
 
         function rotate(id, dir) {
             const drum = document.getElementById('drum-' + id);
-            const cat = (id === 'self' ? 'নিজ' : id === 'flower' ? 'ফুল' : 'ন্যাচার');
+            const cat = (id === 'self' ? 'নিজ' : id === 'flower' ? 'ফুল' : 'প্রকৃতি');
             const items = galleryData.filter(d => d.category === cat);
             if(items.length < 2) return;
 
@@ -339,7 +339,7 @@
             document.getElementById('gridTitle').innerText = cat + " অ্যালবাম";
             const filtered = galleryData.filter(d => d.category === cat);
             
-            const isAdmin = localStorage.getItem('noman_auth'); // অ্যাডমিন চেক
+            const isAdmin = localStorage.getItem('noman_auth');
 
             container.innerHTML = filtered.map(img => `
                 <div class="grid-card">
@@ -497,7 +497,7 @@
                         });
                     } catch(err) {}
                     alert("ছবি সফলভাবে পরিবর্তন করা হয়েছে!");
-                    renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                    renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('প্রকৃতি', 'nature');
                     if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
                 }
             };
@@ -518,7 +518,7 @@
                 } catch(e) { console.log("API Error"); }
                 
                 alert("ক্যাপশন সফলভাবে পরিবর্তন করা হয়েছে!");
-                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('প্রকৃতি', 'nature');
                 if(document.getElementById('manageBox').style.display === 'block') renderAdminList();
                 if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
@@ -536,7 +536,7 @@
                     });
                 } catch(err) {}
                 alert("ক্যাপশন মুছে ফেলা হয়েছে!");
-                renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                renderAdminList(); renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('প্রকৃতি', 'nature');
                 if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
         }
@@ -553,7 +553,7 @@
                 } catch(e) { console.log("API Error"); }
                 
                 alert("ছবিটি ডিলিট করা হয়েছে!");
-                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('ন্যাচার', 'nature');
+                renderDrum('নিজ', 'self'); renderDrum('ফুল', 'flower'); renderDrum('প্রকৃতি', 'nature');
                 if(document.getElementById('manageBox').style.display === 'block') renderAdminList();
                 if(document.getElementById('gridOverlay').style.display === 'block') closeGrid();
             }
