@@ -136,7 +136,7 @@
         
         .up-btn { background: var(--primary); color: #000; font-weight: bold; border: none; cursor: pointer; padding: 15px; width: 100%; border-radius: 15px; font-size: 16px; transition: 0.3s; margin-bottom: 15px; }
         .up-btn:hover { background: #fff; box-shadow: var(--glow); transform: translateY(-2px); }
-        .close-admin-btn { background: transparent; color: #888; border: 1px solid var(--border); padding: 10px; width: 100%; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .close-admin-btn { background: transparent; color: #888; border: 1px solid var(--border); padding: 10px; width: 100%; border-radius: 15px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
         .close-admin-btn:hover { color: #fff; border-color: #fff; }
 
         /* --- নতুন যুক্ত করা ডিজাইন ও ৩ডি থিম ইম্প্রুভমেন্ট --- */
@@ -174,6 +174,10 @@
         .btn-del-cap { background: #ffaa00; color: #000; }
         .btn-del-photo { background: #ff0055; color: #fff; }
         .admin-list-actions button:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+
+        /* --- নতুন অ্যাডমিন প্যানেল ক্লোজ বাটন ডিজাইন --- */
+        .close-panel-top { position: absolute; top: 20px; right: 25px; font-size: 26px; color: #ff0055; cursor: pointer; z-index: 3000; transition: 0.3s; }
+        .close-panel-top:hover { transform: scale(1.2); text-shadow: 0 0 15px var(--secondary); }
     </style>
 </head>
 <body>
@@ -247,6 +251,9 @@
 
     <!-- এডমিন মোডাল -->
     <div class="admin-panel" id="adminPanel">
+        <!-- নতুন ক্লোজ আইকন -->
+        <div class="close-panel-top" onclick="closeAdmin()">✖</div>
+
         <div id="loginBox">
             <h3>সিস্টেম লগিন</h3>
             <input type="password" id="adminPass" placeholder="আপনার সিক্রেট পাসওয়ার্ড দিন...">
@@ -267,6 +274,8 @@
             <!-- নতুন যোগ করা ম্যানেজ বাটন -->
             <button class="up-btn" style="background:var(--secondary); color:#fff; box-shadow: 0 0 15px rgba(255,0,85,0.4);" onclick="showManageBox()">⚙️ ফটো ও ক্যাপশন ম্যানেজ করুন</button>
 
+            <!-- নতুন যোগ করা প্যানেল ক্লোজ বাটন -->
+            <button class="close-admin-btn" onclick="closeAdmin()">প্যানেল বন্ধ করুন</button>
             <button class="close-admin-btn" onclick="logout()" style="color:#ff0055; border-color: rgba(255,0,85,0.3);">লগআউট করুন</button>
         </div>
 
@@ -275,6 +284,9 @@
             <h3 style="color:var(--primary); margin-bottom: 20px;">গ্যালারি ম্যানেজমেন্ট ⚙️</h3>
             <div id="adminPhotoList" style="max-height: 45vh; overflow-y: auto; text-align: left; margin-bottom:20px; padding-right:10px;"></div>
             <button class="up-btn" onclick="hideManageBox()">🔙 আপলোডে ফিরে যান</button>
+            
+            <!-- নতুন যোগ করা প্যানেল ক্লোজ বাটন -->
+            <button class="close-admin-btn" onclick="closeAdmin()">প্যানেল বন্ধ করুন</button>
             <button class="close-admin-btn" onclick="logout()" style="color:#ff0055; border-color: rgba(255,0,85,0.3);">লগআউট করুন</button>
         </div>
     </div>
