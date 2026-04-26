@@ -217,6 +217,22 @@
             border-color: var(--primary);
             background: rgba(0, 240, 255, 0.05);
         }
+        #imgPreviewBox { 
+            width: 100%; 
+            max-height: 180px; 
+            border-radius: 15px; 
+            border: 1px dashed var(--primary); 
+            margin-bottom: 20px; 
+            display: none; 
+            overflow: hidden; 
+            background: rgba(0,0,0,0.2); 
+            position: relative;
+        }
+        #imgPreviewBox img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+        }
     </style>
 </head>
 <body>
@@ -292,7 +308,8 @@
         </div>
         <div id="uploadBox" style="display:none">
             <h3 style="color:var(--primary); margin-bottom: 20px;">নতুন ফটো আপলোড 🚀</h3>
-            <input type="file" id="fInp" accept="image/*">
+            <div id="imgPreviewBox"><img src="" id="uploadPreview"></div>
+            <input type="file" id="fInp" accept="image/*" onchange="previewUpload(event)">
             <input type="text" id="cInp" placeholder="ছবির সুন্দর একটি ক্যাপশন দিন...">
             <select id="catInp">
                 <option value="নিজ">অ্যালবাম: নিজ</option>
@@ -682,6 +699,20 @@
                 header.appendChild(navWrapper);
             }
         });
+
+        function previewUpload(event) {
+            const box = document.getElementById('imgPreviewBox');
+            const preview = document.getElementById('uploadPreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    box.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 </html>
