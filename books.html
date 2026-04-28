@@ -231,6 +231,11 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #toast { visibility: hidden; min-width: 250px; background: #1e293b; color: #fff; text-align: center; border-radius: 16px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 14px; font-weight: 600; }
         #toast.show { visibility: visible; }
+        
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 30; display: flex; align-items: center; justify-content: center; transition: 0.3s; font-size: 14px;}
+        .slider-btn:hover { background: rgba(0,0,0,0.8); }
+        .slider-prev { left: 10px; }
+        .slider-next { right: 10px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -396,7 +401,7 @@
             <input type="number" id="fq" placeholder="বইয়ের সংখ্যা (Quantity) *" required>
             
             <input type="text" id="fc" placeholder="ক্যাটাগরি">
-            <input type="text" id="fi_l" placeholder="বইয়ের ছবি লিঙ্ক">
+            <input type="text" id="fi_l" placeholder="বইয়ের ছবি লিঙ্ক (একাধিক হলে কমা দিয়ে দিন)">
             
             <textarea id="frv" placeholder="বইয়ের রিভিউ লিখুন..." rows="4"></textarea>
 
@@ -446,7 +451,7 @@
 
 <script>
     const API_URL = "/api/books";
-    let allBooks = [], allAuthors = [], allGifts =[], isAdmin = false, userPass = ""; 
+    let allBooks = [], allAuthors =[], allGifts =[], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
     const SESSION_TIMEOUT = 5 * 60 * 1000;
 
@@ -466,7 +471,7 @@
         { t: "বই আপনাকে নিয়ে যাবে এমন জায়গায় যেখানে আপনি আগে কখনো যাননি।", a: "সংগৃহীত" },
         { t: "একটি লাইব্রেরি হলো চিন্তার আস্তানা।", a: "সংগৃহীত" },
         { t: "জ্ঞানের আলো জ্বালতে হলে বইয়ের কোনো বিকল্প নেই।", a: "সংগৃহীত" },
-        { t: "বই মানুষের শ্রেষ্ঠ বন্ধু, কারণ বই কখনো বেইমানি করে না।", a: "সংগৃহীত" },
+        { t: "বই মানুষের শ্রেষ্ঠ বন্ধু, কারণ বই কখনো বেইমানি করে গান্ধি করে না।", a: "সংগৃহীত" },
         { t: "প্রতিটি নতুন বই মানে একটি নতুন জীবনের শুরু।", a: "সংগৃহীত" },
         { t: "বই হলো হৃদয়ের জানালা।", a: "সংগৃহীত" },
         { t: "বই হলো এমন এক জাদু যা আপনি বারবার পড়তে পারেন।", a: "সংগৃহীত" },
@@ -815,7 +820,11 @@
             <div class="slider-img-container ${i===0?'active':''}" id="sl-${i}">
                 <div style="width:100%; height:100%; background-image: url('${getImg(u.trim())}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
                 <div class="slider-shield"></div>
-            </div>`).join('');
+            </div>`).join('') + (imgs.length > 1 ? `
+            <button class="slider-btn slider-prev" onclick="changeSlide(-1, ${imgs.length})"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn slider-next" onclick="changeSlide(1, ${imgs.length})"><i class="fas fa-chevron-right"></i></button>
+        ` : '');
+        window.currentSlideIdx = 0;
         
         let adminSec = isAdmin ? `
             <div style="background:rgba(79, 70, 229, 0.05); padding:15px; border-radius:15px; margin-top:20px; border:1px dashed var(--primary)">
@@ -1115,6 +1124,15 @@
         const q = document.getElementById('sInp').value.toLowerCase();
         const f = allBooks.filter(b => b.BookName.toLowerCase().includes(q) || b.Author.toLowerCase().includes(q));
         document.getElementById('sRes').innerHTML = f.map(b => `<div class="book-card" onclick="showD(${b.ID})"><div style="flex:1"><strong>${b.BookName}</strong><p>${b.Author}</p></div></div>`).join('');
+    }
+
+    window.currentSlideIdx = 0;
+    function changeSlide(dir, max) {
+        const currentEl = document.getElementById('sl-' + window.currentSlideIdx);
+        if(currentEl) currentEl.classList.remove('active');
+        window.currentSlideIdx = (window.currentSlideIdx + dir + max) % max;
+        const nextEl = document.getElementById('sl-' + window.currentSlideIdx);
+        if(nextEl) nextEl.classList.add('active');
     }
 
     window.onload = init;
