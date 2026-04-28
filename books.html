@@ -237,7 +237,6 @@
         .slider-prev { left: 10px; }
         .slider-next { right: 10px; }
 
-        /* Stylish Login Form */
         #loginArea {
             background: var(--card);
             padding: 40px 30px;
@@ -267,8 +266,7 @@
         .login-input-group input { padding-left: 45px; margin: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         .login-btn { background: linear-gradient(135deg, var(--primary) 0%, #3730a3 100%); font-size: 16px; padding: 16px; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); transition: all 0.3s ease; }
         .login-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(79, 70, 229, 0.4); }
-
-        /* Dynamic Image Input Area */
+        
         #imgDynamicArea { background: rgba(0,0,0,0.02); padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px dashed #e2e8f0; }
         .dark-mode #imgDynamicArea { border-color: #334155; background: rgba(255,255,255,0.02); }
     </style>
@@ -381,7 +379,7 @@
 
     <div id="details" class="page">
         <div class="page-header">
-            <button class="back-btn" onclick="navigate('books')"><i class="fas fa-chevron-left"></i></button>
+            <button class="back-btn" onclick="goBackFromDetails()"><i class="fas fa-chevron-left"></i></button>
             <h3 class="page-title">বইয়ের বিবরণ</h3>
         </div>
         <div class="slider" id="dSlid"></div>
@@ -500,6 +498,8 @@
     const API_URL = "/api/books";
     let allBooks =[], allAuthors =[], allGifts =[], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
+    let lastPageBeforeDetails = 'books'; 
+    let lastScrollPos = 0;
     const SESSION_TIMEOUT = 5 * 60 * 1000;
 
     const quotes =[
@@ -739,6 +739,16 @@
         }
     }
 
+    function goBackFromDetails() {
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        if (document.getElementById(lastPageBeforeDetails)) {
+            document.getElementById(lastPageBeforeDetails).classList.add('active');
+        } else {
+            document.getElementById('books').classList.add('active');
+        }
+        window.scrollTo(0, lastScrollPos);
+    }
+
     function showAllBooks() {
         currentFilteredBy = 'all';
         document.getElementById('filterBtnArea').style.display='none';
@@ -860,6 +870,14 @@
 
     function showD(id) {
         const b = allBooks.find(x => x.ID == id);
+        if(!b) return;
+
+        const activePage = document.querySelector('.page.active');
+        if (activePage && activePage.id !== 'details') {
+            lastPageBeforeDetails = activePage.id;
+            lastScrollPos = window.scrollY || document.documentElement.scrollTop;
+        }
+
         const a = allAuthors.find(x => x.AuthorName == b.Author);
         const imgs = b.Images ? b.Images.split(',') : [''];
         
