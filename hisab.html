@@ -3,313 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>হিসাব খাতা এন্টারপ্রাইজ - ক্লাউড ড্যাশবোর্ড</title>
+    <title>হিসাব খাতা এন্টারপ্রাইজ - ক্লাউড ৩ডি ড্যাশবোর্ড</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="হিসাব খাতা">
 
     <script>
+        // PWA Manifest Configuration
         const manifestObj = {
             "name": "হিসাব খাতা এন্টারপ্রাইজ",
             "short_name": "হিসাব খাতা",
-            "description": "দেনা-পাওনা ও লোন ট্র্যাকিং সহ ৩ডি গ্লাস ড্যাশবোর্ড",
-            "start_url": window.location.href,
             "display": "standalone",
-            "background_color": "#0b1d12",
-            "theme_color": "#2ecc71",
-            "orientation": "portrait-primary",
-            "icons": [
-                { "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png", "sizes": "192x192", "type": "image/png" },
-                { "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png", "sizes": "512x512", "type": "image/png" }
-            ]
+            "background_color": "#0f2027",
+            "theme_color": "#3498db"
         };
         const blobManifest = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
         const link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = URL.createObjectURL(blobManifest);
+        link.rel = 'manifest'; link.href = URL.createObjectURL(blobManifest);
         document.head.appendChild(link);
     </script>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js for Financial Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
-          --body-bg: linear-gradient(135deg, #112211, #1a3a2a, #0f2027);
-          --glass-bg: rgba(255, 255, 255, 0.08);
-          --glass-border: rgba(255, 255, 255, 0.15);
-          --text-color: #ffffff;
-          --info: #2ecc71;
-          --success: #2ecc71;
-          --danger: #e74c3c;
-          --warning: #f1c40f;
-          --card-sub: #cbd5e1;
-          --input-bg: rgba(0, 0, 0, 0.4);
-          --shadow-vibe: 0 15px 35px rgba(0, 0, 0, 0.6);
+            --body-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-color: #ffffff;
+            --info: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --card-sub: #cbd5e1;
+            --input-bg: rgba(0, 0, 0, 0.4);
+            --shadow-vibe: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
-        [data-theme="rainforest"] {
-          --body-bg: linear-gradient(135deg, #0b1d12, #14351f, #1c2e24);
-          --glass-bg: rgba(20, 50, 30, 0.25);
-          --glass-border: rgba(46, 204, 113, 0.2);
-          --info: #2ecc71;
-        }
-        [data-theme="glass-rain"] {
-          --body-bg: linear-gradient(180deg, #1f2c3a, #111922, #0d131a);
-          --glass-bg: rgba(255, 255, 255, 0.06);
-          --glass-border: rgba(255, 255, 255, 0.25);
-          --info: #3498db;
-        }
-        [data-theme="autumn"] {
-          --body-bg: linear-gradient(135deg, #2c1a04, #4a3111, #1f1402);
-          --glass-bg: rgba(243, 156, 18, 0.08);
-          --glass-border: rgba(243, 156, 18, 0.25);
-          --info: #e67e22;
-        }
-        [data-theme="classic"] {
-          --body-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-          --glass-bg: rgba(255, 255, 255, 0.1);
-          --glass-border: rgba(255, 255, 255, 0.18);
-          --info: #3498db;
-        }
+        [data-theme="rainforest"] { --body-bg: linear-gradient(135deg, #0b1d12, #14351f, #1c2e24); --info: #2ecc71; }
+        [data-theme="autumn"] { --body-bg: linear-gradient(135deg, #2c1a04, #4a3111, #1f1402); --info: #e67e22; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; transition: background 0.4s ease, color 0.3s; }
-        body { background: var(--body-bg); background-attachment: fixed; color: var(--text-color); min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        body { background: var(--body-bg); background-attachment: fixed; color: var(--text-color); min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
 
-        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--body-bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-vibe); width: 100%; max-width: 420px; text-align: center; }
-        .main-container { display: none; width: 100%; max-width: 1250px; grid-template-columns: 310px 1fr; gap: 25px; }
+        .container { width: 100%; max-width: 1280px; display: grid; grid-template-columns: 310px 1fr; gap: 25px; }
+        @media (max-width: 950px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
 
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-vibe); }
+        /* Login Screen UI */
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--body-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .login-card { background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-vibe); width: 100%; max-width: 400px; text-align: center; }
+
+        /* Panels & Cards */
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-vibe); position: relative; }
+        
+        /* Sidebar Elements */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .profile-img-container { width: 110px; height: 110px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid var(--info); overflow: hidden; background: #11222d; display: flex; align-items: center; justify-content: center; }
+        .profile-img-container img { width: 100%; height: 100%; object-fit: cover; }
         .nav-menu { display: flex; flex-direction: column; gap: 10px; }
-        .nav-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-color); padding: 14px; border-radius: 12px; cursor: pointer; text-align: left; font-size: 1rem; display: flex; align-items: center; gap: 12px; }
-        .nav-btn.active, .nav-btn:hover { background: linear-gradient(135deg, var(--info), transparent); border-color: var(--info); transform: translateX(4px); }
-        
-        .theme-selector { display: flex; gap: 8px; justify-content: space-around; margin-top: 5px;}
-        .theme-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-        .theme-dot.active { border-color: var(--text-color); transform: scale(1.1); }
+        .nav-btn { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 14px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+        .nav-btn:hover, .nav-btn.active { background: linear-gradient(135deg, var(--info), transparent); border-color: var(--info); transform: translateX(5px); }
 
-        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 15px;}
-        .summary-card { padding: 20px; border-radius: 16px; text-align: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); }
-        
-        /* দেনা-পাওনা উইজেট কম্পোনেন্ট (Debt Grid UX) */
-        .debt-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .debt-box { background: rgba(0,0,0,0.25); border: 1px solid var(--glass-border); border-radius: 16px; padding: 18px; }
-        .debt-list { max-height: 140px; overflow-y: auto; margin-top: 12px; padding-right: 5px; }
-        .debt-item { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; border-radius: 6px; margin-bottom: 4px; }
-        .debt-item:hover { background: rgba(255,255,255,0.03); }
-        .debt-total { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--glass-border); font-weight: bold; display: flex; justify-content: space-between; }
+        /* Dashboard Summary */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+        .summary-card { padding: 22px; border-radius: 18px; text-align: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); }
+        .summary-card h4 { font-size: 0.9rem; color: var(--card-sub); margin-bottom: 8px; }
+        .summary-card p { font-size: 1.6rem; font-weight: bold; }
 
-        /* ৩-কলাম রেসপন্সিভ ফর্ম গ্রিড */
-        .form-grid-triple { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        /* Wallets & Debt Widgets */
+        .wallet-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
+        .wallet-box { padding: 16px; border-radius: 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); text-align: center; }
+        .debt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        @media (max-width: 600px) { .debt-grid { grid-template-columns: 1fr; } }
+        .debt-box { background: rgba(0,0,0,0.25); border-radius: 16px; padding: 18px; border: 1px solid var(--glass-border); }
+        .debt-list { list-style: none; max-height: 180px; overflow-y: auto; margin-top: 12px; }
+        .debt-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+
+        /* Forms */
+        .form-grid-triple { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--input-bg); color: var(--text-color); outline: none; width: 100%; }
-        
-        .table-responsive { overflow-x: auto; margin-top: 15px; border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
+        .form-group label { font-size: 0.85rem; color: var(--card-sub); }
+        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--input-bg); color: #fff; outline: none; }
+        .btn-submit { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+
+        /* Tables */
+        .table-responsive { overflow-x: auto; margin-top: 15px; border-radius: 12px; border: 1px solid var(--glass-border); }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: rgba(0,0,0,0.1); }
         th, td { padding: 14px; border-bottom: 1px solid var(--glass-border); }
-        th { background: rgba(0,0,0,0.3); color: var(--card-sub); }
+        th { background: rgba(0,0,0,0.3); color: var(--card-sub); font-size: 0.85rem; }
+
+        /* Modals & Loaders */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index: 1000; justify-content:center; align-items:center; }
+        .modal-content { width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+        #syncLoader { display:none; color: var(--warning); text-align:center; padding: 10px; font-weight: bold; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         .app-section { display: none; }
         .app-section.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);} }
 
-        .action-btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; color: white; margin-right: 5px; }
-        .edit-btn { background: #3498db; } .del-btn { background: #e74c3c; }
-        #syncLoader { display:none; color: var(--warning); font-size:0.9rem; text-align:center; margin-bottom:10px; }
+        .theme-selector { display: flex; justify-content: space-around; padding: 10px; }
+        .theme-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+        .theme-dot.active { border-color: #fff; transform: scale(1.1); }
     </style>
 </head>
 <body>
 
+    <!-- ক্লাউড লগইন সিস্টেম (API Based) -->
     <div id="loginScreen">
         <div class="login-card">
-            <i class="fa-solid fa-seedling" style="font-size: 3.5rem; color: #2ecc71; margin-bottom: 15px;"></i>
-            <h2>হিসাব খাতা এন্টারপ্রাইজ</h2>
-            <p style="color: var(--card-sub); font-size: 0.9rem; margin-bottom: 25px;">দেনা-পাওনা ট্র্যাকিং ক্লাউড ড্যাশবোর্ড</p>
+            <i class="fa-solid fa-vault" style="font-size: 3.5rem; color: var(--info); margin-bottom: 20px;"></i>
+            <h2>হিসাব খাতা ক্লাউড</h2>
+            <p style="color: var(--card-sub); font-size: 0.9rem; margin-bottom: 25px;">সিকিউর ড্যাশবোর্ড এক্সেস করুন</p>
             <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <input type="password" id="loginPassField" placeholder="সিক্রেট সিকিউরিটি পাসওয়ার্ড দিন" required style="text-align: center; font-size: 1.1rem;">
-                </div>
-                <button type="submit" class="btn-submit" style="font-size: 1.05rem;">ড্যাশবোর্ড আনলক করুন</button>
+                <input type="password" id="loginPassField" placeholder="সিক্রেট পাসওয়ার্ড দিন" required style="width:100%; padding:14px; border-radius:12px; border:1px solid var(--glass-border); background:var(--input-bg); color:#fff; text-align:center; font-size:1.1rem; margin-bottom:15px;">
+                <button type="submit" class="btn-submit" style="font-size:1rem;">আনলক ড্যাশবোর্ড</button>
             </form>
-            <p id="loginError" style="color: var(--danger); margin-top: 15px; font-weight: 500; display: none;">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</p>
+            <p id="loginError" style="color: var(--danger); margin-top: 15px; font-weight: bold; display: none;">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</p>
         </div>
     </div>
 
-    <div class="main-container" id="appInterface">
+    <div class="container" id="appInterface" style="display: none;">
+        <!-- সাইডবার নেভিগেশন -->
         <div class="sidebar">
             <div class="glass-panel" style="text-align: center;">
-                <h3>আল নোমান শিকদার</h3>
-                <p style="font-size: 0.85rem; color: var(--card-sub);">একজন প্রকৃতি প্রেমী</p>
-                <button onclick="handleLogout()" style="margin-top: 12px; background: rgba(231,76,60,0.2); border: 1px solid var(--danger); color: #ff7675; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;"><i class="fa-solid fa-power-off"></i> লগআউট</button>
+                <div class="profile-img-container" id="profileImgFrame">
+                    <i class="fa-solid fa-user-tie" style="font-size: 3rem; color: #bdc3c7;"></i>
+                </div>
+                <h3 id="profileName">ইউজার প্রোফাইল</h3>
+                <p id="profilePhone" style="font-size: 0.85rem; color: var(--card-sub);">একজন প্রকৃতি প্রেমী</p>
+                <button onclick="handleLogout()" style="margin-top: 15px; background: rgba(231,76,60,0.15); border: 1px solid var(--danger); color: #ff7675; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;"><i class="fa-solid fa-power-off"></i> লগআউট</button>
             </div>
 
-            <div class="glass-panel" style="padding: 12px 20px;">
-                <p style="font-size:0.8rem; text-align:center; margin-bottom:8px; opacity:0.8;">প্রকৃতি ও গ্লাস থিম ইঞ্জিন</p>
+            <div class="glass-panel">
+                <p style="font-size:0.75rem; text-align:center; margin-bottom:10px; opacity:0.8;">ইন্টারফেস থিম ইঞ্জিন</p>
                 <div class="theme-selector">
-                    <div class="theme-dot" style="background:#14351f;" onclick="setAppTheme('rainforest')" id="t-rainforest" title="রেইনফরেস্ট"><i class="fa-solid fa-tree" style="color:#2ecc71;"></i></div>
-                    <div class="theme-dot" style="background:#1f2c3a;" onclick="setAppTheme('glass-rain')" id="t-glass-rain" title="বর্ষণমুখর কাচ"><i class="fa-solid fa-cloud-showers-heavy" style="color:#3498db;"></i></div>
-                    <div class="theme-dot" style="background:#4a3111;" onclick="setAppTheme('autumn')" id="t-autumn" title="শরতের আমেজ"><i class="fa-solid fa-leaf" style="color:#e67e22;"></i></div>
-                    <div class="theme-dot" style="background:#203a43;" onclick="setAppTheme('classic')" id="t-classic" title="ক্লাসিক গ্লাস"><i class="fa-solid fa-wand-magic-sparkles" style="color:#00cbd5;"></i></div>
+                    <div class="theme-dot" style="background:linear-gradient(#0f2027,#2c5364);" onclick="setAppTheme('classic')" id="t-classic"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="theme-dot" style="background:#14351f;" onclick="setAppTheme('rainforest')" id="t-rainforest"><i class="fa-solid fa-tree"></i></div>
+                    <div class="theme-dot" style="background:#4a3111;" onclick="setAppTheme('autumn')" id="t-autumn"><i class="fa-solid fa-leaf"></i></div>
                 </div>
             </div>
 
+            <div class="glass-panel live-clock" style="text-align: center;">
+                <div id="liveTime" style="font-size: 1.4rem; font-weight: bold; color: var(--info);">০০:০০:০০</div>
+                <div id="liveDate" style="font-size: 0.8rem; opacity: 0.7;">লোড হচ্ছে...</div>
+            </div>
+
             <div class="nav-menu">
-                <button class="nav-btn active" onclick="switchTab('db')"><i class="fa-solid fa-chart-pie"></i> ড্যাশবোর্ড ওভারভিউ</button>
-                <button class="nav-btn" onclick="switchTab('tx')"><i class="fa-solid fa-plus"></i> নতুন লেনদেন / লোন এন্ট্রি</button>
+                <button class="nav-btn active" onclick="switchSection('dashboard')"><i class="fa-solid fa-chart-pie"></i> ড্যাশবোর্ড ওভারভিউ</button>
+                <button class="nav-btn" onclick="switchSection('transactions')"><i class="fa-solid fa-money-bill-transfer"></i> লেনদেন ইনপুট</button>
+                <button class="nav-btn" onclick="switchSection('loans')"><i class="fa-solid fa-hand-holding-dollar"></i> লোন ট্র্যাকিং</button>
+                <button class="nav-btn" onclick="switchSection('people')"><i class="fa-solid fa-users"></i> ব্যক্তি ও প্রোফাইল</button>
             </div>
             
-            <div class="glass-panel" style="text-align: center; font-size: 0.85rem; color: var(--card-sub);">
-                <i class="fa-solid fa-shield-halved"></i> সেশন সিকিউরিটি অ্যাক্টিভ<br>
+            <div class="glass-panel" style="text-align: center; font-size: 0.8rem; color: var(--card-sub);">
                 <span id="sessionTimer" style="font-weight: bold; color: var(--warning);">০৫:০০</span> ইনঅ্যাক্টিভ কাউন্টডাউন
             </div>
         </div>
 
-        <div class="main-content" style="display: flex; flex-direction: column; gap: 25px;">
-            <div id="syncLoader"><i class="fa-solid fa-circle-notch fa-spin"></i> গুগল ক্লাউড ডাটাবেজের সাথে লাইভ সিঙ্ক্রোনাইজ হচ্ছে...</div>
+        <!-- মেইন কন্টেন্ট এরিয়া -->
+        <div class="main-content">
+            <div id="syncLoader"><i class="fa-solid fa-rotate fa-spin"></i> গুগল ক্লাউড ডাটাবেজের সাথে সিঙ্ক্রোনাইজ হচ্ছে...</div>
 
-            <div id="dbSection" class="app-section active">
-                <h2>আর্থিক সংক্ষিপ্ত বিবরণী</h2>
-                <div class="summary-grid">
-                    <div class="summary-card"><h4>মোট আয়</h4><p id="totalInc" style="font-size:1.5rem; font-weight:700; color:#2ecc71; margin-top:5px;">৳ ০</p></div>
-                    <div class="summary-card"><h4>মোট ব্যয়</h4><p id="totalExp" style="font-size:1.5rem; font-weight:700; color:#e74c3c; margin-top:5px;">৳ ০</p></div>
-                    <div class="summary-card"><h4>মোট ক্যাশ ইন হ্যান্ড</h4><p id="netBal" style="font-size:1.5rem; font-weight:700; color:#3498db; margin-top:5px;">৳ ০</p></div>
+            <!-- ১. ড্যাশবোর্ড সেকশন -->
+            <div id="dashboardSection" class="app-section active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>আর্থিক সংক্ষিপ্ত বিবরণী</h2>
+                    <select id="filterMonth" class="form-group" style="padding:8px; width:auto;" onchange="loadDashboard()"></select>
                 </div>
 
-                <div class="debt-grid-container">
+                <div class="summary-grid">
+                    <div class="summary-card" style="border-bottom: 4px solid var(--info);"><h4>ওপেনিং ব্যালেন্স</h4><p id="sumOpening">৳ ০</p></div>
+                    <div class="summary-card" style="border-bottom: 4px solid var(--success);"><h4>চলতি মাসের আয়</h4><p id="sumIncome" style="color:var(--success);">৳ ০</p></div>
+                    <div class="summary-card" style="border-bottom: 4px solid var(--danger);"><h4>চলতি মাসের ব্যয়</h4><p id="sumExpense" style="color:var(--danger);">৳ ০</p></div>
+                    <div class="summary-card" style="border-bottom: 4px solid var(--warning);"><h4>নেট ব্যালেন্স</h4><p id="sumBalance">৳ ০</p></div>
+                </div>
+
+                <!-- ওয়ালেট স্টেটাস -->
+                <div class="glass-panel">
+                    <h3 style="font-size: 1rem; margin-bottom: 15px;"><i class="fa-solid fa-building-columns"></i> ওয়ালেট ও ব্যাংক অ্যাকাউন্ট স্টেটাস</h3>
+                    <div class="wallet-container">
+                        <div class="wallet-box"><span>ক্যাশ</span><h4 id="wCash">৳ ০</h4></div>
+                        <div class="wallet-box"><span>বিকাশ</span><h4 id="wBkash" style="color:#d81b60;">৳ ০</h4></div>
+                        <div class="wallet-box"><span>নগদ</span><h4 id="wNagad" style="color:#f57c00;">৳ ০</h4></div>
+                        <div class="wallet-box"><span>ব্যাংক</span><h4 id="wBank" style="color:var(--info);">৳ ০</h4></div>
+                    </div>
+                </div>
+
+                <!-- দেনা-পাওনা উইজেট -->
+                <div class="debt-grid">
                     <div class="debt-box" style="border-left: 4px solid var(--success);">
-                        <h4 style="color: var(--success);"><i class="fa-solid fa-hand-holding-dollar"></i> আমি অন্যের কাছে পাবো (পাওনা)</h4>
-                        <div class="debt-list" id="pownaList"></div>
-                        <div class="debt-total"><span>সর্বমোট প্রাপ্য:</span><span id="totalPowna" style="color: var(--success);">৳ ০</span></div>
+                        <h4 style="color:var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> আমি অন্যের কাছে পাবো</h4>
+                        <ul class="debt-list" id="receivableList"></ul>
+                        <div style="margin-top:10px; font-weight:bold; display:flex; justify-content:space-between;"><span>মোট:</span><span id="totalReceivable">৳ ০</span></div>
                     </div>
                     <div class="debt-box" style="border-left: 4px solid var(--danger);">
-                        <h4 style="color: var(--danger);"><i class="fa-solid fa-hand-holding-hand"></i> আমার কাছে অন্যেরা পাবে (দেনা)</h4>
-                        <div class="debt-list" id="denaList"></div>
-                        <div class="debt-total"><span>সর্বমোট দেনা:</span><span id="totalDena" style="color: var(--danger);">৳ ০</span></div>
+                        <h4 style="color:var(--danger);"><i class="fa-solid fa-arrow-trend-down"></i> আমি অন্যের কাছে ঋণী</h4>
+                        <ul class="debt-list" id="payableList"></ul>
+                        <div style="margin-top:10px; font-weight:bold; display:flex; justify-content:space-between;"><span>মোট:</span><span id="totalPayable">৳ ০</span></div>
                     </div>
                 </div>
 
+                <!-- রিসেন্ট লেনদেন টেবিল -->
                 <div class="glass-panel" style="margin-top: 25px;">
-                    <h3>ক্লাউড লেজার লেনদেন রেকর্ডস</h3>
+                    <h3>সাম্প্রতিক ক্লাউড লেনদেন লগ</h3>
                     <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
                                     <th>তারিখ ও সময়</th>
                                     <th>ধরণ</th>
-                                    <th>বিবরণ/ব্যক্তি</th>
+                                    <th>বিবরণ / খাত</th>
                                     <th>পরিমাণ</th>
                                     <th>অ্যাকশন</th>
                                 </tr>
                             </thead>
-                            <tbody id="cloudTableBody"></tbody>
+                            <tbody id="recentTransactionTable"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="txSection" class="app-section">
+            <!-- ২. লেনদেন ইনপুট সেকশন -->
+            <div id="transactionsSection" class="app-section">
                 <div class="glass-panel">
-                    <h2 id="formTitle">নতুন আর্থিক লেনদেন / লোন ডাটা এন্ট্রি</h2><br>
-                    <form id="mainDataForm" onsubmit="handleFormSubmit(event)">
+                    <h2 id="formTitle">নতুন লেনদেন / ফান্ড ট্রান্সফার</h2><br>
+                    <form id="txForm" onsubmit="handleFormSubmit(event)">
                         <input type="hidden" id="editRowId">
-                        
                         <div class="form-grid-triple">
                             <div class="form-group">
                                 <label>লেনদেনের ধরণ</label>
-                                <select id="fType" onchange="togglePersonField()" required>
+                                <select id="txType" onchange="toggleWalletFields()" required>
                                     <option value="income">আয় (Income)</option>
                                     <option value="expense">ব্যয় (Expense)</option>
-                                    <option value="loan-give">লোন দেওয়া (Loan Give)</option>
-                                    <option value="loan-take">লোন নেওয়া (Loan Take)</option>
-                                    <option value="loan-repay">লোন পরিশোধ (Loan Repay)</option>
-                                    <option value="loan-receive">লোন ফেরত পাওয়া (Loan Receive)</option>
+                                    <option value="transfer">ফান্ড ট্রান্সফার (Internal Transfer)</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>তারিখ</label>
-                                <input type="date" id="fDate" required>
+                                <input type="date" id="txDate" required>
                             </div>
                             <div class="form-group">
-                                <label>লেনদেনের সময় (টাইম)</label>
-                                <input type="time" id="fTime" required>
+                                <label>সময়</label>
+                                <input type="time" id="txTime" required>
                             </div>
                         </div>
-
                         <div class="form-grid-triple">
                             <div class="form-group">
-                                <label>টাকার পরিমাণ (৳)</label>
-                                <input type="number" id="fAmount" min="1" required>
+                                <label id="walletLabel">ব্যবহৃত ওয়ালেট (From)</label>
+                                <select id="txWalletFrom" required>
+                                    <option value="cash">ক্যাশ</option>
+                                    <option value="bkash">বিকাশ</option>
+                                    <option value="nagad">নগদ</option>
+                                    <option value="bank">ব্যাংক অ্যাকাউন্ট</option>
+                                </select>
                             </div>
-                            <div class="form-group" id="personGroup" style="display:none;">
-                                <label>ব্যক্তির নাম (লোন ট্র্যাকিং)</label>
-                                <input type="text" id="fPerson" placeholder="যেমন: করিম ভাই, রহিম সাহেব">
+                            <div class="form-group" id="walletToGroup" style="display:none;">
+                                <label>টার্গেট ওয়ালেট (To)</label>
+                                <select id="txWalletTo">
+                                    <option value="cash">ক্যাশ</option>
+                                    <option value="bkash">বিকাশ</option>
+                                    <option value="nagad">নগদ</option>
+                                    <option value="bank">ব্যাংক অ্যাকাউন্ট</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label>বিবরণ / খাত নোট</label>
-                                <input type="text" id="fNote" placeholder="যেমন: ক্লায়েন্ট পেমেন্ট, অফিস ভাড়া ইত্যাদি" required>
+                                <label>টাকার পরিমাণ (৳)</label>
+                                <input type="number" id="txAmount" min="1" required>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-submit" id="submitBtn">সংরক্ষণ করুন</button>
-                        <button type="button" onclick="cancelEdit()" id="cancelEditBtn" style="display:none; margin-top:10px; background:rgba(255,255,255,0.1); color:white;" class="btn-submit">এডিট বাতিল করুন</button>
+                        <div class="form-group">
+                            <label>বিবরণ / লেনদেনের খাত</label>
+                            <input type="text" id="txNote" placeholder="যেমন: ক্লায়েন্ট পেমেন্ট, অফিস ভাড়া..." required>
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">ক্লাউড ডাটাবেজে সংরক্ষণ করুন</button>
+                        <button type="button" onclick="cancelEdit()" id="cancelBtn" style="display:none; background:rgba(255,255,255,0.1); margin-top:10px;" class="btn-submit">এডিট বাতিল করুন</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- ৩. লোন ট্র্যাকিং সেকশন -->
+            <div id="loansSection" class="app-section">
+                <div class="glass-panel">
+                    <h2>লোন / ঋণ ও দেনা-পাওনা ট্র্যাকিং</h2><br>
+                    <form id="loanForm" onsubmit="handleLoanSubmit(event)">
+                        <div class="form-grid-triple">
+                            <div class="form-group">
+                                <label>অপারেশন ধরণ</label>
+                                <select id="lType" required>
+                                    <option value="loan-give">লোন প্রদান (পাওনা)</option>
+                                    <option value="loan-take">লোন গ্রহণ (দেনা)</option>
+                                    <option value="loan-repay">লোন পরিশোধ</option>
+                                    <option value="loan-receive">লোন ফেরত পাওয়া</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>ব্যক্তির নাম</label>
+                                <select id="lPerson" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>টাকার পরিমাণ</label>
+                                <input type="number" id="lAmount" required>
+                            </div>
+                        </div>
+                        <div class="form-grid-triple">
+                            <div class="form-group">
+                                <label>ব্যবহৃত ওয়ালেট</label>
+                                <select id="lWallet" required>
+                                    <option value="cash">ক্যাশ</option>
+                                    <option value="bkash">বিকাশ</option>
+                                    <option value="nagad">নগদ</option>
+                                    <option value="bank">ব্যাংক</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>তারিখ</label>
+                                <input type="date" id="lDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>সময়</label>
+                                <input type="time" id="lTime" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background:var(--info);">লোন এন্ট্রি নিশ্চিত করুন</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ৪. ব্যক্তি ও প্রোফাইল সেকশন -->
+            <div id="peopleSection" class="app-section">
+                <div class="form-grid-triple" style="grid-template-columns: 1fr 1fr;">
+                    <div class="glass-panel">
+                        <h3>প্রোফাইল কাস্টমাইজেশন</h3><br>
+                        <div class="form-group">
+                            <label>নাম</label>
+                            <input type="text" id="uName">
+                        </div>
+                        <div class="form-group">
+                            <label>বায়ো</label>
+                            <input type="text" id="uBio">
+                        </div>
+                        <div class="form-group">
+                            <label>প্রোফাইল ফটো</label>
+                            <input type="file" accept="image/*" onchange="handlePhotoUpload(this)">
+                        </div>
+                        <button class="btn-submit" onclick="saveLocalProfile()">আপডেট প্রোফাইল</button>
+                    </div>
+
+                    <div class="glass-panel">
+                        <h3>নতুন ব্যক্তি যুক্ত করুন</h3><br>
+                        <form onsubmit="saveNewPerson(event)">
+                            <div class="form-group">
+                                <label>পূর্ণ নাম</label>
+                                <input type="text" id="pName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>পরিচিতি নোট</label>
+                                <input type="text" id="pNote">
+                            </div>
+                            <button type="submit" class="btn-submit" style="background:var(--info);">ডিরেক্টরিতে যুক্ত করুন</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="margin-top:25px;">
+                    <h3>সংরক্ষিত ব্যক্তিবর্গের ডিরেক্টরি (লেজার দেখতে ক্লিক করুন)</h3>
+                    <div id="peopleListContainer" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:15px; margin-top:15px;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // ইন-লাইন PWA সার্ভিস ওয়ার্কার ইঞ্জিন
-        const swCode = `
-            const CACHE_NAME = 'hishab-khata-pwa-v2';
-            self.addEventListener('install', e => {
-                e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/', window.location.pathname])).then(() => self.skipWaiting()));
-            });
-            self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-            self.addEventListener('fetch', e => {
-                if (e.request.url.includes('/api/')) return;
-                e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-            });
-        `;
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const blobSw = new Blob([swCode], { type: 'text/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(blobSw)).catch(err => console.log(err));
-            });
-        }
+    <!-- ব্যক্তি ভিত্তিক লেজার মোডাল -->
+    <div id="detailsModal" class="modal">
+        <div class="glass-panel modal-content">
+            <span style="float:right; cursor:pointer; font-size:1.5rem;" onclick="closeModal()">&times;</span>
+            <h2 id="mTitle">লেজার প্রোফাইল</h2>
+            <hr style="margin:10px 0; border:0.5px solid var(--glass-border);">
+            <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px; margin-bottom:15px; text-align:center;">
+                <h4 style="color:var(--card-sub);">ব্যালেন্স ও লোন স্থিতি:</h4>
+                <p id="mStatus" style="font-size:1.5rem; font-weight:bold;"></p>
+            </div>
+            <h3>লেনদেন ইতিহাস:</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>তারিখ</th><th>ধরণ</th><th>পরিমাণ</th></tr></thead>
+                    <tbody id="mTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        const API_URL = '/api/tracker'; 
+    <script>
+        // --- API & State Management (Maintaining Cloud System) ---
+        const API_URL = '/api/tracker'; // Your Google Apps Script API URL
         let transactions = [];
+        let people = JSON.parse(localStorage.getItem('h_people')) || [];
+        let userProfile = JSON.parse(localStorage.getItem('h_profile')) || { name: "আল নোমান শিকদার", bio: "প্রকৃতি প্রেমী", photo: "" };
         let userPassword = localStorage.getItem('h_session_pass') || '';
-        let currentTheme = localStorage.getItem('h_theme') || 'rainforest';
         let inactivityTime = 0;
-        let timerInstance = null;
 
         window.onload = function() {
-            setAppTheme(currentTheme);
+            initLiveClock();
+            initMonthFilter();
+            setAppTheme(localStorage.getItem('h_theme') || 'classic');
             if (userPassword) verifySessionPass(userPassword, true);
-            initInactivityTracker();
+            startInactivityTimer();
         }
 
-        // হিউম্যানাইজড বাংলা টাইম কনভার্টার ইঞ্জিন
-        function convertToBanglaTime(timeString) {
-            if(!timeString) return '';
-            let [hrs, mins] = timeString.split(':');
-            hrs = parseInt(hrs);
-            let period = '';
-            if (hrs >= 5 && hrs < 12) period = 'সকাল';
-            else if (hrs >= 12 && hrs < 15) period = 'দুপুর';
-            else if (hrs >= 15 && hrs < 18) period = 'বিকাল';
-            else if (hrs >= 18 && hrs < 20) period = 'সন্ধ্যা';
-            else period = 'রাত';
-            
-            let displayHrs = hrs % 12 || 12;
-            let toBanglaNum = n => String(n).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
-            return `${period} ${toBanglaNum(String(displayHrs).padStart(2, '0'))}:${toBanglaNum(mins)}`;
-        }
-
-        async function verifySessionPass(pass, isAutoLoad = false) {
+        // --- Auth & API Functions ---
+        async function verifySessionPass(pass, isAuto = false) {
             showLoader(true);
             try {
                 const response = await fetch(`${API_URL}?action=checkLogin&pass=${encodeURIComponent(pass)}`);
@@ -318,23 +423,17 @@
                     localStorage.setItem('h_session_pass', pass);
                     document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('appInterface').style.display = 'grid';
+                    loadProfileData();
                     await fetchCloudData();
-                    startInactivityCountdown();
                 } else { throw new Error(); }
             } catch (err) {
-                localStorage.removeItem('h_session_pass');
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('appInterface').style.display = 'none';
-                if(!isAutoLoad) {
-                    const errLabel = document.getElementById('loginError');
-                    errLabel.style.display = 'block';
-                    setTimeout(() => errLabel.style.display = 'none', 4000);
+                if(!isAuto) {
+                    document.getElementById('loginError').style.display = 'block';
+                    setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
                 }
+                handleLogout();
             } finally { showLoader(false); }
         }
-
-        function handleLogin(e) { e.preventDefault(); verifySessionPass(document.getElementById('loginPassField').value); }
-        function handleLogout() { localStorage.removeItem('h_session_pass'); location.reload(); }
 
         async function fetchCloudData() {
             showLoader(true);
@@ -342,238 +441,300 @@
                 const response = await fetch(`${API_URL}?action=getData&pass=${encodeURIComponent(userPassword)}`);
                 const data = await response.json();
                 transactions = data.transactions || [];
-                calculateMetricsAndDebt();
-                renderTable();
-            } catch (error) { console.error(error); }
+                loadDashboard();
+            } catch (err) { console.error("Cloud Sync Error", err); }
             finally { showLoader(false); }
         }
 
-        async function commitToCloud(actionType, payloadData) {
+        async function commitToCloud(action, payload) {
             showLoader(true);
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ adminPass: userPassword, action: actionType, ...payloadData })
+                    body: JSON.stringify({ adminPass: userPassword, action, ...payload })
                 });
-                const resData = await response.json();
-                if(resData.success) await fetchCloudData();
-            } catch (error) { alert("অপারেশন ব্যর্থ হয়েছে!"); }
+                const res = await response.json();
+                if(res.success) await fetchCloudData();
+                else alert("অপারেশন ব্যর্থ হয়েছে!");
+            } catch (err) { alert("সার্ভার ইরর!"); }
             finally { showLoader(false); }
         }
 
-        // মেট্রিকেস এবং দেনা-পাওনা উইজেট প্রসেসর লজিক (Debt Matrix Calculation)
-        function calculateMetricsAndDebt() {
-            let inc = 0, exp = 0;
-            let personBalances = {};
+        // --- Dashboard & Matrix Logic ---
+        function loadDashboard() {
+            const filter = document.getElementById('filterMonth').value;
+            let wallets = { cash: 0, bkash: 0, nagad: 0, bank: 0 };
+            let inc = 0, exp = 0, openBal = 0;
+            let debtMap = {};
+            people.forEach(p => debtMap[p.name] = 0);
+
+            // সর্টিং (নতুন আগে)
+            transactions.sort((a,b) => new Date(b.date + 'T' + (b.walletTo || '00:00')) - new Date(a.date + 'T' + (a.walletTo || '00:00')));
 
             transactions.forEach(t => {
-                let amt = parseFloat(t.amount) || 0;
-                
-                // ১. মেইন ক্যাশ ক্যালকুলেশন
-                if(t.type === 'income' || t.type === 'loan-take' || t.type === 'loan-receive') inc += amt;
-                if(t.type === 'expense' || t.type === 'loan-give' || t.type === 'loan-repay') exp += amt;
+                const amt = parseFloat(t.amount);
+                const tMonth = t.date.substring(0, 7);
 
-                // ২. দেনা-পাওনা ব্যক্তি ভিত্তিক লেজার ব্যালেন্সিং লজিক
-                if(t.person && t.person.trim() !== "") {
-                    let name = t.person.trim();
-                    if(!personBalances[name]) personBalances[name] = 0;
+                // ওয়ালেট ক্যালকুলেশন
+                if(t.type === 'income' || t.type === 'loan-take' || t.type === 'loan-receive') wallets[t.walletFrom] += amt;
+                if(t.type === 'expense' || t.type === 'loan-give' || t.type === 'loan-repay') wallets[t.walletFrom] -= amt;
+                if(t.type === 'transfer') { wallets[t.walletFrom] -= amt; wallets[t.walletTo] += amt; }
 
-                    if(t.type === 'loan-give' || t.type === 'loan-repay') personBalances[name] += amt; // পাওনা প্লাস
-                    if(t.type === 'loan-take' || t.type === 'loan-receive') personBalances[name] -= amt; // দেনা মাইনাস
+                // ব্যালেন্স ক্যালকুলেশন
+                if(tMonth < filter) {
+                    if(['income','loan-take','loan-receive'].includes(t.type)) openBal += amt;
+                    if(['expense','loan-give','loan-repay'].includes(t.type)) openBal -= amt;
+                } else if(tMonth === filter) {
+                    if(t.type === 'income') inc += amt;
+                    if(t.type === 'expense') exp += amt;
+                }
+
+                // লোন/দেনা-পাওনা ট্র্যাকিং
+                if(t.person) {
+                    if(['loan-give','loan-repay'].includes(t.type)) debtMap[t.person] = (debtMap[t.person] || 0) + amt;
+                    if(['loan-take','loan-receive'].includes(t.type)) debtMap[t.person] = (debtMap[t.person] || 0) - amt;
                 }
             });
 
-            document.getElementById('totalInc').innerText = `৳ ${inc.toLocaleString('bn-BD')}`;
-            document.getElementById('totalExp').innerText = `৳ ${exp.toLocaleString('bn-BD')}`;
-            document.getElementById('netBal').innerText = `৳ ${(inc - exp).toLocaleString('bn-BD')}`;
+            // UI আপডেট
+            document.getElementById('sumOpening').innerText = `৳ ${openBal.toLocaleString('bn-BD')}`;
+            document.getElementById('sumIncome').innerText = `৳ ${inc.toLocaleString('bn-BD')}`;
+            document.getElementById('sumExpense').innerText = `৳ ${exp.toLocaleString('bn-BD')}`;
+            document.getElementById('sumBalance').innerText = `৳ ${(openBal + inc - exp).toLocaleString('bn-BD')}`;
 
-            // দেনা ও পাওনা আলাদা উইজেট জেনারেশন
-            const pownaList = document.getElementById('pownaList');
-            const denaList = document.getElementById('denaList');
-            pownaList.innerHTML = ''; denaList.innerHTML = '';
+            document.getElementById('wCash').innerText = `৳ ${wallets.cash.toLocaleString('bn-BD')}`;
+            document.getElementById('wBkash').innerText = `৳ ${wallets.bkash.toLocaleString('bn-BD')}`;
+            document.getElementById('wNagad').innerText = `৳ ${wallets.nagad.toLocaleString('bn-BD')}`;
+            document.getElementById('wBank').innerText = `৳ ${wallets.bank.toLocaleString('bn-BD')}`;
 
-            let totalPownaSum = 0, totalDenaSum = 0;
-
-            for(let key in personBalances) {
-                let bal = personBalances[key];
-                if(bal > 0) {
-                    totalPownaSum += bal;
-                    pownaList.innerHTML += `<div class="debt-item"><span style="font-weight:600;"><i class="fa-solid fa-user-check"></i> ${key}</span><span style="color:var(--success); font-weight:700;">৳ ${bal.toLocaleString('bn-BD')}</span></div>`;
-                } else if(bal < 0) {
-                    let absBal = Math.abs(bal);
-                    totalDenaSum += absBal;
-                    denaList.innerHTML += `<div class="debt-item"><span style="font-weight:600;"><i class="fa-solid fa-user-minus"></i> ${key}</span><span style="color:var(--danger); font-weight:700;">৳ ${absBal.toLocaleString('bn-BD')}</span></div>`;
-                }
-            }
-
-            if(!pownaList.innerHTML) pownaList.innerHTML = `<div style="text-align:center; opacity:0.5; font-size:0.85rem; padding:15px;">কোনো প্রাপ্য পাওনা নেই</div>`;
-            if(!denaList.innerHTML) denaList.innerHTML = `<div style="text-align:center; opacity:0.5; font-size:0.85rem; padding:15px;">কোনো বকেয়া দেনা নেই</div>`;
-
-            document.getElementById('totalPowna').innerText = `৳ ${totalPownaSum.toLocaleString('bn-BD')}`;
-            document.getElementById('totalDena').innerText = `৳ ${totalDenaSum.toLocaleString('bn-BD')}`;
+            renderDebtWidgets(debtMap);
+            renderTable(filter);
         }
 
-        // সঠিক ক্রনোলজিক্যাল সর্টিং লজিক (Date + Time সর্টিং)
-        function renderTable() {
-            const tbody = document.getElementById('cloudTableBody');
+        function renderDebtWidgets(debtMap) {
+            const rList = document.getElementById('receivableList');
+            const pList = document.getElementById('payableList');
+            rList.innerHTML = ''; pList.innerHTML = '';
+            let rSum = 0, pSum = 0;
+
+            for(let name in debtMap) {
+                const bal = debtMap[name];
+                if(bal > 0) {
+                    rSum += bal;
+                    rList.innerHTML += `<li class="debt-item"><span>${name}</span><b style="color:var(--success);">৳ ${bal}</b></li>`;
+                } else if(bal < 0) {
+                    const abs = Math.abs(bal);
+                    pSum += abs;
+                    pList.innerHTML += `<li class="debt-item"><span>${name}</span><b style="color:var(--danger);">৳ ${abs}</b></li>`;
+                }
+            }
+            document.getElementById('totalReceivable').innerText = `৳ ${rSum}`;
+            document.getElementById('totalPayable').innerText = `৳ ${pSum}`;
+        }
+
+        function renderTable(month) {
+            const tbody = document.getElementById('recentTransactionTable');
             tbody.innerHTML = '';
-            
-            // তারিখ এবং সময় যুক্ত করে নিখুঁত সর্ট (সর্বশেষ ডেটা সবার আগে)
-            const sorted = [...transactions].sort((a, b) => {
-                let dateTimeA = new Date(`${a.date}T${a.walletTo || '00:00'}`); 
-                let dateTimeB = new Date(`${b.date}T${b.walletTo || '00:00'}`);
-                return dateTimeB - dateTimeA;
-            });
+            const filtered = transactions.filter(t => t.date.substring(0, 7) === month);
 
-            const typeMap = {
-                'income': {n: 'আয়', c: '#2ecc71'}, 'expense': {n: 'ব্যয়', c: '#e74c3c'},
-                'loan-give': {n: 'লোন দেওয়া', c: '#e67e22'}, 'loan-take': {n: 'লোন নেওয়া', c: '#9b59b6'},
-                'loan-repay': {n: 'লোন পরিশোধ', c: '#f1c40f'}, 'loan-receive': {n: 'লোন ফেরত', c: '#1abc9c'}
-            };
-
-            sorted.forEach(t => {
-                let typeInfo = typeMap[t.type] || {n: t.type, c: '#fff'};
-                let displayDesc = t.person ? `<strong>${t.person}</strong> - ${t.note}` : t.note;
-                let displayBanglaTime = convertToBanglaTime(t.walletTo); // আমরা walletTo কলামে টাইম সেভ রাখছি
-
+            filtered.forEach(t => {
+                const color = t.type==='income'?'var(--success)':t.type==='expense'?'var(--danger)':'#fff';
                 tbody.innerHTML += `<tr>
-                    <td><strong>${t.date}</strong><br><span style="font-size:0.75rem; color:var(--card-sub);"><i class="fa-regular fa-clock"></i> ${displayBanglaTime}</span></td>
-                    <td><span style="color:${typeInfo.c}; font-weight:600;">${typeInfo.n}</span></td>
-                    <td>${displayDesc}</td>
-                    <td style="font-weight:700;">৳ ${parseFloat(t.amount).toLocaleString('bn-BD')}</td>
+                    <td><strong>${t.date}</strong><br><small style="opacity:0.6;">${convertToBanglaTime(t.walletTo)}</small></td>
+                    <td><span style="color:${color}; font-weight:bold;">${t.type}</span></td>
+                    <td><b>${t.person || ''}</b><br>${t.note}</td>
+                    <td style="font-weight:bold;">৳ ${t.amount}</td>
                     <td>
-                        <button class="action-btn edit-btn" onclick="initiateEdit(${t.id})"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="action-btn del-btn" onclick="deleteTransaction(${t.id})"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="initEdit(${t.id})" style="background:var(--info); color:#fff; border:none; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteTx(${t.id})" style="background:var(--danger); color:#fff; border:none; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>`;
             });
-
-            if(sorted.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.6; padding:20px;">কোনো ডেটা রেকর্ড পাওয়া যায়নি!</td></tr>`;
-            }
         }
 
+        // --- Action Handlers ---
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const rowId = document.getElementById('editRowId').value;
-            
-            const txData = {
-                id: rowId ? parseInt(rowId) : Date.now(),
-                date: document.getElementById('fDate').value,
-                walletTo: document.getElementById('fTime').value, // টাইম ডাটা গুগল শিটের walletTo কলামে সিঙ্ক হচ্ছে সর্টিং এর জন্য
-                type: document.getElementById('fType').value,
-                walletFrom: 'cash', timestamp: '',
-                amount: parseFloat(document.getElementById('fAmount').value),
-                person: document.getElementById('fPerson').value || '',
-                note: document.getElementById('fNote').value
+            const id = document.getElementById('editRowId').value;
+            const data = {
+                id: id ? parseInt(id) : Date.now(),
+                date: document.getElementById('txDate').value,
+                walletTo: document.getElementById('txTime').value,
+                type: document.getElementById('txType').value,
+                walletFrom: document.getElementById('txWalletFrom').value,
+                amount: parseFloat(document.getElementById('txAmount').value),
+                note: document.getElementById('txNote').value,
+                walletTo: document.getElementById('txType').value === 'transfer' ? document.getElementById('txWalletTo').value : document.getElementById('txTime').value
             };
 
-            if(rowId) {
-                await commitToCloud('edit', { tx: txData });
-                cancelEdit();
-            } else {
-                await commitToCloud('entry', { tx: txData });
-            }
-            document.getElementById('mainDataForm').reset();
-            switchTab('db');
+            await commitToCloud(id ? 'edit' : 'entry', { tx: data });
+            document.getElementById('txForm').reset();
+            cancelEdit();
+            switchSection('dashboard');
         }
 
-        function togglePersonField() {
-            const type = document.getElementById('fType').value;
-            const pGroup = document.getElementById('personGroup');
-            if(type.startsWith('loan-')) {
-                pGroup.style.display = 'flex';
-                document.getElementById('fPerson').required = true;
-            } else {
-                pGroup.style.display = 'none';
-                document.getElementById('fPerson').required = false;
-                document.getElementById('fPerson').value = '';
-            }
+        async function handleLoanSubmit(e) {
+            e.preventDefault();
+            const data = {
+                id: Date.now(),
+                date: document.getElementById('lDate').value,
+                walletTo: document.getElementById('lTime').value,
+                type: document.getElementById('lType').value,
+                walletFrom: document.getElementById('lWallet').value,
+                amount: parseFloat(document.getElementById('lAmount').value),
+                person: document.getElementById('lPerson').value,
+                note: `লোন অপারেশন: ${document.getElementById('lType').value}`
+            };
+            await commitToCloud('entry', { tx: data });
+            document.getElementById('loanForm').reset();
+            switchSection('dashboard');
         }
 
-        async function deleteTransaction(id) {
-            if(confirm("আপনি কি নিশ্চিতভাবে এই রেকর্ডটি ডিলিট করতে চান?")) {
-                await commitToCloud('delete', { id: id });
-            }
+        async function deleteTx(id) {
+            if(confirm("এই রেকর্ডটি ডিলিট করতে চান?")) await commitToCloud('delete', { id });
         }
 
-        function initiateEdit(id) {
-            const item = transactions.find(t => t.id.toString() === id.toString());
-            if(!item) return;
-
-            document.getElementById('editRowId').value = item.id;
-            document.getElementById('fDate').value = item.date;
-            document.getElementById('fTime').value = item.walletTo || '';
-            document.getElementById('fType').value = item.type;
-            togglePersonField();
-            document.getElementById('fAmount').value = item.amount;
-            document.getElementById('fPerson').value = item.person || '';
-            document.getElementById('fNote').value = item.note;
-
-            document.getElementById('formTitle').innerText = "লেনদেন/লোন ডাটা এডিট মোড";
-            document.getElementById('submitBtn').innerText = "আপডেট কনফার্ম করুন";
-            document.getElementById('cancelEditBtn').style.display = 'block';
-            switchTab('tx');
+        // --- UI Support Functions ---
+        function switchSection(id) {
+            document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id + 'Section').classList.add('active');
+            const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.onclick.toString().includes(id));
+            if(btn) btn.classList.add('active');
+            
+            if(id === 'dashboard') loadDashboard();
+            if(id === 'people') renderPeopleList();
+            if(id === 'transactions' || id === 'loans') resetFormDateTime();
         }
 
-        function cancelEdit() {
-            document.getElementById('editRowId').value = '';
-            document.getElementById('mainDataForm').reset();
-            document.getElementById('formTitle').innerText = "নতুন আর্থিক লেনদেন / লোন ডাটা এন্ট্রি";
-            document.getElementById('submitBtn').innerText = "সংরক্ষণ করুন";
-            document.getElementById('cancelEditBtn').style.display = 'none';
-            togglePersonField();
+        function resetFormDateTime() {
+            const now = new Date();
+            const d = now.toISOString().split('T')[0];
+            const t = now.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('txDate').value = d; document.getElementById('txTime').value = t;
+            document.getElementById('lDate').value = d; document.getElementById('lTime').value = t;
         }
 
-        // ইনঅ্যাক্টিভিটি অটো লগআউট টাইমার (৫ মিনিট)
-        function startInactivityCountdown() {
-            if(timerInstance) clearInterval(timerInstance);
-            const timerLabel = document.getElementById('sessionTimer');
-            inactivityTime = 0;
-            timerInstance = setInterval(() => {
-                inactivityTime++;
-                let remaining = 300 - inactivityTime;
-                if (remaining <= 0) { clearInterval(timerInstance); handleLogout(); }
-                let mins = Math.floor(remaining / 60); let secs = remaining % 60;
-                timerLabel.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        function toggleWalletFields() {
+            const type = document.getElementById('txType').value;
+            document.getElementById('walletToGroup').style.display = (type === 'transfer') ? 'block' : 'none';
+        }
+
+        function initLiveClock() {
+            setInterval(() => {
+                const n = new Date();
+                document.getElementById('liveTime').innerText = n.toLocaleTimeString('bn-BD');
+                document.getElementById('liveDate').innerText = n.toLocaleDateString('bn-BD', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
             }, 1000);
         }
 
-        function initInactivityTracker() {
-            ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
-                window.addEventListener(evt, () => { if (userPassword) inactivityTime = 0; });
-            });
+        function convertToBanglaTime(time) {
+            if(!time || time.includes('loan')) return '';
+            let [h, m] = time.split(':'); h = parseInt(h);
+            let p = h < 6 ? 'ভোর' : h < 12 ? 'সকাল' : h < 16 ? 'দুপুর' : h < 18 ? 'বিকাল' : h < 20 ? 'সন্ধ্যা' : 'রাত';
+            let dh = h % 12 || 12;
+            return `${p} ${dh.toLocaleString('bn-BD')}:${m.toLocaleString('bn-BD')}`;
         }
 
-        function setAppTheme(themeName) {
-            document.documentElement.setAttribute('data-theme', themeName);
-            localStorage.setItem('h_theme', themeName);
-            currentTheme = themeName;
-            document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
-            const activeDot = document.getElementById(`t-${themeName}`);
-            if(activeDot) activeDot.classList.add('active');
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if(tab === 'db') {
-                document.getElementById('dbSection').classList.add('active');
-                document.querySelectorAll('.nav-btn')[0].classList.add('active');
-            } else {
-                document.getElementById('txSection').classList.add('active');
-                document.querySelectorAll('.nav-btn')[1].classList.add('active');
-                if(!document.getElementById('editRowId').value) {
-                    // অটো কারেন্ট টাইম ও ডেট সিলেকশন
-                    document.getElementById('fDate').value = new Date().toISOString().substring(0, 10);
-                    const now = new Date();
-                    document.getElementById('fTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-                }
+        function initMonthFilter() {
+            const s = document.getElementById('filterMonth');
+            const n = new Date();
+            for(let i=0; i<12; i++) {
+                const d = new Date(n.getFullYear(), n.getMonth() - i, 1);
+                const v = d.toISOString().substring(0, 7);
+                const t = d.toLocaleDateString('bn-BD', { month:'long', year:'numeric' });
+                s.innerHTML += `<option value="${v}">${t}</option>`;
             }
         }
 
-        function showLoader(status) { document.getElementById('syncLoader').style.display = status ? 'block' : 'none'; }
+        // --- Person & Profile Functions ---
+        function saveNewPerson(e) {
+            e.preventDefault();
+            const name = document.getElementById('pName').value.trim();
+            if(people.some(p => p.name === name)) return alert("নামটি ইতিমধ্যে আছে!");
+            people.push({ name, note: document.getElementById('pNote').value });
+            localStorage.setItem('h_people', JSON.stringify(people));
+            document.getElementById('pName').value = ''; document.getElementById('pNote').value = '';
+            renderPeopleList(); populatePeopleDropdown();
+        }
+
+        function renderPeopleList() {
+            const c = document.getElementById('peopleListContainer');
+            c.innerHTML = '';
+            people.forEach(p => {
+                c.innerHTML += `<div class="wallet-box" style="cursor:pointer;" onclick="showPersonLedger('${p.name}')">
+                    <i class="fa-solid fa-circle-user" style="font-size:2rem; color:var(--info);"></i><br>
+                    <strong>${p.name}</strong><br><small style="opacity:0.6;">${p.note}</small>
+                </div>`;
+            });
+            populatePeopleDropdown();
+        }
+
+        function populatePeopleDropdown() {
+            const s = document.getElementById('lPerson');
+            s.innerHTML = '';
+            people.forEach(p => s.innerHTML += `<option value="${p.name}">${p.name}</option>`);
+        }
+
+        function showPersonLedger(name) {
+            document.getElementById('mTitle').innerText = name + " - লেজার প্রোফাইল";
+            let bal = 0; let html = '';
+            transactions.filter(t => t.person === name).sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                const amt = parseFloat(t.amount);
+                if(['loan-give','loan-repay'].includes(t.type)) bal += amt;
+                else bal -= amt;
+                html += `<tr><td>${t.date}</td><td>${t.type}</td><td>৳ ${t.amount}</td></tr>`;
+            });
+            const status = document.getElementById('mStatus');
+            status.innerText = bal >= 0 ? `পাওনা: ৳ ${bal}` : `দেনা: ৳ ${Math.abs(bal)}`;
+            status.style.color = bal >= 0 ? 'var(--success)' : 'var(--danger)';
+            document.getElementById('mTableBody').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">রেকর্ড নেই</td></tr>';
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('detailsModal').style.display = 'none'; }
+
+        function handlePhotoUpload(input) {
+            const f = input.files[0];
+            if(f && f.size < 1024*1024) {
+                const r = new FileReader();
+                r.onload = e => userProfile.photo = e.target.result;
+                r.readAsDataURL(f);
+            } else alert("১ মেগাবাইটের কম সাইজের ছবি দিন।");
+        }
+
+        function saveLocalProfile() {
+            userProfile.name = document.getElementById('uName').value;
+            userProfile.bio = document.getElementById('uBio').value;
+            localStorage.setItem('h_profile', JSON.stringify(userProfile));
+            loadProfileData();
+            alert("প্রোফাইল আপডেট হয়েছে!");
+        }
+
+        function loadProfileData() {
+            document.getElementById('profileName').innerText = userProfile.name;
+            document.getElementById('profilePhone').innerText = userProfile.bio;
+            document.getElementById('uName').value = userProfile.name;
+            document.getElementById('uBio').value = userProfile.bio;
+            if(userProfile.photo) document.getElementById('profileImgFrame').innerHTML = `<img src="${userProfile.photo}">`;
+        }
+
+        function handleLogout() { localStorage.removeItem('h_session_pass'); location.reload(); }
+        function showLoader(s) { document.getElementById('syncLoader').style.display = s ? 'block' : 'none'; }
+        function setAppTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('h_theme', t); document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); document.getElementById('t-'+t).classList.add('active'); }
+
+        function startInactivityTimer() {
+            setInterval(() => {
+                inactivityTime++;
+                let rem = 300 - inactivityTime;
+                if(rem <= 0) handleLogout();
+                let m = Math.floor(rem/60), s = rem%60;
+                document.getElementById('sessionTimer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
+            ['mousemove','mousedown','keypress','touchstart','scroll'].forEach(e => window.addEventListener(e, () => inactivityTime = 0));
+        }
+
     </script>
 </body>
 </html>
