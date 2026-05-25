@@ -4,128 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>হিসাব খাতা এন্টারপ্রাইজ - ক্লাউড ড্যাশবোর্ড</title>
+    
+    <!-- PWA iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="হিসাব খাতা">
+
+    <!-- ডায়নামিক ম্যানিফেস্টো ইনজেকশন ট্রিক (আলাদা ফাইল লাগবে না) -->
+    <script>
+        const manifestObj = {
+            "name": "হিসাব খাতা এন্টারপ্রাইজ",
+            "short_name": "হিসাব খাতা",
+            "description": "৩ডি গ্লাস ক্লাউড ফাইন্যান্সিয়াল ড্যাশবোর্ড",
+            "start_url": window.location.href,
+            "display": "standalone",
+            "background_color": "#0b1d12",
+            "theme_color": "#2ecc71",
+            "orientation": "portrait-primary",
+            "icons": [
+                {
+                    "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
+            ]
+        };
+        const manifestStr = JSON.stringify(manifestObj);
+        const blobManifest = new Blob([manifestStr], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blobManifest);
+        
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestURL;
+        document.head.appendChild(link);
+    </script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --body-bg: linear-gradient(135deg, #112211, #1a3a2a, #0f2027);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-color: #ffffff;
-            --info: #2ecc71;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --card-sub: #cbd5e1;
-            --input-bg: rgba(0, 0, 0, 0.4);
-            --shadow-vibe: 0 15px 35px rgba(0, 0, 0, 0.6);
+          --body-bg: linear-gradient(135deg, #112211, #1a3a2a, #0f2027);
+          --glass-bg: rgba(255, 255, 255, 0.08);
+          --glass-border: rgba(255, 255, 255, 0.15);
+          --text-color: #ffffff;
+          --info: #2ecc71;
+          --success: #2ecc71;
+          --danger: #e74c3c;
+          --warning: #f1c40f;
+          --card-sub: #cbd5e1;
+          --input-bg: rgba(0, 0, 0, 0.4);
+          --shadow-vibe: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
-        /* Nature Theme Presets */
         [data-theme="rainforest"] {
-            --body-bg: linear-gradient(135deg, #0b1d12, #14351f, #1c2e24);
-            --glass-bg: rgba(20, 50, 30, 0.25);
-            --glass-border: rgba(46, 204, 113, 0.2);
-            --info: #2ecc71;
+          --body-bg: linear-gradient(135deg, #0b1d12, #14351f, #1c2e24);
+          --glass-bg: rgba(20, 50, 30, 0.25);
+          --glass-border: rgba(46, 204, 113, 0.2);
+          --info: #2ecc71;
         }
-
         [data-theme="glass-rain"] {
-            --body-bg: linear-gradient(180deg, #1f2c3a, #111922, #0d131a);
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --info: #3498db;
-            /* কাচের দেয়ালে বৃষ্টির আবহ ফুটিয়ে তুলতে হালকা টেক্সচার */
-            box-shadow: inset 0 0 100px rgba(255,255,255,0.05); 
+          --body-bg: linear-gradient(180deg, #1f2c3a, #111922, #0d131a);
+          --glass-bg: rgba(255, 255, 255, 0.06);
+          --glass-border: rgba(255, 255, 255, 0.25);
+          --info: #3498db;
         }
-
         [data-theme="autumn"] {
-            --body-bg: linear-gradient(135deg, #2c1a04, #4a3111, #1f1402);
-            --glass-bg: rgba(243, 156, 18, 0.08);
-            --glass-border: rgba(243, 156, 18, 0.25);
-            --info: #e67e22;
+          --body-bg: linear-gradient(135deg, #2c1a04, #4a3111, #1f1402);
+          --glass-bg: rgba(243, 156, 18, 0.08);
+          --glass-border: rgba(243, 156, 18, 0.25);
+          --info: #e67e22;
         }
-
         [data-theme="classic"] {
-            --body-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --info: #3498db;
+          --body-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+          --glass-bg: rgba(255, 255, 255, 0.1);
+          --glass-border: rgba(255, 255, 255, 0.18);
+          --info: #3498db;
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            transition: background 0.4s ease, color 0.3s;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; transition: background 0.4s ease, color 0.3s; }
+        body { background: var(--body-bg); background-attachment: fixed; color: var(--text-color); min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: center; }
 
-        body {
-            background: var(--body-bg); background-attachment: fixed;
-            color: var(--text-color); min-height: 100vh; padding: 20px;
-            display: flex; justify-content: center; align-items: center;
-        }
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--body-bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-vibe); width: 100%; max-width: 420px; text-align: center; }
+        .main-container { display: none; width: 100%; max-width: 1250px; grid-template-columns: 310px 1fr; gap: 25px; }
 
-        /* Login Screen Overlay */
-        #loginScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--body-bg); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .login-card {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border);
-            padding: 40px; border-radius: 24px; box-shadow: var(--shadow-vibe);
-            width: 100%; max-width: 420px; text-align: center;
-        }
-
-        .main-container {
-            display: none; width: 100%; max-width: 1250px;
-            grid-template-columns: 310px 1fr; gap: 25px;
-        }
-
-        .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 24px; box-shadow: var(--shadow-vibe);
-        }
-
-        /* Sidebar, Nav and Widgets setup */
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-vibe); }
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         .nav-menu { display: flex; flex-direction: column; gap: 10px; }
-        .nav-btn {
-            background: transparent; border: 1px solid var(--glass-border);
-            color: var(--text-color); padding: 14px; border-radius: 12px;
-            cursor: pointer; text-align: left; font-size: 1rem;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .nav-btn.active, .nav-btn:hover {
-            background: linear-gradient(135deg, var(--info), transparent);
-            border-color: var(--info); transform: translateX(4px);
-        }
-
-        /* Theme Engine Selector View */
+        .nav-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-color); padding: 14px; border-radius: 12px; cursor: pointer; text-align: left; font-size: 1rem; display: flex; align-items: center; gap: 12px; }
+        .nav-btn.active, .nav-btn:hover { background: linear-gradient(135deg, var(--info), transparent); border-color: var(--info); transform: translateX(4px); }
         .theme-selector { display: flex; gap: 8px; justify-content: space-around; margin-top: 5px;}
-        .theme-dot {
-            width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-            border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
-        }
+        .theme-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
         .theme-dot.active { border-color: var(--text-color); transform: scale(1.1); }
 
-        /* Summary Cards Grid */
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 15px;}
         .summary-card { padding: 20px; border-radius: 16px; text-align: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); }
-        
-        /* Forms & Inputs configuration */
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
-        .form-group input, .form-group select {
-            padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);
-            background: var(--input-bg); color: var(--text-color); outline: none;
-        }
-        .btn-submit {
-            background: var(--info); color: white; border: none; padding: 14px;
-            border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%;
-        }
+        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--input-bg); color: var(--text-color); outline: none; }
+        .btn-submit { background: var(--info); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; }
 
-        /* Modern Table Responsive UI */
         .table-responsive { overflow-x: auto; margin-top: 15px; border-radius: 12px; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 14px; border-bottom: 1px solid var(--glass-border); }
@@ -137,7 +118,6 @@
 
         .action-btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; color: white; margin-right: 5px; }
         .edit-btn { background: #3498db; } .del-btn { background: #e74c3c; }
-        
         #syncLoader { display:none; color: var(--warning); font-size:0.9rem; text-align:center; margin-bottom:10px; }
     </style>
 </head>
@@ -161,11 +141,9 @@
 
     <!-- ২. মেইন অ্যাপ ড্যাশবোর্ড ইন্টারফেস -->
     <div class="main-container" id="appInterface">
-        
-        <!-- বাম পাশের সাইডবার প্যানেল -->
         <div class="sidebar">
             <div class="glass-panel" style="text-align: center;">
-                <h3 style="font-size: 1.25rem;">আল নোমান শিকদার</h3>
+                <h3>আল নোমান শিকদার</h3>
                 <p style="font-size: 0.85rem; color: var(--card-sub);">একজন প্রকৃতি প্রেমী</p>
                 <button onclick="handleLogout()" style="margin-top: 12px; background: rgba(231,76,60,0.2); border: 1px solid var(--danger); color: #ff7675; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;"><i class="fa-solid fa-power-off"></i> লগআউট</button>
             </div>
@@ -192,11 +170,9 @@
             </div>
         </div>
 
-        <!-- ডান পাশের মূল কন্টেন্ট এরিয়া -->
         <div class="main-content" style="display: flex; flex-direction: column; gap: 25px;">
             <div id="syncLoader"><i class="fa-solid fa-circle-notch fa-spin"></i> গুগল ক্লাউড ডাটাবেজের সাথে লাইভ সিঙ্ক্রোনাইজ হচ্ছে...</div>
 
-            <!-- ড্যাশবোর্ড সেকশন -->
             <div id="dbSection" class="app-section active">
                 <h2>আর্থিক সংক্ষিপ্ত বিবরণী</h2>
                 <div class="summary-grid">
@@ -224,7 +200,6 @@
                 </div>
             </div>
 
-            <!-- নতুন এন্ট্রি এবং এডিট ফর্ম সেকশন -->
             <div id="txSection" class="app-section">
                 <div class="glass-panel">
                     <h2 id="formTitle">নতুন আর্থিক লেনদেন ডাটা এন্ট্রি</h2><br>
@@ -254,21 +229,43 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // ভেরিসেল এপিআই প্রক্সি ইউআরএল পাথ সেটিং
+        // ইন-লাইন সার্ভিস ওয়ার্কার ইনজেকশন স্ক্রিপ্ট (আলাদা sw.js ফাইল লাগবে না)
+        const swCode = `
+            const CACHE_NAME = 'hishab-khata-inline-v1';
+            self.addEventListener('install', e => {
+                e.waitUntil(
+                    caches.open(CACHE_NAME).then(cache => {
+                        return cache.addAll(['/', window.location.pathname]);
+                    }).then(() => self.skipWaiting())
+                );
+            });
+            self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+            self.addEventListener('fetch', e => {
+                if (e.request.url.includes('/api/')) return;
+                e.respondWith(
+                    caches.match(e.request).then(res => res || fetch(e.request))
+                );
+            });
+        `;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const blobSw = new Blob([swCode], { type: 'text/javascript' });
+                const swUrl = URL.createObjectURL(blobSw);
+                navigator.serviceWorker.register(swUrl).then(() => {
+                    console.log('Inline ServiceWorker Registered!');
+                }).catch(err => console.log('SW Setup Failed: ', err));
+            });
+        }
+
         const API_URL = '/api/tracker'; 
-        
-        // গ্লোবাল স্টেট ম্যানেজমেন্ট
         let transactions = [];
-        let people = [];
         let userPassword = localStorage.getItem('h_session_pass') || '';
         let currentTheme = localStorage.getItem('h_theme') || 'rainforest';
-        
-        // ইনঅ্যাক্টিভিটি টাইমার কনফিগারেশন (৫ মিনিট = ৩০০ সেকেন্ড)
         let inactivityTime = 0;
         let timerInstance = null;
 
@@ -280,7 +277,6 @@
             initInactivityTracker();
         }
 
-        // সেশন পাসওয়ার্ড ভেরিফিকেশন ইঞ্জিন
         async function verifySessionPass(pass, isAutoLoad = false) {
             showLoader(true);
             try {
@@ -288,7 +284,7 @@
                 if (response.status === 200) {
                     userPassword = pass;
                     localStorage.setItem('h_session_pass', pass);
-                    document.getElementById('loginScreen').style.style.display = 'none';
+                    document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('appInterface').style.display = 'grid';
                     await fetchCloudData();
                     startInactivityCountdown();
@@ -320,14 +316,12 @@
             location.reload();
         }
 
-        // ক্লাউড ডেটাবেজ রিডার (GET রিকোয়েস্ট)
         async function fetchCloudData() {
             showLoader(true);
             try {
                 const response = await fetch(`${API_URL}?action=getData&pass=${encodeURIComponent(userPassword)}`);
                 const data = await response.json();
                 transactions = data.transactions || [];
-                people = data.people || [];
                 calculateMetrics();
                 renderTable();
             } catch (error) {
@@ -337,7 +331,6 @@
             }
         }
 
-        // ডেটা রাইটার (POST রিকোয়েস্ট - এন্ট্রি, এডিট, ডিলিট)
         async function commitToCloud(actionType, payloadData) {
             showLoader(true);
             const bodyPayload = {
@@ -345,7 +338,6 @@
                 action: actionType,
                 ...payloadData
             };
-
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -353,17 +345,12 @@
                     body: JSON.stringify(bodyPayload)
                 });
                 const resData = await response.json();
-                if(resData.success) {
-                    await fetchCloudData(); // গুগল শীটের লেটেস্ট ডাটার সাথে ফ্রন্টএন্ড সিঙ্ক
-                }
+                if(resData.success) { await fetchCloudData(); }
             } catch (error) {
                 alert("ক্লাউড ডাটাবেজ অপারেশন ব্যর্থ হয়েছে!");
-            } finally {
-                showLoader(false);
-            }
+            } finally { showLoader(false); }
         }
 
-        // মেট্রিকেস ক্যালকুলেটর
         function calculateMetrics() {
             let inc = 0, exp = 0;
             transactions.forEach(t => {
@@ -376,14 +363,10 @@
             document.getElementById('netBal').innerText = `৳ ${(inc - exp).toLocaleString('bn-BD')}`;
         }
 
-        // টেবিল রেন্ডারিং
         function renderTable() {
             const tbody = document.getElementById('cloudTableBody');
             tbody.innerHTML = '';
-            
-            // নতুন ডাটা সবার আগে থাকবে (ডিসেন্ডিং অর্ডার)
             const sorted = [...transactions].sort((a,b) => b.id - a.id);
-
             sorted.forEach(t => {
                 tbody.innerHTML += `<tr>
                     <td><strong>${t.date}</strong></td>
@@ -396,17 +379,14 @@
                     </td>
                 </tr>`;
             });
-
             if(sorted.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.6; padding:20px;">কোনো ডেটা রেকর্ড পাওয়া যায়নি!</td></tr>`;
             }
         }
 
-        // ফর্ম সাবমিশন হ্যান্ডেলার (ক্রিয়েট এবং আপডেট)
         async function handleFormSubmit(e) {
             e.preventDefault();
             const rowId = document.getElementById('editRowId').value;
-            
             const txData = {
                 id: rowId ? parseInt(rowId) : Date.now(),
                 date: document.getElementById('fDate').value,
@@ -415,40 +395,33 @@
                 amount: parseFloat(document.getElementById('fAmount').value),
                 note: document.getElementById('fNote').value
             };
-
             if(rowId) {
                 await commitToCloud('edit', { tx: txData });
                 cancelEdit();
             } else {
                 await commitToCloud('entry', { tx: txData });
             }
-
             document.getElementById('mainDataForm').reset();
             switchTab('db');
         }
 
-        // ডাটা ডিলিট কন্ট্রোলার
         async function deleteTransaction(id) {
-            if(confirm("আপনি কি নিশ্চিতভাবে এই রেকর্ডটি গুগল শীট থেকে ডিলিট করতে চান?")) {
+            if(confirm("আপনি কি নিশ্চিতভাবে এই রেকর্ডটি ডিলিট করতে চান?")) {
                 await commitToCloud('delete', { id: id });
             }
         }
 
-        // এডিট মোড ইনিশিয়েটর
         function initiateEdit(id) {
             const item = transactions.find(t => t.id.toString() === id.toString());
             if(!item) return;
-
             document.getElementById('editRowId').value = item.id;
             document.getElementById('fDate').value = item.date;
             document.getElementById('fType').value = item.type;
             document.getElementById('fAmount').value = item.amount;
             document.getElementById('fNote').value = item.note;
-
-            document.getElementById('formTitle').innerText = "লেনদেন ডাটা এডিট ও মডিফিকেশন মোড";
-            document.getElementById('submitBtn').innerText = "আপডেট কনফার্ম করুন";
+            document.getElementById('formTitle').innerText = "লেনদেন ডাটা এডিট মোড";
+            document.getElementById('submitBtn').innerText = "আপডেট করুন";
             document.getElementById('cancelEditBtn').style.display = 'block';
-
             switchTab('tx');
         }
 
@@ -460,22 +433,17 @@
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        // ৫ মিনিটের ইনঅ্যাক্টিভিটি অটো লগআউট লজিক ইঞ্জিন
         function startInactivityCountdown() {
             if(timerInstance) clearInterval(timerInstance);
-            
             const timerLabel = document.getElementById('sessionTimer');
             inactivityTime = 0;
-
             timerInstance = setInterval(() => {
                 inactivityTime++;
                 let remaining = 300 - inactivityTime;
-
                 if (remaining <= 0) {
                     clearInterval(timerInstance);
-                    handleLogout(); // অটো লগআউট ফায়ার
+                    handleLogout();
                 }
-
                 let mins = Math.floor(remaining / 60);
                 let secs = remaining % 60;
                 timerLabel.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -483,47 +451,39 @@
         }
 
         function initInactivityTracker() {
-            // মাউস নড়াচড়া, ক্লিক বা কিবোর্ড প্রেস হলে টাইমার রিসেট হবে
             const resetEvents = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
             resetEvents.forEach(evt => {
                 window.addEventListener(evt, () => {
-                    if (userPassword) inactivityTime = 0; // সেশন একটিভ থাকলে রিসেট হবে
+                    if (userPassword) inactivityTime = 0;
                 });
             });
         }
 
-        // থিম ইঞ্জিন কনফিগারেশন
         function setAppTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
             localStorage.setItem('h_theme', themeName);
             currentTheme = themeName;
-            
             document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
             const activeDot = document.getElementById(`t-${themeName}`);
             if(activeDot) activeDot.classList.add('active');
         }
 
-        // ট্যাব নেভিগেশন কন্ট্রোলার
         function switchTab(tab) {
             document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
             if(tab === 'db') {
                 document.getElementById('dbSection').classList.add('active');
                 document.querySelectorAll('.nav-btn')[0].classList.add('active');
             } else {
                 document.getElementById('txSection').classList.add('active');
                 document.querySelectorAll('.nav-btn')[1].classList.add('active');
-                // ডিফল্ট আজকের তারিখ সেট করা
                 if(!document.getElementById('editRowId').value) {
                     document.getElementById('fDate').value = new Date().toISOString().substring(0, 10);
                 }
             }
         }
 
-        function showLoader(status) {
-            document.getElementById('syncLoader').style.display = status ? 'block' : 'none';
-        }
+        function showLoader(status) { document.getElementById('syncLoader').style.display = status ? 'block' : 'none'; }
     </script>
 </body>
 </html>
