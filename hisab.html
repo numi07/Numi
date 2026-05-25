@@ -5,42 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>হিসাব খাতা এন্টারপ্রাইজ - ক্লাউড ড্যাশবোর্ড</title>
     
-    <!-- PWA iOS Support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="হিসাব খাতা">
 
-    <!-- ডায়নামিক ম্যানিফেস্টো ইনজেকশন ট্রিক (আলাদা ফাইল লাগবে না) -->
     <script>
         const manifestObj = {
             "name": "হিসাব খাতা এন্টারপ্রাইজ",
             "short_name": "হিসাব খাতা",
-            "description": "৩ডি গ্লাস ক্লাউড ফাইন্যান্সিয়াল ড্যাশবোর্ড",
+            "description": "দেনা-পাওনা ও লোন ট্র্যাকিং সহ ৩ডি গ্লাস ড্যাশবোর্ড",
             "start_url": window.location.href,
             "display": "standalone",
             "background_color": "#0b1d12",
             "theme_color": "#2ecc71",
             "orientation": "portrait-primary",
             "icons": [
-                {
-                    "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png",
-                    "sizes": "192x192",
-                    "type": "image/png"
-                },
-                {
-                    "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png",
-                    "sizes": "512x512",
-                    "type": "image/png"
-                }
+                { "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png", "sizes": "192x192", "type": "image/png" },
+                { "src": "https://cdn-icons-png.flaticon.com/512/2454/2454261.png", "sizes": "512x512", "type": "image/png" }
             ]
         };
-        const manifestStr = JSON.stringify(manifestObj);
-        const blobManifest = new Blob([manifestStr], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(blobManifest);
-        
+        const blobManifest = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
         const link = document.createElement('link');
         link.rel = 'manifest';
-        link.href = manifestURL;
+        link.href = URL.createObjectURL(blobManifest);
         document.head.appendChild(link);
     </script>
     
@@ -97,16 +84,27 @@
         .nav-menu { display: flex; flex-direction: column; gap: 10px; }
         .nav-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-color); padding: 14px; border-radius: 12px; cursor: pointer; text-align: left; font-size: 1rem; display: flex; align-items: center; gap: 12px; }
         .nav-btn.active, .nav-btn:hover { background: linear-gradient(135deg, var(--info), transparent); border-color: var(--info); transform: translateX(4px); }
+        
         .theme-selector { display: flex; gap: 8px; justify-content: space-around; margin-top: 5px;}
         .theme-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
         .theme-dot.active { border-color: var(--text-color); transform: scale(1.1); }
 
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 15px;}
         .summary-card { padding: 20px; border-radius: 16px; text-align: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
-        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--input-bg); color: var(--text-color); outline: none; }
-        .btn-submit { background: var(--info); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; }
+        
+        /* দেনা-পাওনা উইজেট কম্পোনেন্ট (Debt Grid UX) */
+        .debt-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .debt-box { background: rgba(0,0,0,0.25); border: 1px solid var(--glass-border); border-radius: 16px; padding: 18px; }
+        .debt-list { max-height: 140px; overflow-y: auto; margin-top: 12px; padding-right: 5px; }
+        .debt-item { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; border-radius: 6px; margin-bottom: 4px; }
+        .debt-item:hover { background: rgba(255,255,255,0.03); }
+        .debt-total { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--glass-border); font-weight: bold; display: flex; justify-content: space-between; }
 
+        /* ৩-কলাম রেসপন্সিভ ফর্ম গ্রিড */
+        .form-grid-triple { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--input-bg); color: var(--text-color); outline: none; width: 100%; }
+        
         .table-responsive { overflow-x: auto; margin-top: 15px; border-radius: 12px; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 14px; border-bottom: 1px solid var(--glass-border); }
@@ -123,12 +121,11 @@
 </head>
 <body>
 
-    <!-- ১. লগইন ওভারলে সিস্টেম -->
     <div id="loginScreen">
         <div class="login-card">
             <i class="fa-solid fa-seedling" style="font-size: 3.5rem; color: #2ecc71; margin-bottom: 15px;"></i>
             <h2>হিসাব খাতা এন্টারপ্রাইজ</h2>
-            <p style="color: var(--card-sub); font-size: 0.9rem; margin-bottom: 25px;">ক্লাউড ডাটাবেজ সিকিউরড এক্সেস লকিং</p>
+            <p style="color: var(--card-sub); font-size: 0.9rem; margin-bottom: 25px;">দেনা-পাওনা ট্র্যাকিং ক্লাউড ড্যাশবোর্ড</p>
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <input type="password" id="loginPassField" placeholder="সিক্রেট সিকিউরিটি পাসওয়ার্ড দিন" required style="text-align: center; font-size: 1.1rem;">
@@ -139,7 +136,6 @@
         </div>
     </div>
 
-    <!-- ২. মেইন অ্যাপ ড্যাশবোর্ড ইন্টারফেস -->
     <div class="main-container" id="appInterface">
         <div class="sidebar">
             <div class="glass-panel" style="text-align: center;">
@@ -148,7 +144,6 @@
                 <button onclick="handleLogout()" style="margin-top: 12px; background: rgba(231,76,60,0.2); border: 1px solid var(--danger); color: #ff7675; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;"><i class="fa-solid fa-power-off"></i> লগআউট</button>
             </div>
 
-            <!-- ডায়নামিক থিম সিলেক্টর মডিউল -->
             <div class="glass-panel" style="padding: 12px 20px;">
                 <p style="font-size:0.8rem; text-align:center; margin-bottom:8px; opacity:0.8;">প্রকৃতি ও গ্লাস থিম ইঞ্জিন</p>
                 <div class="theme-selector">
@@ -161,7 +156,7 @@
 
             <div class="nav-menu">
                 <button class="nav-btn active" onclick="switchTab('db')"><i class="fa-solid fa-chart-pie"></i> ড্যাশবোর্ড ওভারভিউ</button>
-                <button class="nav-btn" onclick="switchTab('tx')"><i class="fa-solid fa-plus"></i> নতুন লেনদেন এন্ট্রি</button>
+                <button class="nav-btn" onclick="switchTab('tx')"><i class="fa-solid fa-plus"></i> নতুন লেনদেন / লোন এন্ট্রি</button>
             </div>
             
             <div class="glass-panel" style="text-align: center; font-size: 0.85rem; color: var(--card-sub);">
@@ -178,7 +173,20 @@
                 <div class="summary-grid">
                     <div class="summary-card"><h4>মোট আয়</h4><p id="totalInc" style="font-size:1.5rem; font-weight:700; color:#2ecc71; margin-top:5px;">৳ ০</p></div>
                     <div class="summary-card"><h4>মোট ব্যয়</h4><p id="totalExp" style="font-size:1.5rem; font-weight:700; color:#e74c3c; margin-top:5px;">৳ ০</p></div>
-                    <div class="summary-card"><h4>মোট নিট ব্যালেন্স</h4><p id="netBal" style="font-size:1.5rem; font-weight:700; color:#3498db; margin-top:5px;">৳ ০</p></div>
+                    <div class="summary-card"><h4>মোট ক্যাশ ইন হ্যান্ড</h4><p id="netBal" style="font-size:1.5rem; font-weight:700; color:#3498db; margin-top:5px;">৳ ০</p></div>
+                </div>
+
+                <div class="debt-grid-container">
+                    <div class="debt-box" style="border-left: 4px solid var(--success);">
+                        <h4 style="color: var(--success);"><i class="fa-solid fa-hand-holding-dollar"></i> আমি অন্যের কাছে পাবো (পাওনা)</h4>
+                        <div class="debt-list" id="pownaList"></div>
+                        <div class="debt-total"><span>সর্বমোট প্রাপ্য:</span><span id="totalPowna" style="color: var(--success);">৳ ০</span></div>
+                    </div>
+                    <div class="debt-box" style="border-left: 4px solid var(--danger);">
+                        <h4 style="color: var(--danger);"><i class="fa-solid fa-hand-holding-hand"></i> আমার কাছে অন্যেরা পাবে (দেনা)</h4>
+                        <div class="debt-list" id="denaList"></div>
+                        <div class="debt-total"><span>সর্বমোট দেনা:</span><span id="totalDena" style="color: var(--danger);">৳ ০</span></div>
+                    </div>
                 </div>
 
                 <div class="glass-panel" style="margin-top: 25px;">
@@ -187,9 +195,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>তারিখ</th>
+                                    <th>তারিখ ও সময়</th>
                                     <th>ধরণ</th>
-                                    <th>খাত/বিবরণ</th>
+                                    <th>বিবরণ/ব্যক্তি</th>
                                     <th>পরিমাণ</th>
                                     <th>অ্যাকশন</th>
                                 </tr>
@@ -202,28 +210,47 @@
 
             <div id="txSection" class="app-section">
                 <div class="glass-panel">
-                    <h2 id="formTitle">নতুন আর্থিক লেনদেন ডাটা এন্ট্রি</h2><br>
+                    <h2 id="formTitle">নতুন আর্থিক লেনদেন / লোন ডাটা এন্ট্রি</h2><br>
                     <form id="mainDataForm" onsubmit="handleFormSubmit(event)">
                         <input type="hidden" id="editRowId">
-                        <div class="form-group">
-                            <label>লেনদেনের ধরণ</label>
-                            <select id="fType" required>
-                                <option value="income">আয় (Income)</option>
-                                <option value="expense">ব্যয় (Expense)</option>
-                            </select>
+                        
+                        <div class="form-grid-triple">
+                            <div class="form-group">
+                                <label>লেনদেনের ধরণ</label>
+                                <select id="fType" onchange="togglePersonField()" required>
+                                    <option value="income">আয় (Income)</option>
+                                    <option value="expense">ব্যয় (Expense)</option>
+                                    <option value="loan-give">লোন দেওয়া (Loan Give)</option>
+                                    <option value="loan-take">লোন নেওয়া (Loan Take)</option>
+                                    <option value="loan-repay">লোন পরিশোধ (Loan Repay)</option>
+                                    <option value="loan-receive">লোন ফেরত পাওয়া (Loan Receive)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>তারিখ</label>
+                                <input type="date" id="fDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>লেনদেনের সময় (টাইম)</label>
+                                <input type="time" id="fTime" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>তারিখ</label>
-                            <input type="date" id="fDate" required>
+
+                        <div class="form-grid-triple">
+                            <div class="form-group">
+                                <label>টাকার পরিমাণ (৳)</label>
+                                <input type="number" id="fAmount" min="1" required>
+                            </div>
+                            <div class="form-group" id="personGroup" style="display:none;">
+                                <label>ব্যক্তির নাম (লোন ট্র্যাকিং)</label>
+                                <input type="text" id="fPerson" placeholder="যেমন: করিম ভাই, রহিম সাহেব">
+                            </div>
+                            <div class="form-group">
+                                <label>বিবরণ / খাত নোট</label>
+                                <input type="text" id="fNote" placeholder="যেমন: ক্লায়েন্ট পেমেন্ট, অফিস ভাড়া ইত্যাদি" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>টাকার পরিমাণ (৳)</label>
-                            <input type="number" id="fAmount" min="1" required>
-                        </div>
-                        <div class="form-group">
-                            <label>বিবরণ / খাত নোট</label>
-                            <input type="text" id="fNote" placeholder="যেমন: ক্লায়েন্ট পেমেন্ট, গ্যাস বিল ইত্যাদি" required>
-                        </div>
+
                         <button type="submit" class="btn-submit" id="submitBtn">সংরক্ষণ করুন</button>
                         <button type="button" onclick="cancelEdit()" id="cancelEditBtn" style="display:none; margin-top:10px; background:rgba(255,255,255,0.1); color:white;" class="btn-submit">এডিট বাতিল করুন</button>
                     </form>
@@ -233,32 +260,22 @@
     </div>
 
     <script>
-        // ইন-লাইন সার্ভিস ওয়ার্কার ইনজেকশন স্ক্রিপ্ট (আলাদা sw.js ফাইল লাগবে না)
+        // ইন-লাইন PWA সার্ভিস ওয়ার্কার ইঞ্জিন
         const swCode = `
-            const CACHE_NAME = 'hishab-khata-inline-v1';
+            const CACHE_NAME = 'hishab-khata-pwa-v2';
             self.addEventListener('install', e => {
-                e.waitUntil(
-                    caches.open(CACHE_NAME).then(cache => {
-                        return cache.addAll(['/', window.location.pathname]);
-                    }).then(() => self.skipWaiting())
-                );
+                e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/', window.location.pathname])).then(() => self.skipWaiting()));
             });
             self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
             self.addEventListener('fetch', e => {
                 if (e.request.url.includes('/api/')) return;
-                e.respondWith(
-                    caches.match(e.request).then(res => res || fetch(e.request))
-                );
+                e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
             });
         `;
-
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const blobSw = new Blob([swCode], { type: 'text/javascript' });
-                const swUrl = URL.createObjectURL(blobSw);
-                navigator.serviceWorker.register(swUrl).then(() => {
-                    console.log('Inline ServiceWorker Registered!');
-                }).catch(err => console.log('SW Setup Failed: ', err));
+                navigator.serviceWorker.register(URL.createObjectURL(blobSw)).catch(err => console.log(err));
             });
         }
 
@@ -271,10 +288,25 @@
 
         window.onload = function() {
             setAppTheme(currentTheme);
-            if (userPassword) {
-                verifySessionPass(userPassword, true);
-            }
+            if (userPassword) verifySessionPass(userPassword, true);
             initInactivityTracker();
+        }
+
+        // হিউম্যানাইজড বাংলা টাইম কনভার্টার ইঞ্জিন
+        function convertToBanglaTime(timeString) {
+            if(!timeString) return '';
+            let [hrs, mins] = timeString.split(':');
+            hrs = parseInt(hrs);
+            let period = '';
+            if (hrs >= 5 && hrs < 12) period = 'সকাল';
+            else if (hrs >= 12 && hrs < 15) period = 'দুপুর';
+            else if (hrs >= 15 && hrs < 18) period = 'বিকাল';
+            else if (hrs >= 18 && hrs < 20) period = 'সন্ধ্যা';
+            else period = 'রাত';
+            
+            let displayHrs = hrs % 12 || 12;
+            let toBanglaNum = n => String(n).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+            return `${period} ${toBanglaNum(String(displayHrs).padStart(2, '0'))}:${toBanglaNum(mins)}`;
         }
 
         async function verifySessionPass(pass, isAutoLoad = false) {
@@ -288,9 +320,7 @@
                     document.getElementById('appInterface').style.display = 'grid';
                     await fetchCloudData();
                     startInactivityCountdown();
-                } else {
-                    throw new Error("Unauthorized");
-                }
+                } else { throw new Error(); }
             } catch (err) {
                 localStorage.removeItem('h_session_pass');
                 document.getElementById('loginScreen').style.display = 'flex';
@@ -300,21 +330,11 @@
                     errLabel.style.display = 'block';
                     setTimeout(() => errLabel.style.display = 'none', 4000);
                 }
-            } finally {
-                showLoader(false);
-            }
+            } finally { showLoader(false); }
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const inputPass = document.getElementById('loginPassField').value;
-            verifySessionPass(inputPass);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('h_session_pass');
-            location.reload();
-        }
+        function handleLogin(e) { e.preventDefault(); verifySessionPass(document.getElementById('loginPassField').value); }
+        function handleLogout() { localStorage.removeItem('h_session_pass'); location.reload(); }
 
         async function fetchCloudData() {
             showLoader(true);
@@ -322,56 +342,105 @@
                 const response = await fetch(`${API_URL}?action=getData&pass=${encodeURIComponent(userPassword)}`);
                 const data = await response.json();
                 transactions = data.transactions || [];
-                calculateMetrics();
+                calculateMetricsAndDebt();
                 renderTable();
-            } catch (error) {
-                console.error("Data fetch failed:", error);
-            } finally {
-                showLoader(false);
-            }
+            } catch (error) { console.error(error); }
+            finally { showLoader(false); }
         }
 
         async function commitToCloud(actionType, payloadData) {
             showLoader(true);
-            const bodyPayload = {
-                adminPass: userPassword,
-                action: actionType,
-                ...payloadData
-            };
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bodyPayload)
+                    body: JSON.stringify({ adminPass: userPassword, action: actionType, ...payloadData })
                 });
                 const resData = await response.json();
-                if(resData.success) { await fetchCloudData(); }
-            } catch (error) {
-                alert("ক্লাউড ডাটাবেজ অপারেশন ব্যর্থ হয়েছে!");
-            } finally { showLoader(false); }
+                if(resData.success) await fetchCloudData();
+            } catch (error) { alert("অপারেশন ব্যর্থ হয়েছে!"); }
+            finally { showLoader(false); }
         }
 
-        function calculateMetrics() {
+        // মেট্রিকেস এবং দেনা-পাওনা উইজেট প্রসেসর লজিক (Debt Matrix Calculation)
+        function calculateMetricsAndDebt() {
             let inc = 0, exp = 0;
+            let personBalances = {};
+
             transactions.forEach(t => {
                 let amt = parseFloat(t.amount) || 0;
-                if(t.type === 'income') inc += amt;
-                if(t.type === 'expense') exp += amt;
+                
+                // ১. মেইন ক্যাশ ক্যালকুলেশন
+                if(t.type === 'income' || t.type === 'loan-take' || t.type === 'loan-receive') inc += amt;
+                if(t.type === 'expense' || t.type === 'loan-give' || t.type === 'loan-repay') exp += amt;
+
+                // ২. দেনা-পাওনা ব্যক্তি ভিত্তিক লেজার ব্যালেন্সিং লজিক
+                if(t.person && t.person.trim() !== "") {
+                    let name = t.person.trim();
+                    if(!personBalances[name]) personBalances[name] = 0;
+
+                    if(t.type === 'loan-give' || t.type === 'loan-repay') personBalances[name] += amt; // পাওনা প্লাস
+                    if(t.type === 'loan-take' || t.type === 'loan-receive') personBalances[name] -= amt; // দেনা মাইনাস
+                }
             });
+
             document.getElementById('totalInc').innerText = `৳ ${inc.toLocaleString('bn-BD')}`;
             document.getElementById('totalExp').innerText = `৳ ${exp.toLocaleString('bn-BD')}`;
             document.getElementById('netBal').innerText = `৳ ${(inc - exp).toLocaleString('bn-BD')}`;
+
+            // দেনা ও পাওনা আলাদা উইজেট জেনারেশন
+            const pownaList = document.getElementById('pownaList');
+            const denaList = document.getElementById('denaList');
+            pownaList.innerHTML = ''; denaList.innerHTML = '';
+
+            let totalPownaSum = 0, totalDenaSum = 0;
+
+            for(let key in personBalances) {
+                let bal = personBalances[key];
+                if(bal > 0) {
+                    totalPownaSum += bal;
+                    pownaList.innerHTML += `<div class="debt-item"><span style="font-weight:600;"><i class="fa-solid fa-user-check"></i> ${key}</span><span style="color:var(--success); font-weight:700;">৳ ${bal.toLocaleString('bn-BD')}</span></div>`;
+                } else if(bal < 0) {
+                    let absBal = Math.abs(bal);
+                    totalDenaSum += absBal;
+                    denaList.innerHTML += `<div class="debt-item"><span style="font-weight:600;"><i class="fa-solid fa-user-minus"></i> ${key}</span><span style="color:var(--danger); font-weight:700;">৳ ${absBal.toLocaleString('bn-BD')}</span></div>`;
+                }
+            }
+
+            if(!pownaList.innerHTML) pownaList.innerHTML = `<div style="text-align:center; opacity:0.5; font-size:0.85rem; padding:15px;">কোনো প্রাপ্য পাওনা নেই</div>`;
+            if(!denaList.innerHTML) denaList.innerHTML = `<div style="text-align:center; opacity:0.5; font-size:0.85rem; padding:15px;">কোনো বকেয়া দেনা নেই</div>`;
+
+            document.getElementById('totalPowna').innerText = `৳ ${totalPownaSum.toLocaleString('bn-BD')}`;
+            document.getElementById('totalDena').innerText = `৳ ${totalDenaSum.toLocaleString('bn-BD')}`;
         }
 
+        // সঠিক ক্রনোলজিক্যাল সর্টিং লজিক (Date + Time সর্টিং)
         function renderTable() {
             const tbody = document.getElementById('cloudTableBody');
             tbody.innerHTML = '';
-            const sorted = [...transactions].sort((a,b) => b.id - a.id);
+            
+            // তারিখ এবং সময় যুক্ত করে নিখুঁত সর্ট (সর্বশেষ ডেটা সবার আগে)
+            const sorted = [...transactions].sort((a, b) => {
+                let dateTimeA = new Date(`${a.date}T${a.walletTo || '00:00'}`); 
+                let dateTimeB = new Date(`${b.date}T${b.walletTo || '00:00'}`);
+                return dateTimeB - dateTimeA;
+            });
+
+            const typeMap = {
+                'income': {n: 'আয়', c: '#2ecc71'}, 'expense': {n: 'ব্যয়', c: '#e74c3c'},
+                'loan-give': {n: 'লোন দেওয়া', c: '#e67e22'}, 'loan-take': {n: 'লোন নেওয়া', c: '#9b59b6'},
+                'loan-repay': {n: 'লোন পরিশোধ', c: '#f1c40f'}, 'loan-receive': {n: 'লোন ফেরত', c: '#1abc9c'}
+            };
+
             sorted.forEach(t => {
+                let typeInfo = typeMap[t.type] || {n: t.type, c: '#fff'};
+                let displayDesc = t.person ? `<strong>${t.person}</strong> - ${t.note}` : t.note;
+                let displayBanglaTime = convertToBanglaTime(t.walletTo); // আমরা walletTo কলামে টাইম সেভ রাখছি
+
                 tbody.innerHTML += `<tr>
-                    <td><strong>${t.date}</strong></td>
-                    <td><span style="color:${t.type==='income'?'#2ecc71':'#e74c3c'}; font-weight:600;">${t.type==='income'?'আয়':'ব্যয়'}</span></td>
-                    <td>${t.note}</td>
+                    <td><strong>${t.date}</strong><br><span style="font-size:0.75rem; color:var(--card-sub);"><i class="fa-regular fa-clock"></i> ${displayBanglaTime}</span></td>
+                    <td><span style="color:${typeInfo.c}; font-weight:600;">${typeInfo.n}</span></td>
+                    <td>${displayDesc}</td>
                     <td style="font-weight:700;">৳ ${parseFloat(t.amount).toLocaleString('bn-BD')}</td>
                     <td>
                         <button class="action-btn edit-btn" onclick="initiateEdit(${t.id})"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -379,6 +448,7 @@
                     </td>
                 </tr>`;
             });
+
             if(sorted.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.6; padding:20px;">কোনো ডেটা রেকর্ড পাওয়া যায়নি!</td></tr>`;
             }
@@ -387,14 +457,18 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
             const rowId = document.getElementById('editRowId').value;
+            
             const txData = {
                 id: rowId ? parseInt(rowId) : Date.now(),
                 date: document.getElementById('fDate').value,
+                walletTo: document.getElementById('fTime').value, // টাইম ডাটা গুগল শিটের walletTo কলামে সিঙ্ক হচ্ছে সর্টিং এর জন্য
                 type: document.getElementById('fType').value,
-                walletFrom: 'cash', walletTo: '', person: '', timestamp: '',
+                walletFrom: 'cash', timestamp: '',
                 amount: parseFloat(document.getElementById('fAmount').value),
+                person: document.getElementById('fPerson').value || '',
                 note: document.getElementById('fNote').value
             };
+
             if(rowId) {
                 await commitToCloud('edit', { tx: txData });
                 cancelEdit();
@@ -403,6 +477,19 @@
             }
             document.getElementById('mainDataForm').reset();
             switchTab('db');
+        }
+
+        function togglePersonField() {
+            const type = document.getElementById('fType').value;
+            const pGroup = document.getElementById('personGroup');
+            if(type.startsWith('loan-')) {
+                pGroup.style.display = 'flex';
+                document.getElementById('fPerson').required = true;
+            } else {
+                pGroup.style.display = 'none';
+                document.getElementById('fPerson').required = false;
+                document.getElementById('fPerson').value = '';
+            }
         }
 
         async function deleteTransaction(id) {
@@ -414,13 +501,18 @@
         function initiateEdit(id) {
             const item = transactions.find(t => t.id.toString() === id.toString());
             if(!item) return;
+
             document.getElementById('editRowId').value = item.id;
             document.getElementById('fDate').value = item.date;
+            document.getElementById('fTime').value = item.walletTo || '';
             document.getElementById('fType').value = item.type;
+            togglePersonField();
             document.getElementById('fAmount').value = item.amount;
+            document.getElementById('fPerson').value = item.person || '';
             document.getElementById('fNote').value = item.note;
-            document.getElementById('formTitle').innerText = "লেনদেন ডাটা এডিট মোড";
-            document.getElementById('submitBtn').innerText = "আপডেট করুন";
+
+            document.getElementById('formTitle').innerText = "লেনদেন/লোন ডাটা এডিট মোড";
+            document.getElementById('submitBtn').innerText = "আপডেট কনফার্ম করুন";
             document.getElementById('cancelEditBtn').style.display = 'block';
             switchTab('tx');
         }
@@ -428,11 +520,13 @@
         function cancelEdit() {
             document.getElementById('editRowId').value = '';
             document.getElementById('mainDataForm').reset();
-            document.getElementById('formTitle').innerText = "নতুন আর্থিক লেনদেন ডাটা এন্ট্রি";
+            document.getElementById('formTitle').innerText = "নতুন আর্থিক লেনদেন / লোন ডাটা এন্ট্রি";
             document.getElementById('submitBtn').innerText = "সংরক্ষণ করুন";
             document.getElementById('cancelEditBtn').style.display = 'none';
+            togglePersonField();
         }
 
+        // ইনঅ্যাক্টিভিটি অটো লগআউট টাইমার (৫ মিনিট)
         function startInactivityCountdown() {
             if(timerInstance) clearInterval(timerInstance);
             const timerLabel = document.getElementById('sessionTimer');
@@ -440,22 +534,15 @@
             timerInstance = setInterval(() => {
                 inactivityTime++;
                 let remaining = 300 - inactivityTime;
-                if (remaining <= 0) {
-                    clearInterval(timerInstance);
-                    handleLogout();
-                }
-                let mins = Math.floor(remaining / 60);
-                let secs = remaining % 60;
+                if (remaining <= 0) { clearInterval(timerInstance); handleLogout(); }
+                let mins = Math.floor(remaining / 60); let secs = remaining % 60;
                 timerLabel.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }, 1000);
         }
 
         function initInactivityTracker() {
-            const resetEvents = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
-            resetEvents.forEach(evt => {
-                window.addEventListener(evt, () => {
-                    if (userPassword) inactivityTime = 0;
-                });
+            ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
+                window.addEventListener(evt, () => { if (userPassword) inactivityTime = 0; });
             });
         }
 
@@ -478,7 +565,10 @@
                 document.getElementById('txSection').classList.add('active');
                 document.querySelectorAll('.nav-btn')[1].classList.add('active');
                 if(!document.getElementById('editRowId').value) {
+                    // অটো কারেন্ট টাইম ও ডেট সিলেকশন
                     document.getElementById('fDate').value = new Date().toISOString().substring(0, 10);
+                    const now = new Date();
+                    document.getElementById('fTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 }
             }
         }
