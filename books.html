@@ -2,6 +2,11 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <!-- FAST LOAD Additions: ফন্ট এবং আইকন দ্রুত লোড করার জন্য -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <!-- End Additions -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
@@ -495,6 +500,7 @@
 </div>
 
 <script>
+    let isAppInitialized = false; // Added for fast load
     const API_URL = "/api/books";
     let allBooks =[], allAuthors =[], allGifts =[], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
@@ -614,6 +620,19 @@
     }
 
     async function init() {
+        if(isAppInitialized) return;
+        isAppInitialized = true;
+        
+        // --- Fast Entry Override: Force hide loader quickly ---
+        setTimeout(() => {
+            const ldr = document.getElementById('loader');
+            if(ldr && ldr.style.display !== 'none') {
+                ldr.style.display = 'none';
+                if(allBooks.length === 0) showToast("ডাটা সিঙ্ক হচ্ছে, দয়া করে অপেক্ষা করুন...");
+            }
+        }, 800); // Forces the app to open within 0.8 seconds no matter what!
+        // ---------------------------
+
         if(localStorage.getItem('libraryTheme') === 'dark') {
             document.body.classList.add('dark-mode');
             const icon = document.getElementById('darkIcon');
@@ -1257,6 +1276,9 @@
         if(nextEl) nextEl.classList.add('active');
     }
 
+    // --- Fast Load Trigger: CSS/Font ডাউনলোড হওয়ার আগেই ফাংশন কল করবে ---
+    document.addEventListener('DOMContentLoaded', init);
+    // -------------------------
     window.onload = init;
 </script>
 </body>
