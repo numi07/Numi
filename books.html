@@ -642,9 +642,36 @@
         }
 
         displayQuote();
+        
+        // --- Cache Check (Fast Load) Added without deleting original code ---
+        const cachedLibraryData = localStorage.getItem('libraryData_v1');
+        if (cachedLibraryData) {
+            try {
+                const cachedD = JSON.parse(cachedLibraryData);
+                allBooks = cachedD.books.sort((a, b) => {
+                    const dateA = new Date(a.EntryDate);
+                    const dateB = new Date(b.EntryDate);
+                    if (dateB - dateA !== 0) return dateB - dateA;
+                    return b.ID - a.ID;
+                });
+                allAuthors = cachedD.authors;
+                allGifts = (cachedD.gifts ||[]).reverse();
+                renderCategories();
+                renderTopAuthors();
+                updateGiftMenuVisibility();
+                populateAuthorList(); 
+                document.getElementById('loader').style.display = 'none';
+            } catch(e) {}
+        }
+        // --------------------------------------------------------------------
+
         try {
             const r = await fetch(`${API_URL}?action=getData`);
             const d = await r.json();
+            
+            // --- Save to Cache ---
+            localStorage.setItem('libraryData_v1', JSON.stringify(d));
+            // ---------------------
             
             allBooks = d.books.sort((a, b) => {
                 const dateA = new Date(a.EntryDate);
@@ -661,7 +688,13 @@
             updateGiftMenuVisibility();
             populateAuthorList(); 
             document.getElementById('loader').style.display = 'none';
-        } catch(e) { showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
+            
+            // --- Update Active UI after background fetch ---
+            if(document.getElementById('books').classList.contains('active')) showAllBooks();
+            if(document.getElementById('authors').classList.contains('active')) renderAuthorLists();
+            if(document.getElementById('gift-list-page').classList.contains('active')) renderGiftList();
+            // -----------------------------------------------
+        } catch(e) { document.getElementById('loader').style.display = 'none'; showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
             window.addEventListener(evt, updateActivity, true)
         );
         setInterval(checkInactivity, 10000);
