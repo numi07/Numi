@@ -291,7 +291,7 @@
         <a href="index.html" onclick="navigate('home')">হোম</a>
         <a href="books.html" onclick="navigate('search')">লাইব্রেরি</a>
         <a href="contact.html" onclick="navigate('books')">যোগাযোগ</a>
-        <a href="about.thml" onclick="navigate('profile')">সম্পর্কে</a>
+        <a href="about.html" onclick="navigate('profile')">সম্পর্কে</a>
     </nav>
     <div style="display: flex; align-items: center; gap: 15px;">
         <i id="darkIconMob" class="fas fa-moon dark-toggle-btn" style="display:none" onclick="toggleDarkMode()"></i>
@@ -421,7 +421,10 @@
         <h3>বইয়ের তথ্য</h3>
         <form id="bookForm">
             <input type="hidden" id="fi">
-            <input type="text" id="fn" placeholder="বইয়ের নাম *" required>
+            <div style="display:flex; gap:10px">
+                <input type="number" id="fserial" placeholder="সিরিয়াল *" required style="flex:1;">
+                <input type="text" id="fn" placeholder="বইয়ের নাম *" required style="flex:3;">
+            </div>
             
             <input type="text" id="fa" list="authList" placeholder="লেখকের নাম *" autocomplete="off" required>
             <datalist id="authList"></datalist>
@@ -500,7 +503,7 @@
 </div>
 
 <script>
-    let isAppInitialized = false; // Added for fast load
+    let isAppInitialized = false; 
     const API_URL = "/api/books";
     let allBooks =[], allAuthors =[], allGifts =[], isAdmin = false, userPass = ""; 
     let currentFilteredBy = 'all'; 
@@ -623,15 +626,13 @@
         if(isAppInitialized) return;
         isAppInitialized = true;
         
-        // --- Fast Entry Override: Force hide loader quickly ---
         setTimeout(() => {
             const ldr = document.getElementById('loader');
             if(ldr && ldr.style.display !== 'none') {
                 ldr.style.display = 'none';
                 if(allBooks.length === 0) showToast("ডাটা সিঙ্ক হচ্ছে, দয়া করে অপেক্ষা করুন...");
             }
-        }, 800); // Forces the app to open within 0.8 seconds no matter what!
-        // ---------------------------
+        }, 800); 
 
         if(localStorage.getItem('libraryTheme') === 'dark') {
             document.body.classList.add('dark-mode');
@@ -662,7 +663,6 @@
 
         displayQuote();
         
-        // --- Cache Check (Fast Load) Added without deleting original code ---
         const cachedLibraryData = localStorage.getItem('libraryData_v1');
         if (cachedLibraryData) {
             try {
@@ -682,15 +682,12 @@
                 document.getElementById('loader').style.display = 'none';
             } catch(e) {}
         }
-        // --------------------------------------------------------------------
 
         try {
             const r = await fetch(`${API_URL}?action=getData`);
             const d = await r.json();
             
-            // --- Save to Cache ---
             localStorage.setItem('libraryData_v1', JSON.stringify(d));
-            // ---------------------
             
             allBooks = d.books.sort((a, b) => {
                 const dateA = new Date(a.EntryDate);
@@ -708,11 +705,9 @@
             populateAuthorList(); 
             document.getElementById('loader').style.display = 'none';
             
-            // --- Update Active UI after background fetch ---
             if(document.getElementById('books').classList.contains('active')) showAllBooks();
             if(document.getElementById('authors').classList.contains('active')) renderAuthorLists();
             if(document.getElementById('gift-list-page').classList.contains('active')) renderGiftList();
-            // -----------------------------------------------
         } catch(e) { document.getElementById('loader').style.display = 'none'; showToast("ডাটা লোড ব্যর্থ হয়েছে!"); }['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evt => 
             window.addEventListener(evt, updateActivity, true)
         );
@@ -913,6 +908,7 @@
                     <h4>${b.BookName}</h4>
                     <p>${b.Author}</p>
                     <span class="book-tag">${b.Category || 'বিবিধ'}</span>
+                    <span class="book-tag" style="background:#e0e7ff; color:#4338ca;"><i class="fas fa-hashtag"></i> সিরিয়াল: ${toBN(b.BookSerial || b.ID)}</span>
                     ${b.SeriesName ? `<br><span class="series-badge"><i class="fas fa-layer-group"></i> ${b.SeriesName} (${toBN(b.SeriesOrder)})</span>` : ''}
                     ${isAdmin ? `<br><span class="book-price">মুদ্রিত মূল্য: ${toBN(b.MRP)} ৳</span>` : ''}
                 </div>
@@ -973,6 +969,7 @@
 
             <div id="tab-spec" class="tab-pane">
                 <table class="spec-table">
+                    <tr><td class="spec-label">সিরিয়াল নং</td><td><span style="background:var(--primary); color:white; padding:2px 8px; border-radius:12px; font-size:12px;">${toBN(b.BookSerial || b.ID)}</span></td></tr>
                     <tr><td class="spec-label">বইয়ের নাম</td><td>${b.BookName}</td></tr>
                     <tr><td class="spec-label">লেখক</td><td>${b.Author}</td></tr>
                     <tr><td class="spec-label">প্রকাশনী</td><td>${b.Publisher || '-'}</td></tr>
@@ -1028,7 +1025,6 @@
                 document.getElementById('adminArea').style.display='block';
                 document.getElementById('fab').style.display='flex';
                 updateStats(); 
-                updateStats(); 
                 updateGiftMenuVisibility();
                 showToast("এডমিন লগিন সফল!");
                 if(document.getElementById('books').classList.contains('active')) showAllBooks();
@@ -1056,6 +1052,17 @@
             }
             document.getElementById('fed').value = new Date().toISOString().split('T')[0]; 
             populateAuthorList();
+
+            // অটোমেটিক সিরিয়াল জেনারেট
+            let maxSerial = 0;
+            if(allBooks && allBooks.length > 0) {
+                allBooks.forEach(b => {
+                    let s = parseInt(b.BookSerial);
+                    if(isNaN(s)) s = parseInt(b.ID);
+                    if(!isNaN(s) && s > maxSerial) maxSerial = s;
+                });
+            }
+            document.getElementById('fserial').value = maxSerial + 1;
         }
         if(t==='auth'){ 
             document.getElementById('aMod').style.display='block'; 
@@ -1148,7 +1155,7 @@
         }
 
         const book = {
-            ID: id, BookName: bookName, Author: document.getElementById('fa').value,
+            ID: id, BookSerial: document.getElementById('fserial').value, BookName: bookName, Author: document.getElementById('fa').value,
             SeriesName: document.getElementById('fsn').value, SeriesOrder: document.getElementById('fso').value,
             TranslatedBy: document.getElementById('ft').value, Publisher: document.getElementById('fp').value, PublishYear: document.getElementById('fy').value,
             MRP: document.getElementById('fm').value, BuyPrice: document.getElementById('fb').value, 
@@ -1214,7 +1221,9 @@
 
     function editB(id) {
         const b = allBooks.find(x=>x.ID==id); openM('book');
-        document.getElementById('fi').value=b.ID; document.getElementById('fn').value=b.BookName;
+        document.getElementById('fi').value=b.ID; 
+        document.getElementById('fserial').value=b.BookSerial || b.ID || ''; 
+        document.getElementById('fn').value=b.BookName;
         document.getElementById('fa').value=b.Author; document.getElementById('fsn').value=b.SeriesName||'';
         document.getElementById('fso').value=b.SeriesOrder||''; document.getElementById('ft').value=b.TranslatedBy||'';
         document.getElementById('fp').value=b.Publisher; document.getElementById('fy').value=b.PublishYear;
@@ -1264,7 +1273,15 @@
     function search() {
         const q = document.getElementById('sInp').value.toLowerCase();
         const f = allBooks.filter(b => b.BookName.toLowerCase().includes(q) || b.Author.toLowerCase().includes(q));
-        document.getElementById('sRes').innerHTML = f.map(b => `<div class="book-card" onclick="showD(${b.ID})"><div style="flex:1"><strong>${b.BookName}</strong><p>${b.Author}</p></div></div>`).join('');
+        document.getElementById('sRes').innerHTML = f.map(b => `
+            <div class="book-card" onclick="showD(${b.ID})" style="align-items:center;">
+                <img src="${getImg(b.Images.split(',')[0])}" style="width:50px; height:70px; border-radius:8px; object-fit:cover;">
+                <div style="flex:1; margin-left:15px;">
+                    <strong style="display:block; font-size:16px;">${b.BookName}</strong>
+                    <p style="margin:0; font-size:13px; color:var(--text-sub);">${b.Author}</p>
+                    <span style="font-size:11px; color:var(--primary); font-weight:bold;">সিরিয়াল: ${toBN(b.BookSerial || b.ID)}</span>
+                </div>
+            </div>`).join('');
     }
 
     window.currentSlideIdx = 0;
@@ -1276,9 +1293,7 @@
         if(nextEl) nextEl.classList.add('active');
     }
 
-    // --- Fast Load Trigger: CSS/Font ডাউনলোড হওয়ার আগেই ফাংশন কল করবে ---
     document.addEventListener('DOMContentLoaded', init);
-    // -------------------------
     window.onload = init;
 </script>
 </body>
