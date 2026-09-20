@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0a3651',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans Bengali', 'Hind Siliguri', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts: Noto Sans Bengali & Hind Siliguri -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SheetJS for Multi-Sheet Excel Live Import & Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        body {
+            font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            letter-spacing: 0.15px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea, select {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.06); }
+        .dark ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Centered Logo Watermark Overlay: বড় ও মৃদু স্বচ্ছ */
+        .center-logo-watermark {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            user-select: none;
+            z-index: 15;
+        }
+        .center-logo-watermark img {
+            opacity: 0.20;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+            pointer-events: none;
+            user-select: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .group:hover .center-logo-watermark img {
+            opacity: 0.28;
+            transform: scale(1.04);
+        }
+
+        /* Large background watermark inside modal */
+        .large-watermark::before {
+            content: "চিলেকোঠা লাইব্রেরি";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: rgba(2, 132, 199, 0.05);
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            z-index: 0;
+        }
+        .dark .large-watermark::before {
+            color: rgba(255, 255, 255, 0.035);
+        }
+    </style>
+</head>
+<body class="bg-slate-100/90 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white" oncontextmenu="return false;">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md shadow-sm dark:shadow-xl transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo with logo.png & Slogan -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 group overflow-hidden p-0.5">
+                        <img src="logo.png" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent">চিলেকোঠা লাইব্রেরি</span>
+                        <p class="text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold -mt-1 tracking-wide">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden lg:flex space-x-1 items-center">
+                    <button onclick="switchTab('home')" id="tab-btn-home" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-slate-800 font-semibold">
+                        <i class="fa-solid fa-house"></i> <span>হোম</span>
+                    </button>
+                    <button onclick="switchTab('all-books')" id="tab-btn-all-books" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-book"></i> <span>সকল বই</span>
+                    </button>
+                    <button onclick="switchTab('authors')" id="tab-btn-authors" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-pen-nib"></i> <span>লেখকগণ</span>
+                    </button>
+                    <button onclick="switchTab('categories')" id="tab-btn-categories" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-layer-group"></i> <span>ক্যাটাগরি</span>
+                    </button>
+                    <button onclick="switchTab('gifts')" id="tab-btn-gifts" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-gift"></i> <span>উপহার</span>
+                    </button>
+                    <button onclick="switchTab('search')" id="tab-btn-search" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-magnifying-glass"></i> <span>অনুসন্ধান</span>
+                    </button>
+                    <button onclick="switchTab('owner')" id="tab-btn-owner" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fa-solid fa-user-tie"></i> <span>স্বত্বাধিকারী</span>
+                    </button>
+                    <button onclick="switchTab('admin')" id="tab-btn-admin" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                        <i class="fa-solid fa-user-shield text-sky-600 dark:text-sky-400"></i> <span>এডমিন</span>
+                        <span id="pending-comment-badge" class="hidden bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full ml-1">০</span>
+                    </button>
+
+                    <!-- Theme Switcher -->
+                    <button onclick="toggleTheme()" id="theme-toggle-btn" title="থিম পরিবর্তন করুন" class="ml-2 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-500 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-sun text-base" id="theme-icon"></i>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu and Theme Button -->
+                <div class="flex items-center space-x-2 lg:hidden">
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-amber-500 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700">
+                        <i class="fa-solid fa-sun" id="theme-icon-mobile"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-slate-800 flex items-center space-x-3">
+                <i class="fa-solid fa-house w-5"></i><span>হোম</span>
+            </button>
+            <button onclick="switchTab('all-books')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-book w-5"></i><span>সকল বই</span>
+            </button>
+            <button onclick="switchTab('authors')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-pen-nib w-5"></i><span>লেখকগণ</span>
+            </button>
+            <button onclick="switchTab('categories')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-layer-group w-5"></i><span>ক্যাটাগরি</span>
+            </button>
+            <button onclick="switchTab('gifts')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-gift w-5"></i><span>উপহার</span>
+            </button>
+            <button onclick="switchTab('search')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-magnifying-glass w-5"></i><span>অনুসন্ধান</span>
+            </button>
+            <button onclick="switchTab('owner')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+                <i class="fa-solid fa-user-tie w-5"></i><span>স্বত্বাধিকারী</span>
+            </button>
+            <button onclick="switchTab('admin')" class="mobile-tab w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-sky-600 dark:text-sky-400 border border-slate-200 dark:border-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-user-shield w-5"></i><span>এডমিন প্যানেল</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Quote Ticker -->
+    <div class="bg-white/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-sky-900/30 text-sky-800 dark:text-sky-200 py-2.5 px-4 shadow-sm backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto flex items-center space-x-3 text-xs sm:text-sm">
+            <span class="bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 px-2.5 py-0.5 rounded-md font-bold shrink-0 flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-quote-left text-xs"></i> বইয়ের বাণী
+            </span>
+            <div class="overflow-hidden relative w-full h-5">
+                <div id="quote-ticker" class="absolute w-full transition-all duration-700 ease-in-out font-serif italic text-slate-600 dark:text-slate-300 truncate">
+                    "বই হচ্ছে এমন এক স্থান যেখানে আপনি বারবার ফিরে যেতে পারেন কোনো প্রশ্ন ছাড়াই।"
+                </div>
+            </div>
+            <button onclick="cycleNextQuote()" title="পরবর্তী বাণী" class="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors shrink-0 p-1">
+                <i class="fa-solid fa-forward text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Global Back Button -->
+        <div id="global-back-wrapper" class="hidden mb-4">
+            <button onclick="goBack()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-500 shadow-sm transition-all">
+                <i class="fa-solid fa-arrow-left"></i> পেছনে ফিরে যান
+            </button>
+        </div>
+
+        <!-- TAB: HOME -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+                <!-- Total Books Card with direct click navigation -->
+                <div onclick="switchTab('all-books')" title="সকল বই দেখতে ক্লিক করুন" 
+                     class="cursor-pointer bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 flex items-center space-x-5 shadow-sm dark:shadow-md backdrop-blur-sm relative overflow-hidden group hover:border-sky-500/70 hover:shadow-xl transition-all">
+                    <div class="absolute -right-6 -bottom-6 text-sky-500/5 dark:text-sky-400/5 text-8xl pointer-events-none group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div class="p-4 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-2xl group-hover:bg-sky-500 group-hover:text-white transition-colors shadow-inner">
+                        <i class="fa-solid fa-books text-3xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সংগ্রহের মোট বই</p>
+                        <h3 id="stat-total-books" class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-1">০</h3>
+                        <p class="text-[11.5px] text-sky-600 dark:text-sky-400 font-semibold mt-1 flex items-center gap-1.5">
+                            সকল বইয়ের তালিকা দেখুন <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Welcome Quote Card with Slogan -->
+                <div class="md:col-span-2 relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-700 to-indigo-800 dark:from-slate-900 dark:via-sky-950/60 dark:to-slate-900 border border-transparent dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-md dark:shadow-xl text-white flex flex-col justify-center">
+                    <div class="absolute -right-6 -bottom-8 text-white/10 dark:text-slate-800/30 text-8xl pointer-events-none font-serif">
+                        <i class="fa-solid fa-quote-right"></i>
+                    </div>
+                    <div class="relative z-10 max-w-2xl space-y-2">
+                        <span class="inline-block px-3 py-0.5 bg-white/20 dark:bg-sky-500/20 text-white dark:text-sky-300 rounded-full text-[11px] font-bold uppercase tracking-wider backdrop-blur-sm border border-white/20">
+                            চিলেকোঠা বার্তা • জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে
+                        </span>
+                        <blockquote id="hero-quote" class="text-base sm:text-xl font-serif text-slate-50 italic leading-relaxed">
+                            "একটি বই হচ্ছে একটি স্বপ্ন যা আপনি আপনার হাতে ধরে রাখতে পারেন।"
+                        </blockquote>
+                        <p id="hero-quote-author" class="text-xs sm:text-sm font-semibold text-sky-200 dark:text-sky-400">— নীল গেইম্যান</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Books -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-star text-amber-500"></i> প্রিয় ও সেরা বইসমূহ
+                    </h2>
+                    <button onclick="switchTab('all-books')" class="text-sky-600 dark:text-sky-400 text-sm font-medium hover:underline flex items-center gap-1">
+                        সবগুলো দেখুন <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+                <div id="home-featured-books" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Cards -->
+                </div>
+            </div>
+
+            <!-- Recently Added Books -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-sky-600 dark:text-sky-400"></i> সাম্প্রতিক যুক্ত করা বই
+                    </h2>
+                </div>
+                <div id="home-recent-books" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: ALL BOOKS -->
+        <section id="tab-all-books" class="tab-content hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="all-books-search" oninput="filterAllBooks()" placeholder="বইয়ের নাম, সিরিজ, লেখক বা প্রকাশনী..." 
+                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-sky-500">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <select id="all-books-cat-filter" onchange="filterAllBooks()" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500">
+                        <option value="ALL">সকল ক্যাটাগরি</option>
+                    </select>
+
+                    <select id="all-books-sort" onchange="filterAllBooks()" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500">
+                        <option value="serial-asc">ক্রমিক নম্বর (১ থেকে শেষ)</option>
+                        <option value="serial-desc">ক্রমিক নম্বর (শেষ থেকে ১)</option>
+                        <option value="price-desc">ক্রয়মূল্য (বেশি থেকে কম)</option>
+                        <option value="price-asc">ক্রয়মূল্য (কম থেকে বেশি)</option>
+                        <option value="date-desc">যুক্ত করার তারিখ (নতুন)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 px-1">
+                <span>প্রদর্শিত বই: <strong id="all-books-count" class="text-sky-600 dark:text-sky-400">০</strong> টি</span>
+                <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> প্রতিটি বইয়ের জন্য রয়েছে স্বয়ংক্রিয় বাংলা ক্রমিক নম্বর</span>
+            </div>
+
+            <div id="all-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamic Content Insertion -->
+            </div>
+        </section>
+
+        <!-- TAB: AUTHORS -->
+        <section id="tab-authors" class="tab-content hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex justify-between items-center shadow-sm">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">সম্মানিত লেখকবৃন্দ</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">লেখকের নামের ওপর চাপ দিয়ে তাঁর পূর্ণ প্রোফাইল ও জীবনী দেখুন</p>
+                </div>
+                <span class="text-xs bg-sky-500/10 text-sky-700 dark:text-sky-400 px-3.5 py-1.5 rounded-full font-semibold border border-sky-500/20" id="authors-total-badge">
+                    মোট লেখক: ০
+                </span>
+            </div>
+
+            <div id="authors-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Authors Grid -->
+            </div>
+        </section>
+
+        <!-- TAB: CATEGORIES -->
+        <section id="tab-categories" class="tab-content hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">ক্যাটাগরি ভিত্তিক বইসমূহ</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">বিষয় ও প্রকরণ অনুযায়ী সজ্জিত সকল বই</p>
+            </div>
+
+            <div id="categories-container" class="space-y-8">
+                <!-- Dynamic Categories -->
+            </div>
+        </section>
+
+        <!-- TAB: GIFTS -->
+        <section id="tab-gifts" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm">
+                    <div class="p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl">
+                        <i class="fa-solid fa-hand-holding-heart text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100" id="gift-received-count">০</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400 font-semibold">উপহার পাওয়া বই (কার থেকে কবে পেয়েছি)</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-900/80 border border-rose-200 dark:border-rose-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm">
+                    <div class="p-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-2xl">
+                        <i class="fa-solid fa-gift text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100" id="gift-given-count">০</h3>
+                        <p class="text-sm text-rose-700 dark:text-rose-400 font-semibold">উপহার দেওয়া বই (কাকে কবে দিয়েছি)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex border-b border-slate-200 dark:border-slate-800 space-x-6">
+                <button onclick="toggleGiftView('received')" id="gift-tab-received" class="pb-3 text-sm font-semibold border-b-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400">
+                    প্রাপ্ত উপহারের তালিকা
+                </button>
+                <button onclick="toggleGiftView('given')" id="gift-tab-given" class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                    প্রদত্ত উপহারের তালিকা
+                </button>
+            </div>
+
+            <div id="gifts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Gifts List -->
+            </div>
+        </section>
+
+        <!-- TAB: SEARCH -->
+        <section id="tab-search" class="tab-content hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-sky-600 dark:text-sky-400"></i> বিস্তারিত অনুসন্ধান ও ফিল্টার
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">কীওয়ার্ড (বই / সিরিজ / লেখক)</label>
+                        <input type="text" id="adv-search-keyword" placeholder="যেমন: গীতাঞ্জলি, ফেলুদা, উপন্যাস..." 
+                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">অনুবাদক</label>
+                        <input type="text" id="adv-search-translator" placeholder="অনুবাদকের নাম..." 
+                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">সংগ্রহের ধরণ</label>
+                        <select id="adv-search-type" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                            <option value="ALL">সকল প্রকার</option>
+                            <option value="PURCHASED">নিজের কেনা বই</option>
+                            <option value="GIFT_RECEIVED">প্রাপ্ত উপহার</option>
+                            <option value="GIFT_GIVEN">অন্যকে দেওয়া উপহার</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">সর্বোচ্চ ক্রয় মূল্য (৳)</label>
+                        <input type="text" id="adv-search-max-price" placeholder="যেমন: ৫০০" 
+                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">প্রথম প্রকাশকাল (সাল)</label>
+                        <input type="text" id="adv-search-pub-year" placeholder="যেমন: ১৯১০" 
+                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="executeAdvancedSearch()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 px-4 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> ফিল্টার করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Search Results -->
+            </div>
+        </section>
+
+        <!-- TAB: OWNER PROFILE -->
+        <section id="tab-owner" class="tab-content hidden space-y-8">
+            <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 text-sky-500/5 dark:text-sky-400/5 text-9xl pointer-events-none">
+                    <i class="fa-solid fa-feather-pointed"></i>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-8 border-b border-slate-200 dark:border-slate-800 relative z-10">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-tr from-sky-600 to-indigo-600 p-1 shadow-xl shrink-0">
+                        <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-950 relative">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
+                                 alt="স্বত্বাধিকারী" class="w-full h-full object-cover">
+                            <!-- Centered Soft Watermark Logo -->
+                            <div class="center-logo-watermark">
+                                <img src="logo.png" alt="Logo Watermark" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-left space-y-2 flex-grow">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">চিলেকোঠার পাঠক</h2>
+                            <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-0.5 rounded-full font-bold">
+                                ব্যক্তিগত সংগ্রাহক
+                            </span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
+                        <p class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+                            "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
+                    <div class="space-y-3 bg-slate-50 dark:bg-slate-950/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-house-chimney text-sky-600 dark:text-sky-400"></i> লাইব্রেরির উদ্দেশ্য
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            নিজের সংগ্রহে থাকা প্রতিটি বইকে সুরক্ষিত রাখা, প্রিয়জনদের দেওয়া উপহারের অমূল্য স্মৃতি সংরক্ষণ করা এবং ভালো বইয়ের পাঠ-অভিজ্ঞতা ডিজিটালভাবে নথিভুক্ত করাই এই আর্কাইভের মূল লক্ষ্য।
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 bg-slate-50 dark:bg-slate-950/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-handshake text-emerald-600 dark:text-emerald-400"></i> বই পড়ার ও ধার নেওয়ার নীতি
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            যে-কোনো বন্ধু বা শুভানুধ্যায়ী চিলেকোঠায় এসে বই পড়তে পারবেন। কোনো বই ধার নিলে তা রেজিস্টারে নথিভুক্ত করে সর্বোচ্চ ২১ দিনের মধ্যে অক্ষত অবস্থায় ফেরত দেওয়া বাধ্যতামূলক।
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: ADMIN -->
+        <section id="tab-admin" class="tab-content hidden space-y-8">
+            
+            <!-- ADMIN LOGIN BOX -->
+            <div id="admin-login-box" class="max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-5">
+                <div class="w-16 h-16 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center mx-auto text-3xl">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">এডমিন অথেনটিকেশন</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">তথ্য পরিবর্তন, সংযোজন বা গুগল শিটে সেভ করতে এডমিন পাসওয়ার্ড দিন</p>
+                </div>
+                <div class="space-y-3">
+                    <input type="password" id="admin-login-pass" placeholder="এডমিন পাসওয়ার্ড লিখুন..." 
+                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-center text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                    <button onclick="handleAdminLogin()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/30 text-sm">
+                        লগইন করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- ADMIN AUTHENTICATED PANEL -->
+            <div id="admin-auth-panel" class="hidden space-y-8">
+                <!-- Admin Top Bar with Cloud Sync Status -->
+                <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">গুগল শিট ক্লাউড সিঙ্ক সক্রিয়</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="syncLiveFromGoogleSheet()" class="text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-rotate"></i> শিট থেকে রিফ্রেশ
+                        </button>
+                        <button onclick="handleAdminLogout()" class="text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-3 py-1.5 rounded-lg border border-rose-500/30 transition-all">
+                            লগআউট
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Google Sheet URL Configuration Card -->
+                <div class="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-link text-sky-500"></i> আপনার গুগল শিট Apps Script Web App URL
+                        </span>
+                        <span class="text-[11px] text-slate-400">স্বয়ংক্রিয় ক্লাউড সেভ লিংক</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="url" id="google-sheet-url-input" placeholder="https://script.google.com/macros/s/.../exec" 
+                               class="flex-grow bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-sky-500">
+                        <button onclick="saveGoogleSheetURL()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition-all shrink-0">
+                            সেভ ও টেস্ট
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pending Comments Approval Box -->
+                <div class="bg-white dark:bg-slate-900/90 border border-amber-300 dark:border-amber-500/30 rounded-2xl p-6 max-w-4xl mx-auto shadow-md">
+                    <h3 class="text-lg font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> অপেক্ষমাণ মন্তব্য অনুমোদন প্যানেল
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">পাঠকদের করা নতুন মন্তব্য এডমিন অনুমোদন করলেই কেবল বইয়ের বিস্তারিত পাতায় প্রদর্শিত হবে।</p>
+                    <div id="admin-pending-comments" class="space-y-3">
+                        <!-- Dynamic pending comments -->
+                    </div>
+                </div>
+
+                <!-- Admin Sub Navigation Tabs -->
+                <div class="max-w-4xl mx-auto flex justify-center border-b border-slate-200 dark:border-slate-800 overflow-x-auto">
+                    <div class="flex space-x-2 sm:space-x-3">
+                        <button type="button" onclick="switchAdminSubTab('books')" id="subtab-btn-books" class="px-4 py-2.5 text-sm font-bold border-b-2 border-sky-600 text-sky-600 dark:text-sky-400 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-book"></i> বই সংযোজন
+                        </button>
+                        <button type="button" onclick="switchAdminSubTab('authors')" id="subtab-btn-authors" class="px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-feather-pointed text-amber-500"></i> লেখক প্রোফাইল
+                        </button>
+                        <button type="button" onclick="switchAdminSubTab('lending')" id="subtab-btn-lending" class="px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-hand-holding text-emerald-500"></i> বই ধার খাতা
+                            <span id="admin-active-borrow-badge" class="bg-emerald-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">০</span>
+                        </button>
+                        <button type="button" onclick="switchAdminSubTab('excel')" id="subtab-btn-excel" class="px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-file-excel text-emerald-600"></i> এক্সেল ইমপোর্ট ও ব্যাকআপ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUB-SECTION 1: BOOK MANAGEMENT FORM -->
+                <div id="admin-sub-books" class="space-y-6">
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2" id="form-title">
+                                <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি গুগল শিটে সেভ হবে)
+                            </h2>
+                        </div>
+
+                        <form id="book-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                            <input type="hidden" id="edit-book-id" value="">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">বইয়ের নাম (BookName) <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="form-title-input" required placeholder="যেমন: শেষের কবিতা" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের নাম (Author) <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="form-author-input" required placeholder="যেমন: রবীন্দ্রনাথ ঠাকুর" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">বইয়ের সিরিজ (SeriesName)</label>
+                                    <input type="text" id="form-series-input" placeholder="যেমন: ফেলুদা সিরিজ, মিসির আলি..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সিরিজ পর্ব (SeriesOrder)</label>
+                                        <input type="text" id="form-series-num-input" placeholder="যেমন: ৩" 
+                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মোট সিরিজ খণ্ড</label>
+                                        <input type="text" id="form-series-total-input" placeholder="যেমন: ৫" 
+                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ক্যাটাগরি (Category) <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="form-category-input" required placeholder="যেমন: উপন্যাস, কবিতা, ইতিহাস..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংগ্রহের ধরণ</label>
+                                    <select id="form-acquisition-input" onchange="handleAcquisitionTypeChange()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                        <option value="PURCHASED">নিজের কেনা বই</option>
+                                        <option value="GIFT_RECEIVED">উপহার প্রাপ্ত</option>
+                                        <option value="GIFT_GIVEN">উপহার দেওয়া হয়েছে</option>
+                                    </select>
+                                </div>
+
+                                <!-- Gift Details -->
+                                <div id="gift-person-wrapper" class="hidden">
+                                    <label id="gift-person-label" class="block text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">কার থেকে পেয়েছি (ব্যক্তির নাম)</label>
+                                    <input type="text" id="form-gift-person-input" placeholder="ব্যক্তির নাম..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div id="gift-date-wrapper" class="hidden">
+                                    <label id="gift-date-label" class="block text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">উপহার পাওয়ার তারিখ</label>
+                                    <input type="date" id="form-gift-date-input" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">অনুবাদক (TranslatedBy)</label>
+                                    <input type="text" id="form-translator-input" placeholder="অনুবাদকের নাম" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রকাশনী (Publisher)</label>
+                                    <input type="text" id="form-publisher-input" placeholder="যেমন: বিশ্বভারতী" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রথম প্রকাশকাল (PublishYear)</label>
+                                    <input type="text" id="form-first-pub-input" placeholder="যেমন: ১৯২৯" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংযুক্তির তারিখ (EntryDate)</label>
+                                    <input type="date" id="form-entry-date-input" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মুদ্রিত মূল্য (MRP ৳)</label>
+                                    <input type="text" id="form-printed-price-input" placeholder="যেমন: ৩৫০" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div id="purchase-price-wrapper">
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ক্রয় মূল্য (BuyPrice ৳)</label>
+                                    <input type="text" id="form-purchase-price-input" placeholder="যেমন: ২৮০" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <!-- Book Photos -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                        <i class="fa-solid fa-image text-sky-600 dark:text-sky-400"></i> ছবির লিংক (URL / Google Drive Link) <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="url" id="form-main-image-input" placeholder="গুগল ড্রাইভ অথবা ওয়েব ছবির সরাসরি লিংক..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                        <i class="fa-solid fa-images text-indigo-500"></i> অতিরিক্ত ছবির লিংক (কমা দিয়ে একাধিক)
+                                    </label>
+                                    <input type="text" id="form-extra-images-input" placeholder="https://img2.jpg, https://img3.jpg" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সারসংক্ষেপ ও পর্যালোচনা (Review)</label>
+                                <textarea id="form-summary-input" rows="4" placeholder="বইয়ের বিষয়বস্তু, অনুভূতি বা সংক্ষিপ্ত পর্যালোচনা লিখুন..." 
+                                          class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="flex items-center space-x-4 pt-2">
+                                <button type="submit" id="book-save-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-sky-600/30 flex items-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> বই সংরক্ষণ ও গুগল শিটে পাঠান
+                                </button>
+                                <button type="button" onclick="resetForm()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 px-5 rounded-xl transition-all">
+                                    রিসেট
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- SUB-SECTION 2: AUTHOR PROFILE MANAGEMENT -->
+                <div id="admin-sub-authors" class="hidden space-y-8">
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4" id="author-form-title">
+                            <i class="fa-solid fa-feather-pointed text-amber-500"></i> নতুন লেখক প্রোফাইল তৈরি করুন
+                        </h2>
+
+                        <form id="author-profile-form" onsubmit="handleAuthorFormSubmit(event)" class="space-y-6">
+                            <input type="hidden" id="edit-author-id" value="">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের পুরো নাম <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="author-profile-name" required placeholder="যেমন: বিভূতিভূষণ বন্দ্যোপাধ্যায়" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">জীবনকাল (জন্ম ও মৃত্যু সাল)</label>
+                                    <input type="text" id="author-profile-lifespan" placeholder="যেমন: ১৮৯৪ - ১৯৫০" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের ছবির ওয়েব লিংক (URL)</label>
+                                    <input type="url" id="author-profile-photo" placeholder="https://..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">উল্লেখযোগ্য সাহিত্যকর্ম</label>
+                                    <input type="text" id="author-profile-notable" placeholder="যেমন: পথের পাঁচালী, অপরাজিত..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংক্ষিপ্ত পরিচিতি ও জীবনী</label>
+                                    <textarea id="author-profile-bio" rows="4" placeholder="লেখকের সাহিত্যজীবন ও শৈলীর বিবরণ লিখুন..." 
+                                              class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4 pt-2">
+                                <button type="submit" id="author-save-btn" class="bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-amber-600/30 flex items-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> লেখক সেভ করুন
+                                </button>
+                                <button type="button" onclick="resetAuthorForm()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 px-5 rounded-xl transition-all">
+                                    রিসেট
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-users text-sky-600 dark:text-sky-400"></i> তৈরিকৃত লেখক প্রোফাইলসমূহ
+                        </h3>
+                        <div id="admin-authors-list" class="space-y-3">
+                            <!-- Dynamic List -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-SECTION 3: BOOK LENDING REGISTER -->
+                <div id="admin-sub-lending" class="hidden space-y-8">
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                        <h3 class="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-hand-holding-hand"></i> নতুন বই ধার দেওয়ার এন্ট্রি
+                        </h3>
+
+                        <form id="lending-form" onsubmit="handleLendingSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কোন বইটি ধার দেওয়া হচ্ছে <span class="text-rose-500">*</span></label>
+                                    <select id="lending-book-select" required class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                        <option value="">বই নির্বাচন করুন...</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কাকে দেওয়া হলো (গ্রহীতার নাম) <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="lending-borrower-name" required placeholder="গ্রহীতার পুরো নাম..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মোবাইল নম্বর / যোগাযোগের মাধ্যম</label>
+                                    <input type="text" id="lending-borrower-phone" placeholder="০১XXXXXXXXX" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কবে দেওয়া হলো (ধারের তারিখ) <span class="text-rose-500">*</span></label>
+                                    <input type="date" id="lending-borrow-date" required 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সম্ভাব্য ফেরত দেওয়ার তারিখ</label>
+                                    <input type="date" id="lending-expected-date" 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মন্তব্য / বিশেষ নোট</label>
+                                    <input type="text" id="lending-note" placeholder="যেমন: পড়ার জন্য ২১ দিনের শর্তে দেওয়া..." 
+                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-emerald-600/30 flex items-center gap-2">
+                                    <i class="fa-solid fa-check"></i> ধার রেজিস্টারে যুক্ত করুন
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-list-check text-sky-600 dark:text-sky-400"></i> বর্তমানে ধার দেওয়া ও পূর্ববর্তী রেকর্ড
+                        </h3>
+                        <div id="admin-lending-list" class="space-y-3">
+                            <!-- Dynamic Borrowing Rows -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-SECTION 4: MULTI-SHEET EXCEL LIVE IMPORT & BACKUP -->
+                <div id="admin-sub-excel" class="hidden space-y-8">
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl space-y-6">
+                        <div>
+                            <h3 class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-excel text-2xl"></i> এক্সেল ফাইল আপলোড
+                            </h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                                আপনার কম্পিউটারে থাকা এক্সেল ফাইলটি আপলোড করলেই সরাসরি সিস্টেমে লাইভ হয়ে যাবে।
+                            </p>
+                        </div>
+
+                        <!-- Upload Zone -->
+                        <div class="border-2 border-dashed border-emerald-400/50 dark:border-emerald-600/40 rounded-3xl p-8 text-center bg-emerald-50/20 dark:bg-emerald-950/10 hover:border-emerald-500 transition-colors">
+                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-emerald-500 mb-3"></i>
+                            <h4 class="text-base font-bold text-slate-900 dark:text-slate-100">এক্সেল ফাইল নির্বাচন করুন (.xlsx / .xls / .csv)</h4>
+                            <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload(event)" class="hidden">
+                            <label for="excel-file-input" class="cursor-pointer inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 transition-all text-xs mt-3">
+                                <i class="fa-solid fa-file-arrow-up"></i> এক্সেল ফাইল আপলোড করুন
+                            </label>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+                            <button onclick="downloadSampleExcel()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold py-2.5 px-5 rounded-xl transition-all text-xs flex items-center gap-2">
+                                <i class="fa-solid fa-download text-emerald-500"></i> নমুনা এক্সেল টেমপ্লেট
+                            </button>
+                            <button onclick="exportLibraryToExcel()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 px-5 rounded-xl transition-all shadow-md shadow-sky-600/20 text-xs flex items-center gap-2">
+                                <i class="fa-solid fa-file-export"></i> সম্পূর্ণ ডাটা এক্সেল ডাউনলোড
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AUTHOR PROFILE DETAILS MODAL -->
+    <div id="author-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-8">
+            <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
+                <button onclick="closeAuthorModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i> পেছনে যান
+                </button>
+                <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                    লেখক পরিচিতি
+                </span>
+                <button onclick="closeAuthorModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto relative z-10">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                    <div class="w-36 h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group">
+                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover">
+                        <div class="center-logo-watermark">
+                            <img src="logo.png" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-left space-y-2">
+                        <h2 id="author-modal-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
+                        <p id="author-modal-lifespan" class="text-sm font-medium text-amber-600 dark:text-amber-400"></p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            চিলেকোঠা লাইব্রেরিতে বই সংখ্যা: <strong id="author-modal-book-count" class="text-sky-600 dark:text-sky-400">০</strong> টি
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সংক্ষিপ্ত জীবনী</h4>
+                    <p id="author-modal-bio" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        কোনো জীবনী পাওয়া যায়নি।
+                    </p>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">উল্লেখযোগ্য সাহিত্যকর্ম</h4>
+                    <p id="author-modal-notable" class="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                        অনুল্লেখিত
+                    </p>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">চিলেকোঠায় সংরক্ষিত এই লেখকের বইসমূহ</h4>
+                    <div id="author-modal-books-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamic list -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOK DETAILS MODAL -->
+    <div id="book-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-8">
+            <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
+                <div class="flex items-center space-x-2 sm:space-x-3 flex-wrap gap-y-1">
+                    <button onclick="closeBookModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
+                        <i class="fa-solid fa-arrow-left"></i> পেছনে যান
+                    </button>
+                    <span id="modal-serial-badge" class="bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                        ক্রমিক #১
+                    </span>
+                    <span id="modal-acquisition-badge" class="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                        ক্রয়কৃত
+                    </span>
+                    <span id="modal-series-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                        <!-- Series dynamic -->
+                    </span>
+                </div>
+                <button onclick="closeBookModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-3">
+                        <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-md">
+                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
+                            <div class="center-logo-watermark">
+                                <img src="logo.png" alt="Logo Watermark" class="w-32 h-32 sm:w-40 sm:h-40 object-contain" onerror="this.style.display='none'">
+                            </div>
+                        </div>
+                        <div id="modal-thumbnails" class="flex space-x-2 overflow-x-auto pb-2">
+                            <!-- Thumbnails -->
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 space-y-4">
+                        <div>
+                            <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
+                            <p class="text-sky-600 dark:text-sky-400 text-lg font-semibold mt-0.5 cursor-pointer hover:underline" id="modal-author" onclick="viewAuthorProfileFromName(this.innerText)"></p>
+                            <p id="modal-series-text" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 hidden"></p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">অনুবাদক:</span>
+                                <span id="modal-translator" class="text-slate-800 dark:text-slate-200 font-medium">প্রযোজ্য নয়</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">প্রকাশনী:</span>
+                                <span id="modal-publisher" class="text-slate-800 dark:text-slate-200 font-medium">অনুল্লেখিত</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">ক্যাটাগরি:</span>
+                                <span id="modal-category" class="text-slate-800 dark:text-slate-200 font-medium">সাধারণ</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">প্রথম প্রকাশ:</span>
+                                <span id="modal-first-pub" class="text-slate-800 dark:text-slate-200 font-medium">অনুল্লেখিত</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">সংযুক্তির তারিখ:</span>
+                                <span id="modal-entry-date" class="text-slate-800 dark:text-slate-200 font-medium">অনুল্লেখিত</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 dark:text-slate-400 block">মুদ্রিত মূল্য:</span>
+                                <span id="modal-printed-price" class="text-slate-800 dark:text-slate-200 font-medium">৳ ০</span>
+                            </div>
+                            <div id="modal-purchase-price-box">
+                                <span class="text-slate-500 dark:text-slate-400 block">ক্রয় মূল্য:</span>
+                                <span id="modal-purchase-price" class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ০</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সারসংক্ষেপ ও পর্যালোচনা</h4>
+                            <p id="modal-summary" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/80">
+                                কোনো বিবরণ যুক্ত করা হয়নি।
+                            </p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2">
+                            <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors">
+                                <i class="fa-solid fa-heart" id="modal-like-icon"></i>
+                                <span id="modal-like-count">০</span>টি পছন্দ
+                            </button>
+
+                            <div class="flex space-x-2">
+                                <button onclick="quickLendCurrentBook()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs transition-colors font-medium">
+                                    <i class="fa-solid fa-hand-holding"></i> ধার দিন
+                                </button>
+                                <button onclick="editCurrentBook()" class="bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-400 border border-sky-500/30 px-3 py-2 rounded-xl text-xs transition-colors">
+                                    <i class="fa-solid fa-pen"></i> সম্পাদনা
+                                </button>
+                                <button onclick="deleteCurrentBook()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-500/30 px-3 py-2 rounded-xl text-xs transition-colors">
+                                    <i class="fa-solid fa-trash"></i> মুছে ফেলুন
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments System -->
+                <div class="border-t border-slate-200 dark:border-slate-800 pt-6 space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-sky-600 dark:text-sky-400"></i> পাঠকদের মন্তব্য (<span id="modal-comment-count">০</span>টি)
+                    </h3>
+
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="comment-author-input" placeholder="আপনার নাম..." class="sm:w-1/3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:border-sky-500">
+                        <input type="text" id="comment-text-input" placeholder="বই নিয়ে আপনার মতামত লিখুন..." class="sm:w-2/3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:border-sky-500">
+                        <button onclick="addCommentToCurrentBook()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs px-5 py-2.5 rounded-xl font-semibold shrink-0 shadow-sm">
+                            মন্তব্য পাঠান
+                        </button>
+                    </div>
+                    <div id="modal-comments-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-12 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                <p class="font-bold text-slate-800 dark:text-slate-200">চিলেকোঠা লাইব্রেরি</p>
+                <p class="text-[11px] text-sky-600 dark:text-sky-400">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
+            </div>
+            <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
+            <div class="flex space-x-4">
+                <span><i class="fa-solid fa-cloud text-emerald-500"></i> গুগল শিট লাইভ সংযুক্ত</span>
+                <span><i class="fa-solid fa-circle-half-stroke text-indigo-500"></i> ডার্ক ও লাইট রূপান্তর</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Anti-Scraping Listeners
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Bengali Number Conversion
+        function toBnNum(n) {
+            if (n === null || n === undefined || n === '') return '০';
+            const enToBn = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+            return String(n).replace(/[0-9]/g, char => enToBn[char]);
+        }
+
+        function toEnNum(bnStr) {
+            if (!bnStr) return 0;
+            const bnToEn = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+            const converted = String(bnStr).replace(/[০-৯]/g, char => bnToEn[char]);
+            return parseFloat(converted) || 0;
+        }
+
+        // Automatic Google Drive link converter
+        function formatImageUrl(url) {
+            if (!url) return '';
+            url = url.trim();
+            if (url.includes('drive.google.com')) {
+                let id = '';
+                const match1 = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (match1 && match1[1]) id = match1[1];
+                const match2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                if (match2 && match2[1]) id = match2[1];
+                if (id) {
+                    return `https://lh3.googleusercontent.com/d/${id}`;
+                }
+            }
+            return url;
+        }
+
+        // App States
+        let books = [];
+        let authorProfiles = [];
+        let borrowings = [];
+        let currentQuoteIndex = 0;
+        let activeBookId = null;
+        let currentGiftView = 'received';
+        let likedBooksSet = new Set();
+        let tabHistoryStack = ['home'];
+        let isAdminLoggedIn = false;
+
+        // Cloud Google Sheet Web App URL
+        let googleSheetURL = localStorage.getItem('chilekotha_cloud_sheet_url') || '';
+
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('chilekotha_theme') || 'dark';
+            applyTheme(savedTheme);
+
+            // Load from Local Storage fallback
+            const savedBooks = localStorage.getItem('chilekotha_library_books');
+            books = savedBooks ? JSON.parse(savedBooks) : initialBooks;
+
+            const savedAuthors = localStorage.getItem('chilekotha_library_authors');
+            authorProfiles = savedAuthors ? JSON.parse(savedAuthors) : initialAuthors;
+
+            const savedBorrowings = localStorage.getItem('chilekotha_borrowings');
+            borrowings = savedBorrowings ? JSON.parse(savedBorrowings) : initialBorrowings;
+
+            if (googleSheetURL) {
+                document.getElementById('google-sheet-url-input').value = googleSheetURL;
+            }
+
+            // Check admin session
+            if (sessionStorage.getItem('chilekotha_admin_auth') === 'true') {
+                isAdminLoggedIn = true;
+                showAdminPanel();
+            }
+
+            updateStats();
+            renderHomePage();
+            populateCategoryFilter();
+            populateLendingBookDropdown();
+            filterAllBooks();
+            renderAuthors();
+            renderCategoriesTab();
+            renderGiftsTab();
+            executeAdvancedSearch();
+            renderPendingCommentsAdmin();
+            renderAdminAuthorsList();
+            renderLendingList();
+
+            startQuoteCarousel();
+
+            // অটোমেটিক গুগল শিট থেকে লাইভ ডাটা লোড
+            if (googleSheetURL) {
+                syncLiveFromGoogleSheet(true);
+            }
+        };
+
+        // গুগল শিটের সাথে লাইভ সিঙ্ক ফাংশন
+        async function syncLiveFromGoogleSheet(silent = false) {
+            if (!googleSheetURL) return;
+            try {
+                if (!silent) {
+                    alert("গুগল শিট থেকে সর্বশেষ তথ্য আনা হচ্ছে...");
+                }
+                const res = await fetch(googleSheetURL);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.books && data.books.length > 0) {
+                        books = data.books;
+                        saveToLocalStorage();
+                    }
+                    if (data.authors && data.authors.length > 0) {
+                        authorProfiles = data.authors;
+                        saveAuthorsToLocalStorage();
+                    }
+                    refreshViews();
+                    if (!silent) alert("গুগল শিটের সাথে সফলভাবে সিঙ্ক সম্পন্ন হয়েছে!");
+                }
+            } catch(err) {
+                console.error("Google Sheet Sync Error:", err);
+                if (!silent) alert("গুগল শিট থেকে ডাটা লোড করা যায়নি। লিংকটি ঠিক আছে কি না নিশ্চিত করুন।");
+            }
+        }
+
+        function saveGoogleSheetURL() {
+            const url = document.getElementById('google-sheet-url-input').value.trim();
+            if (!url) {
+                alert("দয়া করে Apps Script Web App URL প্রদান করুন।");
+                return;
+            }
+            googleSheetURL = url;
+            localStorage.setItem('chilekotha_cloud_sheet_url', url);
+            syncLiveFromGoogleSheet(false);
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('chilekotha_library_books', JSON.stringify(books));
+        }
+
+        function saveAuthorsToLocalStorage() {
+            localStorage.setItem('chilekotha_library_authors', JSON.stringify(authorProfiles));
+        }
+
+        function saveBorrowingsToLocalStorage() {
+            localStorage.setItem('chilekotha_borrowings', JSON.stringify(borrowings));
+        }
+
+        // Admin Authentication
+        async function handleAdminLogin() {
+            const pass = document.getElementById('admin-login-pass').value.trim();
+            if (!pass) {
+                alert("দয়া করে এডমিন পাসওয়ার্ড লিখুন।");
+                return;
+            }
+
+            if (pass === "chilekotha2026") {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem('chilekotha_admin_auth', 'true');
+                showAdminPanel();
+                alert("এডমিন প্যানেলে স্বাগতম!");
+            } else {
+                alert("ভুল পাসওয়ার্ড!");
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('admin-login-box').classList.add('hidden');
+            document.getElementById('admin-auth-panel').classList.remove('hidden');
+        }
+
+        function handleAdminLogout() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('chilekotha_admin_auth');
+            document.getElementById('admin-login-pass').value = '';
+            document.getElementById('admin-login-box').classList.remove('hidden');
+            document.getElementById('admin-auth-panel').classList.add('hidden');
+            switchTab('home');
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const newTheme = isDark ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('chilekotha_theme', newTheme);
+        }
+
+        function applyTheme(theme) {
+            const themeIcon = document.getElementById('theme-icon');
+            const themeIconMobile = document.getElementById('theme-icon-mobile');
+
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                if (themeIcon) themeIcon.className = "fa-solid fa-sun text-base";
+                if (themeIconMobile) themeIconMobile.className = "fa-solid fa-sun";
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (themeIcon) themeIcon.className = "fa-solid fa-moon text-base";
+                if (themeIconMobile) themeIconMobile.className = "fa-solid fa-moon";
+            }
+        }
+
+        // Navigation Switch & History
+        function switchTab(tabId, pushHistory = true) {
+            if (pushHistory && tabHistoryStack[tabHistoryStack.length - 1] !== tabId) {
+                tabHistoryStack.push(tabId);
+            }
+
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            const navButtons = document.querySelectorAll('.nav-tab');
+            navButtons.forEach(btn => {
+                btn.classList.remove('text-sky-600', 'dark:text-sky-400', 'bg-sky-50', 'dark:bg-slate-800', 'font-semibold');
+                btn.classList.add('text-slate-600', 'dark:text-slate-300');
+            });
+
+            const currentBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (currentBtn) {
+                currentBtn.classList.add('text-sky-600', 'dark:text-sky-400', 'bg-sky-50', 'dark:bg-slate-800', 'font-semibold');
+                currentBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+            }
+
+            const backWrapper = document.getElementById('global-back-wrapper');
+            if (tabId === 'home') {
+                backWrapper.classList.add('hidden');
+            } else {
+                backWrapper.classList.remove('hidden');
+            }
+
+            document.getElementById('mobile-menu').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            if (tabHistoryStack.length > 1) {
+                tabHistoryStack.pop();
+                const previousTab = tabHistoryStack[tabHistoryStack.length - 1];
+                switchTab(previousTab, false);
+            } else {
+                switchTab('home', false);
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Quotes Ticker
+        function startQuoteCarousel() {
+            setInterval(cycleNextQuote, 7500);
+        }
+
+        function cycleNextQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % bookQuotes.length;
+            const quoteObj = bookQuotes[currentQuoteIndex];
+            
+            const tickerEl = document.getElementById('quote-ticker');
+            if (tickerEl) {
+                tickerEl.style.opacity = '0';
+                setTimeout(() => {
+                    tickerEl.innerText = `"${quoteObj.quote}" — ${quoteObj.author}`;
+                    tickerEl.style.opacity = '1';
+                }, 400);
+            }
+
+            const heroQuote = document.getElementById('hero-quote');
+            const heroAuthor = document.getElementById('hero-quote-author');
+            if (heroQuote) heroQuote.innerText = `"${quoteObj.quote}"`;
+            if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
+        }
+
+        function updateStats() {
+            const totalBooks = books.length;
+            const authorsSet = new Set(books.map(b => b.author.trim()).filter(Boolean));
+
+            const statTotalBooks = document.getElementById('stat-total-books');
+            if (statTotalBooks) {
+                statTotalBooks.innerText = toBnNum(totalBooks);
+            }
+
+            const authorBadge = document.getElementById('authors-total-badge');
+            if (authorBadge) {
+                authorBadge.innerText = `মোট লেখক: ${toBnNum(authorsSet.size)} জন`;
+            }
+
+            const activeBorrows = borrowings.filter(b => !b.isReturned).length;
+            const borrowBadge = document.getElementById('admin-active-borrow-badge');
+            if (borrowBadge) {
+                borrowBadge.innerText = toBnNum(activeBorrows);
+            }
+        }
+
+        function renderHomePage() {
+            const featuredContainer = document.getElementById('home-featured-books');
+            const recentContainer = document.getElementById('home-recent-books');
+
+            const sortedByLikes = [...books].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 4);
+            featuredContainer.innerHTML = sortedByLikes.map(book => createBookCardHTML(book)).join('');
+
+            const sortedRecent = [...books].sort((a, b) => b.serial - a.serial).slice(0, 3);
+            recentContainer.innerHTML = sortedRecent.map(book => createBookCardHTML(book)).join('');
+        }
+
+        function populateCategoryFilter() {
+            const catSelect = document.getElementById('all-books-cat-filter');
+            const categories = [...new Set(books.map(b => b.category.trim()).filter(Boolean))];
+            
+            catSelect.innerHTML = '<option value="ALL">সকল ক্যাটাগরি</option>' + 
+                categories.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function filterAllBooks() {
+            const searchText = (document.getElementById('all-books-search').value || '').toLowerCase();
+            const category = document.getElementById('all-books-cat-filter').value;
+            const sortVal = document.getElementById('all-books-sort').value;
+
+            let filtered = books.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(searchText) || 
+                                      (book.series && book.series.toLowerCase().includes(searchText)) ||
+                                      book.author.toLowerCase().includes(searchText) ||
+                                      (book.publisher && book.publisher.toLowerCase().includes(searchText));
+                const matchesCat = category === 'ALL' || book.category === category;
+                return matchesSearch && matchesCat;
+            });
+
+            filtered.sort((a, b) => {
+                if (sortVal === 'serial-asc') return a.serial - b.serial;
+                if (sortVal === 'serial-desc') return b.serial - a.serial;
+                if (sortVal === 'price-desc') return (b.purchasePrice || 0) - (a.purchasePrice || 0);
+                if (sortVal === 'price-asc') return (a.purchasePrice || 0) - (b.purchasePrice || 0);
+                if (sortVal === 'date-desc') return new Date(b.entryDate) - new Date(a.entryDate);
+                return 0;
+            });
+
+            document.getElementById('all-books-count').innerText = toBnNum(filtered.length);
+            const grid = document.getElementById('all-books-grid');
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">কোনো বই পাওয়া যায়নি।</div>`;
+            } else {
+                grid.innerHTML = filtered.map(book => createBookCardHTML(book)).join('');
+            }
+        }
+
+        // Generate Card with Large Centered Soft Logo Watermark
+        function createBookCardHTML(book) {
+            const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : 'https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি';
+            
+            let badgeText = "ক্রয়কৃত";
+            let badgeClass = "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30";
+            if (book.acquisitionType === 'GIFT_RECEIVED') {
+                badgeText = "উপহার প্রাপ্ত";
+                badgeClass = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
+            }
+
+            let seriesHTML = '';
+            if (book.series) {
+                const partInfo = book.seriesNum ? ` • পর্ব ${toBnNum(book.seriesNum)}` : '';
+                seriesHTML = `
+                <span class="text-[9.5px] font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md truncate max-w-[140px]">
+                    <i class="fa-solid fa-layer-group text-[8px]"></i> ${book.series}${partInfo}
+                </span>`;
+            }
+
+            let priceHTML = (book.acquisitionType === 'GIFT_RECEIVED') 
+                ? `<span class="text-emerald-600 dark:text-emerald-400 font-semibold text-xs"><i class="fa-solid fa-gift text-[10px]"></i> উপহার প্রাপ্ত</span>`
+                : `<span class="text-slate-600 dark:text-slate-400 text-xs">ক্রয়: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.purchasePrice || 0)}</strong></span>`;
+
+            return `
+            <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
+                <div class="absolute top-3 left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+                    #${toBnNum(book.serial)}
+                </div>
+
+                <div class="aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
+                    <img src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
+                    
+                    <!-- Centered Large & Transparent Logo Watermark -->
+                    <div class="center-logo-watermark">
+                        <img src="logo.png" alt="Logo Watermark" class="w-24 h-24 sm:w-28 sm:h-28 object-contain" onerror="this.style.display='none'">
+                    </div>
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+
+                <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex items-center justify-between gap-1.5 mb-1.5 flex-wrap">
+                            <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">${book.category || 'সাধারণ'}</span>
+                            <span class="text-[10px] font-medium border px-2 py-0.5 rounded-md ${badgeClass}">${badgeText}</span>
+                            ${seriesHTML}
+                        </div>
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-base line-clamp-1 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">${book.title}</h3>
+                        <p class="text-xs text-slate-600 dark:text-sky-300/80 mt-0.5">${book.author}</p>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        ${priceHTML}
+                        <span class="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-heart text-rose-500"></i> ${toBnNum(book.likes || 0)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // Render Authors
+        function renderAuthors() {
+            const authorsGrid = document.getElementById('authors-grid');
+            const authorMap = {};
+            books.forEach(book => {
+                const name = book.author.trim();
+                if (!authorMap[name]) {
+                    authorMap[name] = {
+                        name: name,
+                        photo: formatImageUrl(book.authorPhoto) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        books: []
+                    };
+                }
+                authorMap[name].books.push(book);
+            });
+
+            authorProfiles.forEach(ap => {
+                if (authorMap[ap.name]) {
+                    if (ap.photo) authorMap[ap.name].photo = formatImageUrl(ap.photo);
+                } else {
+                    authorMap[ap.name] = {
+                        name: ap.name,
+                        photo: formatImageUrl(ap.photo) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        books: []
+                    };
+                }
+            });
+
+            const authorList = Object.values(authorMap);
+            if (authorList.length === 0) {
+                authorsGrid.innerHTML = `<p class="col-span-full text-center text-slate-400">কোনো লেখক তথ্য পাওয়া যায়নি।</p>`;
+                return;
+            }
+
+            authorsGrid.innerHTML = authorList.map(author => `
+                <div onclick="openAuthorModal('${author.name}')" class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex items-center space-x-4 cursor-pointer transition-all hover:shadow-lg group shadow-sm">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative">
+                        <img src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/0f172a/0284c7?text=লেখক'">
+                        <div class="center-logo-watermark">
+                            <img src="logo.png" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <div class="space-y-1 overflow-hidden flex-grow">
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors truncate">${author.name}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">চিলেকোঠায় বই: <strong class="text-sky-600 dark:text-sky-400">${toBnNum(author.books.length)}</strong> টি</p>
+                        <span class="inline-block text-[11px] text-sky-600 dark:text-sky-400 font-medium">প্রোফাইল ও জীবনী দেখুন &rarr;</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAuthorModal(authorName) {
+            const profile = authorProfiles.find(a => a.name.trim() === authorName.trim()) || {
+                name: authorName,
+                lifespan: 'অনুল্লেখিত',
+                photo: '',
+                bio: 'এই লেখকের বিস্তারিত জীবনী এখনও যুক্ত করা হয়নি।',
+                notable: 'অনুল্লেখিত'
+            };
+
+            const authorBooks = books.filter(b => b.author.trim() === authorName.trim());
+            const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক';
+
+            document.getElementById('author-modal-name').innerText = profile.name;
+            document.getElementById('author-modal-lifespan').innerText = profile.lifespan ? `জীবনকাল: ${toBnNum(profile.lifespan)}` : '';
+            document.getElementById('author-modal-photo').src = photo;
+            document.getElementById('author-modal-bio').innerText = profile.bio || 'কোনো জীবনী পাওয়া যায়নি।';
+            document.getElementById('author-modal-notable').innerText = profile.notable || 'অনুল্লেখিত';
+            document.getElementById('author-modal-book-count').innerText = toBnNum(authorBooks.length);
+
+            const listContainer = document.getElementById('author-modal-books-list');
+            if (authorBooks.length === 0) {
+                listContainer.innerHTML = `<p class="col-span-full text-xs text-slate-400 italic">চিলেকোঠায় এই লেখকের কোনো বই এখনও তালিকায় ওঠেনি।</p>`;
+            } else {
+                listContainer.innerHTML = authorBooks.map(b => `
+                    <div onclick="closeAuthorModal(); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
+                        <img src="${b.images[0] ? formatImageUrl(b.images[0]) : ''}" class="w-9 h-12 object-cover rounded-lg shrink-0" onerror="this.src='https://placehold.co/100x150/0f172a/0284c7?text=বই'">
+                        <div class="overflow-hidden">
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
+                            <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('author-modal').classList.remove('hidden');
+        }
+
+        function closeAuthorModal() {
+            document.getElementById('author-modal').classList.add('hidden');
+        }
+
+        function viewAuthorProfileFromName(name) {
+            closeBookModal();
+            openAuthorModal(name);
+        }
+
+        function renderCategoriesTab() {
+            const container = document.getElementById('categories-container');
+            const categories = [...new Set(books.map(b => b.category.trim()).filter(Boolean))];
+
+            if (categories.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-400">কোনো ক্যাটাগরি পাওয়া যায়নি।</p>`;
+                return;
+            }
+
+            container.innerHTML = categories.map(cat => {
+                const catBooks = books.filter(b => b.category === cat);
+                return `
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-sky-300 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-sky-600 dark:text-sky-500 text-sm"></i> ${cat}
+                                <span class="text-xs bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-normal">${toBnNum(catBooks.length)} টি</span>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            ${catBooks.map(b => createBookCardHTML(b)).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleGiftView(type) {
+            currentGiftView = type;
+            const recBtn = document.getElementById('gift-tab-received');
+            const givBtn = document.getElementById('gift-tab-given');
+
+            if (type === 'received') {
+                recBtn.className = "pb-3 text-sm font-semibold border-b-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400";
+                givBtn.className = "pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            } else {
+                givBtn.className = "pb-3 text-sm font-semibold border-b-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400";
+                recBtn.className = "pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            }
+            renderGiftsTab();
+        }
+
+        function renderGiftsTab() {
+            const recCount = books.filter(b => b.acquisitionType === 'GIFT_RECEIVED').length;
+            const givCount = books.filter(b => b.acquisitionType === 'GIFT_GIVEN').length;
+
+            document.getElementById('gift-received-count').innerText = toBnNum(recCount);
+            document.getElementById('gift-given-count').innerText = toBnNum(givCount);
+
+            const targetType = currentGiftView === 'received' ? 'GIFT_RECEIVED' : 'GIFT_GIVEN';
+            const giftBooks = books.filter(b => b.acquisitionType === targetType);
+
+            const grid = document.getElementById('gifts-grid');
+            if (giftBooks.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400">কোনো ${currentGiftView === 'received' ? 'প্রাপ্ত' : 'প্রদত্ত'} উপহারের তথ্য নেই।</div>`;
+            } else {
+                grid.innerHTML = giftBooks.map(b => createBookCardHTML(b)).join('');
+            }
+        }
+
+        function executeAdvancedSearch() {
+            const keyword = (document.getElementById('adv-search-keyword').value || '').toLowerCase();
+            const translator = (document.getElementById('adv-search-translator').value || '').toLowerCase();
+            const acqType = document.getElementById('adv-search-type').value;
+            const maxPriceInput = document.getElementById('adv-search-max-price').value;
+            const maxPrice = maxPriceInput ? toEnNum(maxPriceInput) : Infinity;
+            const pubYear = document.getElementById('adv-search-pub-year').value || '';
+
+            const results = books.filter(b => {
+                const matchKw = !keyword || b.title.toLowerCase().includes(keyword) || 
+                                (b.series && b.series.toLowerCase().includes(keyword)) ||
+                                b.author.toLowerCase().includes(keyword) || 
+                                b.category.toLowerCase().includes(keyword);
+                const matchTrans = !translator || (b.translator && b.translator.toLowerCase().includes(translator));
+                const matchType = acqType === 'ALL' || b.acquisitionType === acqType;
+                const matchPrice = (b.purchasePrice || 0) <= maxPrice;
+                const matchYear = !pubYear || (b.firstPublicationDate && toBnNum(b.firstPublicationDate).includes(toBnNum(pubYear)));
+
+                return matchKw && matchTrans && matchType && matchPrice && matchYear;
+            });
+
+            const grid = document.getElementById('search-results-grid');
+            if (results.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">অনুসন্ধানের সাথে কোনো বই মেলেনি।</div>`;
+            } else {
+                grid.innerHTML = results.map(b => createBookCardHTML(b)).join('');
+            }
+        }
+
+        function openBookModal(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            activeBookId = bookId;
+
+            document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
+            const acqBadge = document.getElementById('modal-acquisition-badge');
+            const purchaseBox = document.getElementById('modal-purchase-price-box');
+
+            if (book.acquisitionType === 'GIFT_RECEIVED') {
+                acqBadge.innerText = 'উপহার প্রাপ্ত';
+                acqBadge.className = 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full font-bold';
+                purchaseBox.classList.add('hidden');
+            } else {
+                acqBadge.innerText = 'ক্রয়কৃত';
+                acqBadge.className = 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-2.5 py-1 rounded-full font-bold';
+                purchaseBox.classList.remove('hidden');
+            }
+
+            const seriesBadge = document.getElementById('modal-series-badge');
+            const seriesText = document.getElementById('modal-series-text');
+            if (book.series) {
+                const partInfo = book.seriesNum ? ` • পর্ব ${toBnNum(book.seriesNum)}` : '';
+                seriesBadge.innerText = `${book.series}`;
+                seriesBadge.classList.remove('hidden');
+                seriesText.innerHTML = `<i class="fa-solid fa-layer-group"></i> সিরিজ: <strong>${book.series}</strong> ${partInfo}`;
+                seriesText.classList.remove('hidden');
+            } else {
+                seriesBadge.classList.add('hidden');
+                seriesText.classList.add('hidden');
+            }
+
+            document.getElementById('modal-title').innerText = book.title;
+            document.getElementById('modal-author').innerText = book.author;
+            document.getElementById('modal-translator').innerText = book.translator || 'প্রযোজ্য নয়';
+            document.getElementById('modal-publisher').innerText = book.publisher || 'অনুল্লেখিত';
+            document.getElementById('modal-category').innerText = book.category || 'সাধারণ';
+            document.getElementById('modal-first-pub').innerText = toBnNum(book.firstPublicationDate) || 'অনুল্লেখিত';
+            document.getElementById('modal-entry-date').innerText = toBnNum(book.entryDate) || 'অনুল্লেখিত';
+            document.getElementById('modal-printed-price').innerText = `৳ ${toBnNum(book.printedPrice || 0)}`;
+            document.getElementById('modal-purchase-price').innerText = `৳ ${toBnNum(book.purchasePrice || 0)}`;
+            document.getElementById('modal-summary').innerText = book.summary || 'কোনো সারসংক্ষেপ যুক্ত করা হয়নি।';
+
+            updateModalLikeButton(book);
+
+            const images = (book.images && book.images.length > 0) ? book.images.map(img => formatImageUrl(img)) : ['https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'];
+            document.getElementById('modal-main-image').src = images[0];
+
+            const thumbsContainer = document.getElementById('modal-thumbnails');
+            thumbsContainer.innerHTML = images.map((img) => `
+                <div class="relative shrink-0 overflow-hidden rounded-lg group">
+                    <img src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=ছবি'">
+                    <div class="center-logo-watermark">
+                        <img src="logo.png" alt="Logo Watermark" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            `).join('');
+
+            renderModalApprovedComments(book);
+            document.getElementById('book-modal').classList.remove('hidden');
+        }
+
+        function setModalMainImage(imgUrl) {
+            document.getElementById('modal-main-image').src = imgUrl;
+        }
+
+        function closeBookModal() {
+            document.getElementById('book-modal').classList.add('hidden');
+            activeBookId = null;
+        }
+
+        function updateModalLikeButton(book) {
+            const likeBtn = document.getElementById('modal-like-btn');
+            const likeIcon = document.getElementById('modal-like-icon');
+            const likeCount = document.getElementById('modal-like-count');
+
+            likeCount.innerText = toBnNum(book.likes || 0);
+
+            if (likedBooksSet.has(book.id)) {
+                likeBtn.classList.add('bg-rose-500/25', 'text-rose-600', 'dark:text-rose-300');
+                likeIcon.className = "fa-solid fa-heart text-rose-500";
+            } else {
+                likeBtn.classList.remove('bg-rose-500/25', 'text-rose-600', 'dark:text-rose-300');
+                likeIcon.className = "fa-regular fa-heart";
+            }
+        }
+
+        function toggleLikeCurrentBook() {
+            if (!activeBookId) return;
+            const book = books.find(b => b.id === activeBookId);
+            if (!book) return;
+
+            if (likedBooksSet.has(book.id)) {
+                alert("আপনি ইতোমধ্যে পছন্দ করেছেন!");
+                return;
+            }
+
+            book.likes = (book.likes || 0) + 1;
+            likedBooksSet.add(book.id);
+            saveToLocalStorage();
+            updateModalLikeButton(book);
+            renderHomePage();
+            filterAllBooks();
+        }
+
+        function renderModalApprovedComments(book) {
+            const list = document.getElementById('modal-comments-list');
+            const approvedComments = (book.comments || []).filter(c => c.approved);
+            document.getElementById('modal-comment-count').innerText = toBnNum(approvedComments.length);
+
+            if (approvedComments.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-400 italic">এখনো কোনো মন্তব্য নেই।</p>`;
+            } else {
+                list.innerHTML = approvedComments.map(c => `
+                    <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                        <div class="flex justify-between font-bold text-sky-700 dark:text-sky-400 mb-1">
+                            <span>${c.author}</span>
+                            <span class="text-[10px] text-slate-400 font-normal">${toBnNum(c.date)}</span>
+                        </div>
+                        <p class="text-slate-700 dark:text-slate-300">${c.text}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addCommentToCurrentBook() {
+            if (!activeBookId) return;
+            const authorInput = document.getElementById('comment-author-input');
+            const textInput = document.getElementById('comment-text-input');
+
+            const author = authorInput.value.trim() || 'শুভাকাঙ্ক্ষী পাঠক';
+            const text = textInput.value.trim();
+
+            if (!text) return;
+
+            const book = books.find(b => b.id === activeBookId);
+            if (book) {
+                if (!book.comments) book.comments = [];
+                book.comments.push({
+                    id: 'c_' + Date.now(),
+                    author,
+                    text,
+                    date: new Date().toISOString().split('T')[0],
+                    approved: false
+                });
+
+                saveToLocalStorage();
+                updateStats();
+                renderPendingCommentsAdmin();
+                
+                textInput.value = '';
+                alert("আপনার মন্তব্য জমা হয়েছে। এডমিন অনুমোদনের পর প্রদর্শিত হবে।");
+            }
+        }
+
+        function renderPendingCommentsAdmin() {
+            const container = document.getElementById('admin-pending-comments');
+            let pendingItems = [];
+
+            books.forEach(b => {
+                if (b.comments) {
+                    b.comments.filter(c => !c.approved).forEach(c => {
+                        pendingItems.push({ bookId: b.id, bookTitle: b.title, comment: c });
+                    });
+                }
+            });
+
+            if (pendingItems.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো অপেক্ষমাণ মন্তব্য নেই।</p>`;
+                return;
+            }
+
+            container.innerHTML = pendingItems.map(item => `
+                <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                    <div>
+                        <p class="font-semibold text-sky-700 dark:text-sky-300 mb-0.5">বই: ${item.bookTitle}</p>
+                        <p class="text-slate-700 dark:text-slate-300">"${item.comment.text}" — <strong class="text-amber-600 dark:text-amber-400">${item.comment.author}</strong></p>
+                    </div>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="approveComment('${item.bookId}', '${item.comment.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-semibold shadow-sm">অনুমোদন</button>
+                        <button onclick="rejectComment('${item.bookId}', '${item.comment.id}')" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg font-semibold shadow-sm">বাতিল</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveComment(bookId, commentId) {
+            if (!isAdminLoggedIn) return;
+            const book = books.find(b => b.id === bookId);
+            if (book && book.comments) {
+                const comment = book.comments.find(c => c.id === commentId);
+                if (comment) {
+                    comment.approved = true;
+                    saveToLocalStorage();
+                    refreshViews();
+                }
+            }
+        }
+
+        function rejectComment(bookId, commentId) {
+            if (!isAdminLoggedIn) return;
+            const book = books.find(b => b.id === bookId);
+            if (book && book.comments) {
+                book.comments = book.comments.filter(c => c.id !== commentId);
+                saveToLocalStorage();
+                refreshViews();
+            }
+        }
+
+        function handleAcquisitionTypeChange() {
+            const acqType = document.getElementById('form-acquisition-input').value;
+            const personWrapper = document.getElementById('gift-person-wrapper');
+            const dateWrapper = document.getElementById('gift-date-wrapper');
+            const purchaseWrapper = document.getElementById('purchase-price-wrapper');
+
+            if (acqType === 'GIFT_RECEIVED') {
+                personWrapper.classList.remove('hidden');
+                dateWrapper.classList.remove('hidden');
+                purchaseWrapper.classList.add('hidden');
+                document.getElementById('form-purchase-price-input').value = '০';
+            } else {
+                personWrapper.classList.add('hidden');
+                dateWrapper.classList.add('hidden');
+                purchaseWrapper.classList.remove('hidden');
+            }
+        }
+
+        // Book Form Submit (Save Locally & Send to Google Sheets)
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            if (!isAdminLoggedIn) { alert("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!"); return; }
+
+            const saveBtn = document.getElementById('book-save-btn');
+            const originalBtnText = saveBtn.innerHTML;
+            saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> সেভ হচ্ছে...`;
+
+            const editId = document.getElementById('edit-book-id').value;
+            const title = document.getElementById('form-title-input').value.trim();
+            const series = document.getElementById('form-series-input').value.trim();
+            const seriesNum = document.getElementById('form-series-num-input').value.trim();
+            const author = document.getElementById('form-author-input').value.trim();
+            const category = document.getElementById('form-category-input').value.trim();
+            const acquisitionType = document.getElementById('form-acquisition-input').value;
+            const giftPerson = document.getElementById('form-gift-person-input').value.trim();
+            const giftDate = document.getElementById('form-gift-date-input').value;
+
+            const translator = document.getElementById('form-translator-input').value.trim();
+            const publisher = document.getElementById('form-publisher-input').value.trim();
+            const firstPublicationDate = document.getElementById('form-first-pub-input').value.trim();
+            const entryDate = document.getElementById('form-entry-date-input').value || new Date().toISOString().split('T')[0];
+            const printedPrice = toEnNum(document.getElementById('form-printed-price-input').value) || 0;
+            const purchasePrice = (acquisitionType === 'GIFT_RECEIVED') ? 0 : toEnNum(document.getElementById('form-purchase-price-input').value) || 0;
+
+            const mainImg = document.getElementById('form-main-image-input').value.trim();
+            const images = mainImg ? [formatImageUrl(mainImg)] : [];
+            const summary = document.getElementById('form-summary-input').value.trim();
+
+            const nextSerial = books.length > 0 ? Math.max(...books.map(b => b.serial || 0)) + 1 : 1;
+            const newBook = {
+                id: editId || ('b_' + Date.now()),
+                serial: editId ? (books.find(b => b.id === editId)?.serial || nextSerial) : nextSerial,
+                title, series, seriesNum, author, category, acquisitionType, 
+                giftPerson, giftDate, translator, publisher, firstPublicationDate, entryDate, 
+                printedPrice, purchasePrice, images, summary, likes: 0, comments: []
+            };
+
+            if (editId) {
+                const idx = books.findIndex(b => b.id === editId);
+                if (idx !== -1) books[idx] = newBook;
+            } else {
+                books.push(newBook);
+            }
+
+            saveToLocalStorage();
+            refreshViews();
+            populateCategoryFilter();
+            populateLendingBookDropdown();
+
+            // Send to Google Sheet Live
+            if (googleSheetURL) {
+                try {
+                    await fetch(googleSheetURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "addBook", book: newBook })
+                    });
+                } catch(err) {
+                    console.log("Could not push to Google Sheet directly:", err);
+                }
+            }
+
+            saveBtn.innerHTML = originalBtnText;
+            resetForm();
+            alert("বই সফলভাবে সংরক্ষিত হয়েছে এবং গুগল শিটে পাঠানো হয়েছে!");
+            switchTab('all-books');
+        }
+
+        function resetForm() {
+            document.getElementById('book-form').reset();
+            document.getElementById('edit-book-id').value = '';
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ`;
+            handleAcquisitionTypeChange();
+        }
+
+        function editCurrentBook() {
+            if (!isAdminLoggedIn) { alert("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!"); switchTab('admin'); return; }
+            if (!activeBookId) return;
+            const book = books.find(b => b.id === activeBookId);
+            if (!book) return;
+
+            closeBookModal();
+            switchTab('admin');
+            switchAdminSubTab('books');
+
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-pen text-amber-500"></i> বইয়ের তথ্য সম্পাদনা করুন`;
+            document.getElementById('edit-book-id').value = book.id;
+            document.getElementById('form-title-input').value = book.title || '';
+            document.getElementById('form-series-input').value = book.series || '';
+            document.getElementById('form-series-num-input').value = book.seriesNum || '';
+            document.getElementById('form-author-input').value = book.author || '';
+            document.getElementById('form-category-input').value = book.category || '';
+            document.getElementById('form-acquisition-input').value = book.acquisitionType || 'PURCHASED';
+            
+            handleAcquisitionTypeChange();
+            document.getElementById('form-gift-person-input').value = book.giftPerson || '';
+            document.getElementById('form-gift-date-input').value = book.giftDate || '';
+            document.getElementById('form-translator-input').value = book.translator || '';
+            document.getElementById('form-publisher-input').value = book.publisher || '';
+            document.getElementById('form-first-pub-input').value = toBnNum(book.firstPublicationDate) || '';
+            document.getElementById('form-entry-date-input').value = book.entryDate || '';
+            document.getElementById('form-printed-price-input').value = toBnNum(book.printedPrice) || '';
+            document.getElementById('form-purchase-price-input').value = toBnNum(book.purchasePrice) || '';
+            document.getElementById('form-main-image-input').value = (book.images && book.images[0]) || '';
+            document.getElementById('form-summary-input').value = book.summary || '';
+        }
+
+        function deleteCurrentBook() {
+            if (!isAdminLoggedIn) { alert("বই মুছতে এডমিন লগইন প্রয়োজন!"); return; }
+            if (!activeBookId) return;
+            if (confirm("আপনি কি নিশ্চিত যে এই বইটি মুছে ফেলতে চান?")) {
+                books = books.filter(b => b.id !== activeBookId);
+                saveToLocalStorage();
+                closeBookModal();
+                refreshViews();
+            }
+        }
+
+        // Admin Sub-tabs
+        function switchAdminSubTab(tab) {
+            const booksSec = document.getElementById('admin-sub-books');
+            const authorsSec = document.getElementById('admin-sub-authors');
+            const lendingSec = document.getElementById('admin-sub-lending');
+            const excelSec = document.getElementById('admin-sub-excel');
+
+            const booksBtn = document.getElementById('subtab-btn-books');
+            const authorsBtn = document.getElementById('subtab-btn-authors');
+            const lendingBtn = document.getElementById('subtab-btn-lending');
+            const excelBtn = document.getElementById('subtab-btn-excel');
+
+            booksSec.classList.add('hidden');
+            authorsSec.classList.add('hidden');
+            lendingSec.classList.add('hidden');
+            excelSec.classList.add('hidden');
+
+            const inactive = "px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0";
+            booksBtn.className = inactive;
+            authorsBtn.className = inactive;
+            lendingBtn.className = inactive;
+            excelBtn.className = inactive;
+
+            if (tab === 'books') {
+                booksSec.classList.remove('hidden');
+                booksBtn.className = "px-4 py-2.5 text-sm font-bold border-b-2 border-sky-600 text-sky-600 dark:text-sky-400 flex items-center gap-2 shrink-0";
+            } else if (tab === 'authors') {
+                authorsSec.classList.remove('hidden');
+                authorsBtn.className = "px-4 py-2.5 text-sm font-bold border-b-2 border-amber-600 text-amber-600 dark:text-amber-400 flex items-center gap-2 shrink-0";
+                renderAdminAuthorsList();
+            } else if (tab === 'lending') {
+                lendingSec.classList.remove('hidden');
+                lendingBtn.className = "px-4 py-2.5 text-sm font-bold border-b-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 flex items-center gap-2 shrink-0";
+                populateLendingBookDropdown();
+                renderLendingList();
+            } else if (tab === 'excel') {
+                excelSec.classList.remove('hidden');
+                excelBtn.className = "px-4 py-2.5 text-sm font-bold border-b-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 flex items-center gap-2 shrink-0";
+            }
+        }
+
+        // Author Form Submit
+        async function handleAuthorFormSubmit(e) {
+            e.preventDefault();
+            if (!isAdminLoggedIn) { alert("এডমিন লগইন প্রয়োজন!"); return; }
+
+            const name = document.getElementById('author-profile-name').value.trim();
+            const lifespan = document.getElementById('author-profile-lifespan').value.trim();
+            const photo = formatImageUrl(document.getElementById('author-profile-photo').value.trim());
+            const notable = document.getElementById('author-profile-notable').value.trim();
+            const bio = document.getElementById('author-profile-bio').value.trim();
+
+            const newAuthor = { id: 'auth_' + Date.now(), name, lifespan, photo, notable, bio };
+            authorProfiles.push(newAuthor);
+
+            saveAuthorsToLocalStorage();
+            resetAuthorForm();
+            renderAdminAuthorsList();
+            renderAuthors();
+
+            if (googleSheetURL) {
+                try {
+                    await fetch(googleSheetURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "addAuthor", author: newAuthor })
+                    });
+                } catch(e){}
+            }
+
+            alert("লেখক সফলভাবে সংরক্ষিত হয়েছে!");
+        }
+
+        function resetAuthorForm() {
+            document.getElementById('author-profile-form').reset();
+            document.getElementById('edit-author-id').value = '';
+        }
+
+        function deleteAuthorProfile(authorId) {
+            if (!isAdminLoggedIn) return;
+            if (confirm("আপনি কি নিশ্চিত যে এই লেখকের প্রোফাইল মুছে ফেলতে চান?")) {
+                authorProfiles = authorProfiles.filter(a => a.id !== authorId);
+                saveAuthorsToLocalStorage();
+                renderAdminAuthorsList();
+                renderAuthors();
+            }
+        }
+
+        function renderAdminAuthorsList() {
+            const container = document.getElementById('admin-authors-list');
+            if (authorProfiles.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">এখনও কোনো লেখক প্রোফাইল নেই।</p>`;
+                return;
+            }
+
+            container.innerHTML = authorProfiles.map(author => `
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <img src="${formatImageUrl(author.photo) || 'https://placehold.co/100x100/0f172a/0284c7?text=লেখক'}" class="w-10 h-10 rounded-full object-cover shrink-0">
+                        <div class="overflow-hidden">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">${author.name}</h4>
+                            <p class="text-[11px] text-amber-600 dark:text-amber-400 truncate">${author.lifespan ? 'জীবনকাল: ' + toBnNum(author.lifespan) : ''}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteAuthorProfile('${author.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 px-3 py-1.5 rounded-xl text-xs font-semibold">
+                        মুছুন
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Lending System
+        function populateLendingBookDropdown() {
+            const select = document.getElementById('lending-book-select');
+            if (!select) return;
+            select.innerHTML = '<option value="">বই নির্বাচন করুন...</option>' + 
+                books.map(b => `<option value="${b.id}">[#${toBnNum(b.serial)}] ${b.title} - ${b.author}</option>`).join('');
+        }
+
+        function quickLendCurrentBook() {
+            if (!isAdminLoggedIn) { alert("এডমিন লগইন প্রয়োজন!"); switchTab('admin'); return; }
+            if (!activeBookId) return;
+            closeBookModal();
+            switchTab('admin');
+            switchAdminSubTab('lending');
+            document.getElementById('lending-book-select').value = activeBookId;
+            document.getElementById('lending-borrow-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('lending-borrower-name').focus();
+        }
+
+        function handleLendingSubmit(e) {
+            e.preventDefault();
+            if (!isAdminLoggedIn) return;
+
+            const bookId = document.getElementById('lending-book-select').value;
+            const borrowerName = document.getElementById('lending-borrower-name').value.trim();
+            const borrowerPhone = document.getElementById('lending-borrower-phone').value.trim();
+            const borrowDate = document.getElementById('lending-borrow-date').value;
+            const expectedDate = document.getElementById('lending-expected-date').value;
+            const note = document.getElementById('lending-note').value.trim();
+
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            borrowings.unshift({
+                id: 'br_' + Date.now(),
+                bookId: book.id,
+                bookTitle: book.title,
+                borrowerName,
+                borrowerPhone,
+                borrowDate,
+                expectedDate,
+                isReturned: false,
+                returnDate: '',
+                note
+            });
+
+            saveBorrowingsToLocalStorage();
+            updateStats();
+            renderLendingList();
+            document.getElementById('lending-form').reset();
+            alert("ধার রেজিস্টারে সফলভাবে যুক্ত হয়েছে!");
+        }
+
+        function markBookReturned(borrowId) {
+            if (!isAdminLoggedIn) return;
+            const record = borrowings.find(b => b.id === borrowId);
+            if (!record) return;
+
+            record.isReturned = true;
+            record.returnDate = new Date().toISOString().split('T')[0];
+            saveBorrowingsToLocalStorage();
+            updateStats();
+            renderLendingList();
+            alert("বইটি ফেরত হিসেবে চিহ্নিত হয়েছে।");
+        }
+
+        function deleteBorrowRecord(borrowId) {
+            if (!isAdminLoggedIn) return;
+            if (confirm("মুছে ফেলতে চান?")) {
+                borrowings = borrowings.filter(b => b.id !== borrowId);
+                saveBorrowingsToLocalStorage();
+                updateStats();
+                renderLendingList();
+            }
+        }
+
+        function renderLendingList() {
+            const container = document.getElementById('admin-lending-list');
+            if (!container) return;
+
+            if (borrowings.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো ধার দেওয়ার রেকর্ড নেই।</p>`;
+                return;
+            }
+
+            container.innerHTML = borrowings.map(b => `
+                <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                    <div>
+                        <strong class="text-sm font-bold text-slate-900 dark:text-slate-100">${b.bookTitle}</strong>
+                        <p class="text-slate-600 dark:text-slate-300">গ্রহীতা: <strong class="text-sky-600 dark:text-sky-400">${b.borrowerName}</strong> ${b.borrowerPhone ? `(${toBnNum(b.borrowerPhone)})` : ''}</p>
+                        <p class="text-slate-500 text-[11px]">ধারের তারিখ: ${toBnNum(b.borrowDate)} | ফেরত: ${toBnNum(b.expectedDate) || 'অনির্দিষ্ট'}</p>
+                    </div>
+                    <div class="flex gap-2 shrink-0">
+                        ${!b.isReturned ? `<button onclick="markBookReturned('${b.id}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-semibold text-xs">ফেরত গ্রহণ</button>` : `<span class="text-emerald-500 font-bold">ফেরত সম্পন্ন</span>`}
+                        <button onclick="deleteBorrowRecord('${b.id}')" class="bg-rose-500/10 text-rose-600 px-3 py-1.5 rounded-xl font-semibold text-xs">মুছুন</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Multi-Sheet Excel Parser
+        function handleExcelUpload(event) {
+            if (!isAdminLoggedIn) { alert("এক্সেল আপলোড করতে এডমিন লগইন প্রয়োজন!"); event.target.value = ''; return; }
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    let addedBooks = 0;
+
+                    workbook.SheetNames.forEach(sheetName => {
+                        const worksheet = workbook.Sheets[sheetName];
+                        const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                        if (!rows || rows.length === 0) return;
+
+                        const sName = sheetName.toLowerCase();
+                        if (sName.includes('book') || sName.includes('বই') || rows[0].hasOwnProperty('BookName')) {
+                            rows.forEach(row => {
+                                const title = (row['BookName'] || row['বইয়ের নাম'] || '').toString().trim();
+                                const author = (row['Author'] || row['লেখকের নাম'] || '').toString().trim();
+                                if (!title || !author) return;
+
+                                const nextSerial = books.length > 0 ? Math.max(...books.map(b => b.serial || 0)) + 1 : 1;
+                                books.push({
+                                    id: 'b_' + Date.now() + Math.random().toString(36).substr(2, 4),
+                                    serial: nextSerial,
+                                    title, 
+                                    author,
+                                    series: (row['SeriesName'] || row['সিরিজ'] || '').toString().trim(),
+                                    seriesNum: (row['SeriesOrder'] || row['পর্ব'] || '').toString().trim(),
+                                    translator: (row['TranslatedBy'] || row['অনুবাদক'] || '').toString().trim(),
+                                    publisher: (row['Publisher'] || row['প্রকাশনী'] || '').toString().trim(),
+                                    firstPublicationDate: (row['PublishYear'] || '').toString().trim(),
+                                    printedPrice: toEnNum((row['MRP'] || 0).toString()),
+                                    purchasePrice: toEnNum((row['BuyPrice'] || 0).toString()),
+                                    category: (row['Category'] || 'সাধারণ').toString().trim(),
+                                    entryDate: (row['EntryDate'] || new Date().toISOString().split('T')[0]).toString().trim(),
+                                    summary: (row['Review'] || '').toString().trim(),
+                                    images: row['Images'] ? [formatImageUrl(row['Images'])] : [],
+                                    acquisitionType: toEnNum(row['BuyPrice']) > 0 ? 'PURCHASED' : 'GIFT_RECEIVED',
+                                    likes: 0,
+                                    comments: []
+                                });
+                                addedBooks++;
+                            });
+                        }
+                    });
+
+                    saveToLocalStorage();
+                    refreshViews();
+                    alert(`এক্সেল থেকে ${toBnNum(addedBooks)} টি বই সফলভাবে যুক্ত হয়েছে!`);
+                    switchTab('all-books');
+                } catch(error) {
+                    alert("এক্সেল ফাইলটি পড়তে সমস্যা হয়েছে।");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function downloadSampleExcel() {
+            const wb = XLSX.utils.book_new();
+            const booksData = [
+                {
+                    'ID': 1,
+                    'BookName': 'নির্মোচন',
+                    'Author': 'ফাবিয়াহ্ মোমো',
+                    'TranslatedBy': '',
+                    'Publisher': 'অন্যধারা',
+                    'PublishYear': '2024',
+                    'MRP': 860,
+                    'BuyPrice': 645,
+                    'Images': 'https://drive.google.com/...',
+                    'Category': 'উপন্যাস',
+                    'EntryDate': '2024-04-23',
+                    'Quantity': 1,
+                    'Review': 'চমৎকার একটি বই।',
+                    'SeriesName': '',
+                    'SeriesOrder': ''
+                }
+            ];
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(booksData), "Books");
+            XLSX.writeFile(wb, "চিলেকোঠা_লাইব্রেরি_নমুনা_এক্সেল.xlsx");
+        }
+
+        function exportLibraryToExcel() {
+            const wb = XLSX.utils.book_new();
+            const booksExport = books.map(b => ({
+                'ID': b.serial,
+                'BookName': b.title,
+                'Author': b.author,
+                'TranslatedBy': b.translator || '',
+                'Publisher': b.publisher || '',
+                'PublishYear': b.firstPublicationDate || '',
+                'MRP': b.printedPrice || 0,
+                'BuyPrice': b.purchasePrice || 0,
+                'Images': (b.images && b.images[0]) ? b.images[0] : '',
+                'Category': b.category,
+                'EntryDate': b.entryDate || '',
+                'Quantity': 1,
+                'Review': b.summary || '',
+                'SeriesName': b.series || '',
+                'SeriesOrder': b.seriesNum || ''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(booksExport), "Books");
+            XLSX.writeFile(wb, `চিলেকোঠা_লাইব্রেরি_ডাটাবেজ.xlsx`);
+        }
+
+        function refreshViews() {
+            updateStats();
+            renderHomePage();
+            filterAllBooks();
+            renderAuthors();
+            renderCategoriesTab();
+            renderGiftsTab();
+            executeAdvancedSearch();
+            renderPendingCommentsAdmin();
+            renderAdminAuthorsList();
+            renderLendingList();
+        }
+    </script>
+</body>
+</html>
