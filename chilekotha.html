@@ -280,7 +280,7 @@
                         সবগুলো দেখুন <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                 </div>
-                <div id="home-featured-books" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="home-featured-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                     <!-- Dynamic Cards -->
                 </div>
             </div>
@@ -292,7 +292,7 @@
                         <i class="fa-solid fa-clock-rotate-left text-sky-600 dark:text-sky-400"></i> সাম্প্রতিক যুক্ত করা বই
                     </h2>
                 </div>
-                <div id="home-recent-books" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="home-recent-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                     <!-- Dynamic Cards -->
                 </div>
             </div>
@@ -327,7 +327,7 @@
                 <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> প্রতিটি বইয়ের জন্য রয়েছে স্বয়ংক্রিয় বাংলা ক্রমিক নম্বর</span>
             </div>
 
-            <div id="all-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[50vh]">
+            <div id="all-books-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 min-h-[50vh]">
                 <!-- Dynamic Content Insertion -->
             </div>
         </section>
@@ -393,7 +393,7 @@
                 </button>
             </div>
 
-            <div id="gifts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="gifts-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                 <!-- Dynamic Gifts List -->
             </div>
         </section>
@@ -443,7 +443,7 @@
                 </div>
             </div>
 
-            <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                 <!-- Search Results -->
             </div>
         </section>
@@ -742,7 +742,7 @@
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সারসংক্ষেপ ও পর্যালোচনা (Review)</label>
-                                <textarea id="form-summary-input" rows="4" placeholder="বইয়ের বিষয়বস্তু, অনুভূতি বা সংক্ষিপ্ত পর্যালোচনা লিখুন..." 
+                                <textarea id="form-summary-input" rows="4" placeholder="বইয়ের বিষয়বস্তু, অনুভূতি বা সংক্ষিপ্ত পর্যালোচনা লিখুন..." 
                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none"></textarea>
                             </div>
 
@@ -1067,7 +1067,7 @@
                                 <span id="modal-like-count">০</span>টি পছন্দ
                             </button>
 
-                            <div class="flex space-x-2">
+                            <div id="admin-book-actions" class="hidden space-x-2">
                                 <button onclick="quickLendCurrentBook()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs transition-colors font-medium">
                                     <i class="fa-solid fa-hand-holding"></i> ধার দিন
                                 </button>
@@ -1309,7 +1309,7 @@
                     alert("গুগল শিট থেকে সর্বশেষ তথ্য আনা হচ্ছে...");
                 }
                 const fetchUrl = googleSheetURL + "?t=" + new Date().getTime();
-                const res = await fetch(fetchUrl, { cache: "no-store", redirect: "follow" });
+                const res = await fetch(fetchUrl, { method: 'GET', mode: 'cors', cache: 'no-store', redirect: 'follow' });
                 if (res.ok) {
                     const data = await res.json();
                     if (data.books) {
@@ -1322,6 +1322,8 @@
                     }
                     refreshViews();
                     if (!silent) alert("গুগল শিটের সাথে সফলভাবে সিঙ্ক সম্পন্ন হয়েছে!");
+                } else {
+                    if (!silent) alert("ডাটা ফেচ করতে সমস্যা হয়েছে। স্ট্যাটাস: " + res.status);
                 }
             } catch(err) {
                 console.error("Google Sheet Sync Error:", err);
@@ -1490,7 +1492,8 @@
         }
 
         function updateStats() {
-            const totalBooks = books.length;
+            // Count total books handling potential 'quantity' field for series logic
+            const totalBooks = books.reduce((sum, b) => sum + (parseInt(b.quantity) || 1), 0);
             const authorsSet = new Set(books.map(b => b.author.trim()).filter(Boolean));
 
             const statTotalBooks = document.getElementById('stat-total-books');
@@ -1517,7 +1520,7 @@
             const sortedByLikes = [...books].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 4);
             featuredContainer.innerHTML = sortedByLikes.map(book => createBookCardHTML(book)).join('');
 
-            const sortedRecent = [...books].sort((a, b) => b.serial - a.serial).slice(0, 3);
+            const sortedRecent = [...books].sort((a, b) => b.serial - a.serial).slice(0, 4);
             recentContainer.innerHTML = sortedRecent.map(book => createBookCardHTML(book)).join('');
         }
 
@@ -1552,9 +1555,10 @@
                 return 0;
             });
 
-            document.getElementById('all-books-count').innerText = toBnNum(filtered.length);
-            const grid = document.getElementById('all-books-grid');
+            const currentFilteredCount = filtered.reduce((sum, b) => sum + (parseInt(b.quantity) || 1), 0);
+            document.getElementById('all-books-count').innerText = toBnNum(currentFilteredCount);
             
+            const grid = document.getElementById('all-books-grid');
             if (filtered.length === 0) {
                 grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">কোনো বই পাওয়া যায়নি।</div>`;
             } else {
@@ -1589,40 +1593,40 @@
             }
 
             let priceHTML = (book.acquisitionType === 'GIFT_RECEIVED') 
-                ? `<span class="text-emerald-600 dark:text-emerald-400 font-semibold text-xs"><i class="fa-solid fa-gift text-[10px]"></i> উপহার প্রাপ্ত</span>`
-                : `<span class="text-slate-600 dark:text-slate-400 text-xs">মূল্য: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.printedPrice || 0)}</strong>${adminPriceHTML}</span>`;
+                ? `<span class="text-emerald-600 dark:text-emerald-400 font-semibold text-[10px] sm:text-xs"><i class="fa-solid fa-gift text-[8px] sm:text-[10px]"></i> উপহার</span>`
+                : `<span class="text-slate-600 dark:text-slate-400 text-[10px] sm:text-xs">মূল্য: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.printedPrice || 0)}</strong>${adminPriceHTML}</span>`;
 
             return `
             <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
-                <div class="absolute top-3 left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
                     #${toBnNum(book.serial)}
                 </div>
 
                 <div class="aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
                     
                     <!-- Centered Large & Transparent Logo Watermark -->
                     <div class="center-logo-watermark">
-                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
+                        <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
                     </div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 </div>
 
-                <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+                <div class="p-2.5 sm:p-4 flex-grow flex flex-col justify-between space-y-2 sm:space-y-3">
                     <div>
-                        <div class="flex items-center justify-between gap-1.5 mb-1.5 flex-wrap">
-                            <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">${book.category || 'সাধারণ'}</span>
-                            <span class="text-[10px] font-medium border px-2 py-0.5 rounded-md ${badgeClass}">${badgeText}</span>
+                        <div class="flex items-center justify-between gap-1 sm:gap-1.5 mb-1.5 flex-wrap">
+                            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">${book.category || 'সাধারণ'}</span>
+                            <span class="text-[9px] sm:text-[10px] font-medium border px-2 py-0.5 rounded-md ${badgeClass}">${badgeText}</span>
                             ${seriesHTML}
                         </div>
-                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-base line-clamp-1 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">${book.title}</h3>
-                        <p class="text-xs text-slate-600 dark:text-sky-300/80 mt-0.5">${book.author}</p>
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base line-clamp-1 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">${book.title}</h3>
+                        <p class="text-[10px] sm:text-xs text-slate-600 dark:text-sky-300/80 mt-0.5 truncate">${book.author}</p>
                     </div>
 
                     <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         ${priceHTML}
-                        <span class="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1">
+                        <span class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs flex items-center gap-1">
                             <i class="fa-solid fa-heart text-rose-500"></i> ${toBnNum(book.likes || 0)}
                         </span>
                     </div>
@@ -1668,9 +1672,9 @@
             authorsGrid.innerHTML = authorList.map(author => `
                 <div onclick="openAuthorModal('${author.name}')" class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex items-center space-x-4 cursor-pointer transition-all hover:shadow-lg group shadow-sm">
                     <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative">
-                        <img src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/0f172a/0284c7?text=লেখক'">
+                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/0f172a/0284c7?text=লেখক'">
                         <div class="center-logo-watermark">
-                            <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
+                            <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <div class="space-y-1 overflow-hidden flex-grow">
@@ -1707,7 +1711,7 @@
             } else {
                 listContainer.innerHTML = authorBooks.map(b => `
                     <div onclick="closeAuthorModal(); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
-                        <img src="${b.images[0] ? formatImageUrl(b.images[0]) : ''}" class="w-9 h-12 object-cover rounded-lg shrink-0" onerror="this.src='https://placehold.co/100x150/0f172a/0284c7?text=বই'">
+                        <img loading="lazy" decoding="async" src="${b.images[0] ? formatImageUrl(b.images[0]) : ''}" class="w-9 h-12 object-cover rounded-lg shrink-0" onerror="this.src='https://placehold.co/100x150/0f172a/0284c7?text=বই'">
                         <div class="overflow-hidden">
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
@@ -1747,7 +1751,7 @@
                                 <span class="text-xs bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-normal">${toBnNum(catBooks.length)} টি</span>
                             </h3>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                             ${catBooks.map(b => createBookCardHTML(b)).join('')}
                         </div>
                     </div>
@@ -1826,6 +1830,7 @@
             document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
             const acqBadge = document.getElementById('modal-acquisition-badge');
             const purchaseBox = document.getElementById('modal-purchase-price-box');
+            const adminActions = document.getElementById('admin-book-actions');
 
             if (book.acquisitionType === 'GIFT_RECEIVED') {
                 acqBadge.innerText = 'উপহার প্রাপ্ত';
@@ -1834,12 +1839,17 @@
             } else {
                 acqBadge.innerText = 'ক্রয়কৃত';
                 acqBadge.className = 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-2.5 py-1 rounded-full font-bold';
-                // ক্রয় মূল্য শুধুমাত্র এডমিন দেখতে পারবে
-                if (isAdminLoggedIn) {
-                    purchaseBox.classList.remove('hidden');
-                } else {
-                    purchaseBox.classList.add('hidden');
-                }
+            }
+
+            // Show Edit/Delete buttons and Purchase Price only for Admins
+            if (isAdminLoggedIn) {
+                if (book.acquisitionType !== 'GIFT_RECEIVED') purchaseBox.classList.remove('hidden');
+                adminActions.classList.remove('hidden');
+                adminActions.classList.add('flex');
+            } else {
+                purchaseBox.classList.add('hidden');
+                adminActions.classList.add('hidden');
+                adminActions.classList.remove('flex');
             }
 
             const seriesBadge = document.getElementById('modal-series-badge');
@@ -1874,9 +1884,9 @@
             const thumbsContainer = document.getElementById('modal-thumbnails');
             thumbsContainer.innerHTML = images.map((img) => `
                 <div class="relative shrink-0 overflow-hidden rounded-lg group">
-                    <img src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=ছবি'">
+                    <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=ছবি'">
                     <div class="center-logo-watermark">
-                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
+                        <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
                     </div>
                 </div>
             `).join('');
@@ -2063,6 +2073,9 @@
             const title = document.getElementById('form-title-input').value.trim();
             const series = document.getElementById('form-series-input').value.trim();
             const seriesNum = document.getElementById('form-series-num-input').value.trim();
+            const seriesTotalStr = document.getElementById('form-series-total-input').value.trim();
+            const quantity = parseInt(seriesTotalStr) || 1; // Handled dynamically for specific series volume inputs
+            
             const author = document.getElementById('form-author-input').value.trim();
             const category = document.getElementById('form-category-input').value.trim();
             const acquisitionType = document.getElementById('form-acquisition-input').value;
@@ -2084,7 +2097,7 @@
             const newBook = {
                 id: editId || ('b_' + Date.now()),
                 serial: editId ? (books.find(b => b.id === editId)?.serial || nextSerial) : nextSerial,
-                title, series, seriesNum, author, category, acquisitionType, 
+                title, series, seriesNum, quantity, author, category, acquisitionType, 
                 giftPerson, giftDate, translator, publisher, firstPublicationDate, entryDate, 
                 printedPrice, purchasePrice, images, summary, likes: 0, comments: []
             };
@@ -2143,6 +2156,7 @@
             document.getElementById('form-title-input').value = book.title || '';
             document.getElementById('form-series-input').value = book.series || '';
             document.getElementById('form-series-num-input').value = book.seriesNum || '';
+            document.getElementById('form-series-total-input').value = book.quantity || '';
             document.getElementById('form-author-input').value = book.author || '';
             document.getElementById('form-category-input').value = book.category || '';
             document.getElementById('form-acquisition-input').value = book.acquisitionType || 'PURCHASED';
@@ -2425,7 +2439,7 @@
                                     entryDate: (row['EntryDate'] || new Date().toISOString().split('T')[0]).toString().trim(),
                                     summary: (row['Review'] || '').toString().trim(),
                                     images: row['Images'] ? [formatImageUrl(row['Images'])] : [],
-                                    /* acquisitionType: toEnNum(row['BuyPrice']) > 0 ? 'PURCHASED' : 'GIFT_RECEIVED', */
+                                    quantity: parseInt(row['Quantity'] || row['পরিমাণ']) || 1, // Added for series total count fix
                                     acquisitionType: 'PURCHASED',
                                     likes: 0,
                                     comments: []
@@ -2486,7 +2500,7 @@
                 'Images': (b.images && b.images[0]) ? b.images[0] : '',
                 'Category': b.category,
                 'EntryDate': b.entryDate || '',
-                'Quantity': 1,
+                'Quantity': b.quantity || 1,
                 'Review': b.summary || '',
                 'SeriesName': b.series || '',
                 'SeriesOrder': b.seriesNum || ''
