@@ -2,7 +2,6 @@
 <html lang="bn" class="dark">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport updated with maximum-scale & user-scalable=no to completely prevent auto-zoom on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</title>
     
@@ -68,7 +67,6 @@
             user-select: none;
             overflow-x: hidden;
         }
-        /* Mobile auto-zoom prevention: Input font size 16px minimum on touch screens */
         input, textarea, select {
             -webkit-user-select: text !important;
             user-select: text !important;
@@ -84,7 +82,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
-        /* Centered Logo Watermark Overlay: বড় ও আরও স্বচ্ছ (Transparent) */
+        /* Centered Logo Watermark Overlay */
         .center-logo-watermark {
             position: absolute;
             inset: 0;
@@ -93,10 +91,10 @@
             justify-content: center;
             pointer-events: none;
             user-select: none;
-            z-index: 25; /* Increased to ensure visibility over images */
+            z-index: 25;
         }
         .center-logo-watermark img {
-            opacity: 0.08; /* More transparent */
+            opacity: 0.08;
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
             pointer-events: none;
             user-select: none;
@@ -138,18 +136,48 @@
                 padding-bottom: 78px;
             }
         }
+
+        /* Toast animation */
+        @keyframes slideInToast {
+            from { transform: translateY(-30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .animate-toast {
+            animation: slideInToast 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-100/90 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white" oncontextmenu="return false;">
+
+    <!-- IN-APP TOAST NOTIFICATION CONTAINER (NO WEBSITE DOMAIN) -->
+    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4 w-full max-w-md"></div>
+
+    <!-- IN-APP CUSTOM CONFIRM DIALOG MODAL (NO WEBSITE DOMAIN) -->
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <p id="custom-confirm-msg" class="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed"></p>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button id="custom-confirm-cancel-btn" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">
+                    বাতিল
+                </button>
+                <button id="custom-confirm-ok-btn" class="px-5 py-2 text-xs font-bold rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-md shadow-sky-600/30 transition-all">
+                    নিশ্চিত
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Header Navigation -->
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md shadow-sm dark:shadow-xl transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo with updated Link & Slogan -->
+                <!-- Logo with updated Link, Slogan & Clean Background -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                    <div class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 group overflow-hidden p-0.5">
-                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
+                    <div class="relative w-11 h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shadow-sm group overflow-hidden p-1 transition-all group-hover:border-sky-500">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
                     </div>
                     <div>
                         <span class="text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent">চিলেকোঠা লাইব্রেরি</span>
@@ -475,56 +503,79 @@
             </div>
         </section>
 
-        <!-- TAB: OWNER PROFILE -->
+        <!-- TAB: OWNER PROFILE (উন্নত ও দৃষ্টিনন্দন আধুনিক ডিজাইন) -->
         <section id="tab-owner" class="tab-content hidden space-y-8">
-            <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+            <div class="max-w-4xl mx-auto bg-gradient-to-b from-white via-white to-slate-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden backdrop-blur-md">
                 
-                <!-- ADDED EDIT BUTTON FOR ADMIN -->
-                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-4 right-4 bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold z-30 shadow-md transition-all">
-                    <i class="fa-solid fa-pen"></i> এডিট
+                <!-- ADMIN EDIT BUTTON -->
+                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-5 right-5 bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold z-30 shadow-md shadow-sky-600/20 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-pen-to-square"></i> এডিট
                 </button>
 
-                <div class="absolute -right-12 -top-12 text-sky-500/5 dark:text-sky-400/5 text-9xl pointer-events-none">
+                <!-- Subtle Background Art -->
+                <div class="absolute -right-10 -bottom-10 text-sky-500/[0.03] dark:text-sky-400/[0.04] text-[180px] pointer-events-none select-none">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div class="absolute -left-12 -top-12 text-indigo-500/[0.03] dark:text-indigo-400/[0.04] text-[160px] pointer-events-none select-none">
                     <i class="fa-solid fa-feather-pointed"></i>
                 </div>
 
-                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-8 border-b border-slate-200 dark:border-slate-800 relative z-10">
-                    <!-- ENLARGED OWNER PHOTO CONTAINER WITHOUT WATERMARK -->
-                    <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-sky-600 to-indigo-600 p-1.5 shadow-2xl shrink-0">
-                        <div class="w-full h-full rounded-[20px] overflow-hidden bg-slate-950 relative shadow-inner">
-                            <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
-                                 alt="স্বত্বাধিকারী" class="w-full h-full object-cover">
+                <!-- PROFILE HEADER -->
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-7 pb-8 border-b border-slate-200/80 dark:border-slate-800 relative z-10">
+                    <div class="relative group shrink-0">
+                        <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-sky-600 p-[3px] shadow-2xl shadow-sky-500/20">
+                            <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-900 relative shadow-inner">
+                                <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
+                                     alt="স্বত্বাধিকারী" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
                         </div>
+                        <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl text-xs shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-900" title="অনলাইন আর্কাইভ">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </span>
                     </div>
+
                     <div class="text-center sm:text-left space-y-2.5 flex-grow">
-                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                            <h2 id="owner-name-el" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">চিলেকোঠার পাঠক</h2>
-                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-0.5 rounded-full font-bold">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                            <h2 id="owner-name-el" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">চিলেকোঠার পাঠক</h2>
+                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold shadow-sm">
                                 ব্যক্তিগত সংগ্রাহক
                             </span>
                         </div>
                         <p id="owner-bio-el" class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
-                        <p id="owner-quote-el" class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
-                        <p id="owner-message-el" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl text-justify">
+                        
+                        <div class="pt-1">
+                            <span id="owner-quote-el" class="inline-block text-xs font-semibold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-slate-800/80 border border-sky-200 dark:border-sky-900/60 px-3 py-1 rounded-xl italic">
+                                "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"
+                            </span>
+                        </div>
+
+                        <p id="owner-message-el" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl text-justify pt-1">
                             "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
                         </p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
-                    <div class="space-y-3 bg-slate-50 dark:bg-slate-950/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
-                        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                            <i class="fa-solid fa-house-chimney text-sky-600 dark:text-sky-400"></i> লাইব্রেরির উদ্দেশ্য
-                        </h3>
+                <!-- PURPOSE & LENDING POLICY -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 relative z-10">
+                    <div class="space-y-3 bg-white/60 dark:bg-slate-950/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-sky-500/40 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base">
+                                <i class="fa-solid fa-house-chimney"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">লাইব্রেরির উদ্দেশ্য</h3>
+                        </div>
                         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             নিজের সংগ্রহে থাকা প্রতিটি বইকে সুরক্ষিত রাখা, প্রিয়জনদের দেওয়া উপহারের অমূল্য স্মৃতি সংরক্ষণ করা এবং ভালো বইয়ের পাঠ-অভিজ্ঞতা ডিজিটালভাবে নথিভুক্ত করাই এই আর্কাইভের মূল লক্ষ্য।
                         </p>
                     </div>
 
-                    <div class="space-y-3 bg-slate-50 dark:bg-slate-950/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
-                        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                            <i class="fa-solid fa-handshake text-emerald-600 dark:text-emerald-400"></i> বই পড়ার ও ধার নেওয়ার নীতি
-                        </h3>
+                    <div class="space-y-3 bg-white/60 dark:bg-slate-950/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-emerald-500/40 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base">
+                                <i class="fa-solid fa-handshake"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">বই পড়ার ও ধার নেওয়ার নীতি</h3>
+                        </div>
                         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             যে-কোনো বন্ধু বা শুভানুধ্যায়ী চিলেকোঠায় এসে বই পড়তে পারবেন। কোনো বই ধার নিলে তা রেজিস্টারে নথিভুক্ত করে সর্বোচ্চ ২১ দিনের মধ্যে অক্ষত অবস্থায় ফেরত দেওয়া বাধ্যতামূলক।
                         </p>
@@ -532,19 +583,21 @@
                 </div>
                 
                 <!-- OWNER EDIT FORM (Hidden by default) -->
-                <div id="owner-edit-panel" class="hidden mt-8 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative z-10">
-                    <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white">স্বত্বাধিকারী প্রফাইল সম্পাদনা</h3>
+                <div id="owner-edit-panel" class="hidden mt-8 bg-white dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative z-10 shadow-inner">
+                    <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-pen-clip text-sky-600"></i> স্বত্বাধিকারী প্রোফাইল সম্পাদনা
+                    </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
-                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
-                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
+                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
+                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
                     </div>
                     <div class="mt-4 flex gap-2">
-                        <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all">সেভ ও ক্লাউডে পাঠান</button>
-                        <button onclick="toggleOwnerEditForm()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-4 py-2 rounded-xl text-sm font-bold transition-all">বাতিল</button>
+                        <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl text-xs font-bold shadow-md transition-all">সেভ ও ক্লাউডে পাঠান</button>
+                        <button onclick="toggleOwnerEditForm()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold transition-all">বাতিল</button>
                     </div>
                 </div>
 
@@ -588,6 +641,36 @@
                         <button onclick="handleAdminLogout()" class="text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-3 py-1.5 rounded-lg border border-rose-500/30 transition-all">
                             লগআউট
                         </button>
+                    </div>
+                </div>
+
+                <!-- ADMIN FINANCIAL SUMMARY DASHBOARD (শুধু এডমিন দেখতে পারবে) -->
+                <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট মুদ্রিত মূল্য (MRP)</span>
+                            <span class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-sm"><i class="fa-solid fa-tags"></i></span>
+                        </div>
+                        <h4 id="admin-total-mrp" class="text-2xl font-black text-slate-900 dark:text-slate-100 mt-2">৳ ০</h4>
+                        <p class="text-[10.5px] text-slate-400 mt-1">লাইব্রেরির সর্বমোট মুদ্রিত মূল্য</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট ক্রয় মূল্য (BuyPrice)</span>
+                            <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm"><i class="fa-solid fa-receipt"></i></span>
+                        </div>
+                        <h4 id="admin-total-buy" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-2">৳ ০</h4>
+                        <p class="text-[10.5px] text-slate-400 mt-1">প্রকৃত কেনায় সর্বমোট খরচ</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট সাশ্রয় / ছাড়</span>
+                            <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-piggy-bank"></i></span>
+                        </div>
+                        <h4 id="admin-total-savings" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-2">৳ ০</h4>
+                        <p class="text-[10.5px] text-slate-400 mt-1">মুদ্রিত মূল্য থেকে সাশ্রয়কৃত অর্থ</p>
                     </div>
                 </div>
 
@@ -1112,7 +1195,7 @@
         </div>
     </div>
 
-    <!-- MOBILE BOTTOM APP-STYLE NAVIGATION BAR (সার্চ, সকল বই, লেখকগণ, স্বত্বাধিকারী) -->
+    <!-- MOBILE BOTTOM APP-STYLE NAVIGATION BAR -->
     <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 py-2 px-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-center justify-around">
         <button onclick="switchTab('search')" id="bottom-tab-search" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
             <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
@@ -1132,12 +1215,17 @@
         </button>
     </nav>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-12 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>
-                <p class="font-bold text-slate-800 dark:text-slate-200">চিলেকোঠা লাইব্রেরি</p>
-                <p class="text-[11px] text-sky-600 dark:text-sky-400">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
+    <!-- Footer with Redesigned "চিলেকোঠা লাইব্রেরি" Brand -->
+    <footer class="bg-white/90 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs text-slate-500 dark:text-slate-400 mt-12 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-sky-500/10 dark:bg-sky-400/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base shadow-sm">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-sm font-black bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-500 dark:from-sky-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent tracking-wide">চিলেকোঠা লাইব্রেরি</p>
+                    <p class="text-[10px] text-sky-600 dark:text-sky-400 font-medium">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
+                </div>
             </div>
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
             <div class="flex space-x-4 hidden">
@@ -1158,6 +1246,57 @@
             }
         });
 
+        /* ==========================================================
+           CUSTOM IN-APP TOAST & DIALOG (NO BROWSER DOMAIN HEADER)
+           ========================================================== */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let icon = 'fa-circle-info text-sky-500';
+            let border = 'border-sky-500/30';
+            if (type === 'success') { icon = 'fa-circle-check text-emerald-500'; border = 'border-emerald-500/40'; }
+            if (type === 'error' || type === 'rose') { icon = 'fa-circle-xmark text-rose-500'; border = 'border-rose-500/40'; }
+            if (type === 'warning') { icon = 'fa-triangle-exclamation text-amber-500'; border = 'border-amber-500/40'; }
+
+            toast.className = `animate-toast pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border ${border} shadow-xl text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-semibold transition-all duration-300`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base shrink-0"></i><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-15px) scale(0.95)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        // Custom confirm dialog that avoids displaying website url
+        function showCustomConfirm(message) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('custom-confirm-modal');
+                const msgEl = document.getElementById('custom-confirm-msg');
+                const okBtn = document.getElementById('custom-confirm-ok-btn');
+                const cancelBtn = document.getElementById('custom-confirm-cancel-btn');
+
+                if (!modal) { resolve(false); return; }
+
+                msgEl.innerText = message;
+                modal.classList.remove('hidden');
+
+                const cleanup = (res) => {
+                    modal.classList.add('hidden');
+                    okBtn.onclick = null;
+                    cancelBtn.onclick = null;
+                    resolve(res);
+                };
+
+                okBtn.onclick = () => cleanup(true);
+                cancelBtn.onclick = () => cleanup(false);
+            });
+        }
+
         // Bengali Number Conversion
         function toBnNum(n) {
             if (n === null || n === undefined || n === '') return '০';
@@ -1172,7 +1311,7 @@
             return parseFloat(converted) || 0;
         }
 
-        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন (গুগল শিটের L কলামের Quantity ও সমস্ত ফিল্ড সাপোর্ট)
+        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন
         function getBookCopies(b) {
             if (!b) return 1;
             const possibleVal = b.quantity !== undefined ? b.quantity : 
@@ -1271,7 +1410,7 @@
 
         // Inactivity Timer Variables (5 minutes timeout)
         let inactivityTimeout = null;
-        const INACTIVITY_LIMIT_MS = 5 * 60 * 1000; // ৫ মিনিট
+        const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
 
         window.onload = function() {
             setupPWAFeatures();
@@ -1319,17 +1458,19 @@
             renderPendingCommentsAdmin();
             renderAdminAuthorsList();
             renderLendingList();
+            updateAdminFinancials();
 
             startQuoteCarousel();
 
-            // অটোমেটিক Vercel Serverless API / ক্লাউড থেকে ডাটা লোড
-            syncLiveFromGoogleSheet(true);
+            // অপ্টিমাইজড ব্যাকগ্রাউন্ড সিঙ্ক (নতুন ব্রাউজারে প্রথম লোড মসৃণ রাখবে)
+            setTimeout(() => {
+                syncLiveFromGoogleSheet(true);
+            }, 600);
 
             // Restore current tab & modal state after reload
             restoreCurrentState();
         };
 
-        // রিলোড করার পরেও বর্তমান ট্যাব ও মডাল ধরে রাখার ব্যবস্থা
         function restoreCurrentState() {
             const hash = window.location.hash.replace('#', '');
             if (hash) {
@@ -1404,7 +1545,7 @@
             }
         });
 
-        // ৫ মিনিট নিষ্ক্রিয়তায় অটো লগআউট ওয়াচার (Inactivity Auto-Logout)
+        // ৫ মিনিট নিষ্ক্রিয়তায় অটো লগআউট ওয়াচার
         function startInactivityWatcher() {
             resetInactivityTimer();
             ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
@@ -1425,7 +1566,7 @@
             inactivityTimeout = setTimeout(() => {
                 if (isAdminLoggedIn) {
                     handleAdminLogout();
-                    alert("নিরাপত্তার স্বার্থে ৫ মিনিট নিষ্ক্রিয় থাকায় স্বয়ংক্রিয়ভাবে এডমিন লগআউট করা হয়েছে।");
+                    showToast("নিরাপত্তার স্বার্থে ৫ মিনিট নিষ্ক্রিয় থাকায় এডমিন লগআউট করা হয়েছে।", "warning");
                 }
             }, INACTIVITY_LIMIT_MS);
         }
@@ -1441,10 +1582,10 @@
             datalist.innerHTML = Array.from(authorSet).map(name => `<option value="${name}"></option>`).join('');
         }
 
-        // লাইভ সিঙ্ক ফাংশন (Vercel Serverless Function /api/books)
+        // লাইভ সিঙ্ক ফাংশন (অপ্টিমাইজড ও নন-ব্লকিং)
         async function syncLiveFromGoogleSheet(silent = false) {
             try {
-                if (!silent) alert("ডাটাবেজ সিঙ্ক করা হচ্ছে...");
+                if (!silent) showToast("ডাটাবেজ সিঙ্ক করা হচ্ছে...", "info");
                 const pass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
                 const vercelUrl = `/api/books?action=getData${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
                 
@@ -1465,13 +1606,13 @@
                         renderOwnerProfile();
                     }
                     refreshViews();
-                    if (!silent) alert("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!");
+                    if (!silent) showToast("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!", "success");
                 } else {
-                    if (!silent) alert("ডাটা ফেচ করা সম্ভব হয়নি।");
+                    if (!silent) showToast("ডাটা ফেচ করা সম্ভব হয়নি।", "error");
                 }
             } catch(err) {
                 console.error("Sync Error:", err);
-                if (!silent) alert("তথ্য লোড করা সম্ভব হয়নি।");
+                if (!silent) showToast("তথ্য লোড করা সম্ভব হয়নি।", "error");
             }
         }
 
@@ -1499,7 +1640,7 @@
         async function handleAdminLogin() {
             const pass = document.getElementById('admin-login-pass').value.trim();
             if (!pass) {
-                alert("দয়া করে এডমিন পাসওয়ার্ড লিখুন।");
+                showToast("দয়া করে এডমিন পাসওয়ার্ড লিখুন।", "warning");
                 return;
             }
 
@@ -1514,14 +1655,14 @@
                         showAdminPanel();
                         startInactivityWatcher();
                         refreshViews();
-                        alert("এডমিন প্যানেলে স্বাগতম!");
+                        showToast("এডমিন প্যানেলে স্বাগতম!", "success");
                         return;
                     }
                 }
-                alert("ভুল পাসওয়ার্ড!");
+                showToast("ভুল পাসওয়ার্ড!", "error");
             } catch(e) {
                 console.error("Login verification failed:", e);
-                alert("সার্ভার যাচাইকরণে সমস্যা হয়েছে! ইন্টারনেট সংযোগ বা Vercel পরিবেশ পরীক্ষা করুন।");
+                showToast("সার্ভার যাচাইকরণে সমস্যা হয়েছে! ইন্টারনেট সংযোগ পরীক্ষা করুন।", "error");
             }
         }
 
@@ -1530,6 +1671,7 @@
             document.getElementById('admin-auth-panel').classList.remove('hidden');
             const ownerEditBtn = document.getElementById('admin-owner-edit-btn');
             if(ownerEditBtn) ownerEditBtn.classList.remove('hidden');
+            updateAdminFinancials();
         }
 
         function handleAdminLogout() {
@@ -1546,6 +1688,7 @@
             if(ownerEditPanel) ownerEditPanel.classList.add('hidden');
             refreshViews();
             switchTab('home');
+            showToast("এডমিন লগআউট সফল হয়েছে!", "info");
         }
 
         function toggleTheme() {
@@ -1654,7 +1797,7 @@
             if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
         }
 
-        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (গুগল শিটের L কলামের Quantity অনুসারে মোট যোগফল)
+        // মোট বইয়ের সংখ্যা ও এডমিন আর্থিক ক্যালকুলেশন
         function updateStats() {
             const totalCopies = (books || []).reduce((sum, b) => {
                 return sum + getBookCopies(b);
@@ -1677,6 +1820,34 @@
             if (borrowBadge) {
                 borrowBadge.innerText = toBnNum(activeBorrows);
             }
+
+            updateAdminFinancials();
+        }
+
+        // এডমিনের জন্য মোট মুদ্রিত ও ক্রয় মূল্যের যোগফল
+        function updateAdminFinancials() {
+            if (!isAdminLoggedIn) return;
+            
+            let totalMrp = 0;
+            let totalBuy = 0;
+
+            (books || []).forEach(b => {
+                const copies = getBookCopies(b);
+                const mrp = (toEnNum(b.printedPrice) || 0) * copies;
+                const buy = (b.acquisitionType === 'GIFT_RECEIVED' ? 0 : (toEnNum(b.purchasePrice) || 0)) * copies;
+                totalMrp += mrp;
+                totalBuy += buy;
+            });
+
+            const savings = Math.max(0, totalMrp - totalBuy);
+
+            const mrpEl = document.getElementById('admin-total-mrp');
+            const buyEl = document.getElementById('admin-total-buy');
+            const savEl = document.getElementById('admin-total-savings');
+
+            if (mrpEl) mrpEl.innerText = `৳ ${toBnNum(totalMrp)}`;
+            if (buyEl) buyEl.innerText = `৳ ${toBnNum(totalBuy)}`;
+            if (savEl) savEl.innerText = `৳ ${toBnNum(savings)}`;
         }
 
         function renderHomePage() {
@@ -2097,7 +2268,7 @@
             if (!book) return;
 
             if (likedBooksSet.has(book.id)) {
-                alert("আপনি ইতোমধ্যে পছন্দ করেছেন!");
+                showToast("আপনি ইতোমধ্যে পছন্দ করেছেন!", "info");
                 return;
             }
 
@@ -2155,7 +2326,7 @@
                 renderPendingCommentsAdmin();
                 
                 textInput.value = '';
-                alert("আপনার মন্তব্য জমা হয়েছে। এডমিন অনুমোদনের পর প্রদর্শিত হবে।");
+                showToast("আপনার মন্তব্য জমা হয়েছে। এডমিন অনুমোদনের পর প্রদর্শিত হবে।", "success");
             }
         }
 
@@ -2199,6 +2370,7 @@
                     comment.approved = true;
                     saveToLocalStorage();
                     refreshViews();
+                    showToast("মন্তব্য অনুমোদিত হয়েছে!", "success");
                 }
             }
         }
@@ -2210,6 +2382,7 @@
                 book.comments = book.comments.filter(c => c.id !== commentId);
                 saveToLocalStorage();
                 refreshViews();
+                showToast("মন্তব্য বাতিল করা হয়েছে!", "info");
             }
         }
 
@@ -2231,18 +2404,17 @@
             }
         }
 
-        // Book Form Submit with Duplicate Book Name Warning & Vercel API Backend Support
+        // Book Form Submit with In-App Dialogs (No Website URL Header)
         async function handleFormSubmit(e) {
             e.preventDefault();
-            if (!isAdminLoggedIn) { alert("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!"); return; }
+            if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
 
             const editId = document.getElementById('edit-book-id').value;
             const title = document.getElementById('form-title-input').value.trim();
 
-            // একই নামের বই থাকলে ওয়ার্নিং দেওয়া
             const isDuplicateBook = books.some(b => b.title.toLowerCase() === title.toLowerCase() && b.id !== editId);
             if (isDuplicateBook) {
-                const proceed = confirm(`সতর্কতা: "${title}" নামের বইটি ইতিপূর্বেই লাইব্রেরিতে যুক্ত আছে!\n\nআপনি কি নিশ্চিত যে এই বইটি সংরক্ষণ করবেন?`);
+                const proceed = await showCustomConfirm(`"${title}" নামের বইটি ইতিপূর্বেই লাইব্রেরিতে যুক্ত আছে! আপনি কি নিশ্চিতভাবে বইটি সংরক্ষণ করবেন?`);
                 if (!proceed) return;
             }
 
@@ -2294,7 +2466,6 @@
             populateAuthorSuggestions();
             populateLendingBookDropdown();
 
-            // Vercel Serverless API /api/books এর মাধ্যমে সেভ
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             try {
                 await fetch('/api/books', {
@@ -2308,7 +2479,7 @@
 
             saveBtn.innerHTML = originalBtnText;
             resetForm();
-            alert("বই সফলভাবে সংরক্ষিত হয়েছে!");
+            showToast("বই সফলভাবে সংরক্ষিত হয়েছে!", "success");
             switchTab('all-books');
         }
 
@@ -2321,7 +2492,7 @@
         }
 
         function editCurrentBook() {
-            if (!isAdminLoggedIn) { alert("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!"); switchTab('admin'); return; }
+            if (!isAdminLoggedIn) { showToast("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!", "warning"); switchTab('admin'); return; }
             if (!activeBookId) return;
             const book = books.find(b => b.id === activeBookId);
             if (!book) return;
@@ -2353,15 +2524,15 @@
             document.getElementById('form-summary-input').value = book.summary || '';
         }
 
-        // বই ডিলিট করার সাথে সাথে গুগল শিট থেকেও মুছে ফেলা
+        // বই ডিলিট (No Website Domain Pop-up)
         async function deleteCurrentBook() {
-            if (!isAdminLoggedIn) { alert("বই মুছতে এডমিন লগইন প্রয়োজন!"); return; }
+            if (!isAdminLoggedIn) { showToast("বই মুছতে এডমিন লগইন প্রয়োজন!", "warning"); return; }
             if (!activeBookId) return;
             const book = books.find(b => b.id === activeBookId);
             if (!book) return;
 
-            if (confirm(`আপনি কি নিশ্চিত যে "${book.title}" বইটি লাইব্রেরি এবং গুগল শিট থেকে সম্পূর্ণ মুছে ফেলতে চান?`)) {
-                const bookToDeleteId = book.id;
+            const confirmed = await showCustomConfirm(`আপনি কি নিশ্চিত যে "${book.title}" বইটি লাইব্রেরি এবং গুগল শিট থেকে সম্পূর্ণ মুছে ফেলতে চান?`);
+            if (confirmed) {
                 const bookToDeleteSerial = book.serial;
                 const bookToDeleteTitle = book.title;
 
@@ -2370,7 +2541,6 @@
                 closeBookModal();
                 refreshViews();
 
-                // Call Vercel API to permanently delete from Google Sheet
                 const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
                 try {
                     await fetch('/api/books', {
@@ -2387,7 +2557,7 @@
                     console.log("Could not trigger remote sheet delete:", e);
                 }
 
-                alert("বইটি ডাটাবেজ ও গুগল শিট থেকে সফলভাবে মুছে ফেলা হয়েছে!");
+                showToast("বইটি ডাটাবেজ ও ক্লাউড থেকে সফলভাবে মুছে ফেলা হয়েছে!", "success");
             }
         }
 
@@ -2431,17 +2601,16 @@
             }
         }
 
-        // Author Form Submit with Duplicate Warning & Vercel API Support
+        // Author Form Submit
         async function handleAuthorFormSubmit(e) {
             e.preventDefault();
-            if (!isAdminLoggedIn) { alert("এডমিন লগইন প্রয়োজন!"); return; }
+            if (!isAdminLoggedIn) { showToast("এডমিন লগইন প্রয়োজন!", "warning"); return; }
 
             const name = document.getElementById('author-profile-name').value.trim();
 
-            // একই নামের লেখক আগে থেকে আছে কি না যাচাই এবং ওয়ার্নিং দেওয়া
             const isDuplicateAuthor = authorProfiles.some(a => a.name.toLowerCase() === name.toLowerCase());
             if (isDuplicateAuthor) {
-                const proceed = confirm(`সতর্কতা: "${name}" নামের লেখক প্রোফাইল আগে থেকেই সংরক্ষিত আছে!\n\nআপনি কি তবুও নতুন করে এন্ট্রি দিতে চান?`);
+                const proceed = await showCustomConfirm(`"${name}" নামের লেখক প্রোফাইল আগে থেকেই সংরক্ষিত আছে! আপনি কি তবুও নতুন করে এন্ট্রি দিতে চান?`);
                 if (!proceed) return;
             }
 
@@ -2468,7 +2637,7 @@
                 });
             } catch(e){}
 
-            alert("লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!");
+            showToast("লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!", "success");
         }
 
         function resetAuthorForm() {
@@ -2476,13 +2645,13 @@
             document.getElementById('edit-author-id').value = '';
         }
 
-        // লেখক ডিলিট করার সাথে সাথে গুগল শিট থেকেও মুছে ফেলা
         async function deleteAuthorProfile(authorId) {
             if (!isAdminLoggedIn) return;
             const author = authorProfiles.find(a => a.id === authorId);
             if (!author) return;
 
-            if (confirm(`আপনি কি নিশ্চিত যে লেখক "${author.name}"-এর প্রোফাইল গুগল শিট থেকে মুছে ফেলতে চান?`)) {
+            const confirmed = await showCustomConfirm(`আপনি কি নিশ্চিত যে লেখক "${author.name}"-এর প্রোফাইল মুছে ফেলতে চান?`);
+            if (confirmed) {
                 const authorNameToDelete = author.name;
                 authorProfiles = authorProfiles.filter(a => a.id !== authorId);
                 saveAuthorsToLocalStorage();
@@ -2490,7 +2659,6 @@
                 renderAuthors();
                 populateAuthorSuggestions();
 
-                // Delete from Google Sheet
                 const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
                 try {
                     await fetch('/api/books', {
@@ -2500,7 +2668,7 @@
                     });
                 } catch(e){}
 
-                alert("লেখক প্রোফাইল শিট থেকে মুছে ফেলা হয়েছে!");
+                showToast("লেখক প্রোফাইল শিট থেকে মুছে ফেলা হয়েছে!", "success");
             }
         }
 
@@ -2536,7 +2704,7 @@
         }
 
         function quickLendCurrentBook() {
-            if (!isAdminLoggedIn) { alert("এডমিন লগইন প্রয়োজন!"); switchTab('admin'); return; }
+            if (!isAdminLoggedIn) { showToast("এডমিন লগইন প্রয়োজন!", "warning"); switchTab('admin'); return; }
             if (!activeBookId) return;
             closeBookModal();
             switchTab('admin');
@@ -2577,7 +2745,7 @@
             updateStats();
             renderLendingList();
             document.getElementById('lending-form').reset();
-            alert("ধার রেজিস্টারে সফলভাবে যুক্ত হয়েছে!");
+            showToast("ধার রেজিস্টারে সফলভাবে যুক্ত হয়েছে!", "success");
         }
 
         function markBookReturned(borrowId) {
@@ -2590,16 +2758,18 @@
             saveBorrowingsToLocalStorage();
             updateStats();
             renderLendingList();
-            alert("বইটি ফেরত হিসেবে চিহ্নিত হয়েছে।");
+            showToast("বইটি ফেরত হিসেবে চিহ্নিত হয়েছে।", "success");
         }
 
-        function deleteBorrowRecord(borrowId) {
+        async function deleteBorrowRecord(borrowId) {
             if (!isAdminLoggedIn) return;
-            if (confirm("মুছে ফেলতে চান?")) {
+            const confirmed = await showCustomConfirm("আপনি কি এই ধারের রেকর্ড মুছে ফেলতে চান?");
+            if (confirmed) {
                 borrowings = borrowings.filter(b => b.id !== borrowId);
                 saveBorrowingsToLocalStorage();
                 updateStats();
                 renderLendingList();
+                showToast("রেকর্ড মুছে ফেলা হয়েছে।", "info");
             }
         }
 
@@ -2629,7 +2799,7 @@
 
         // Multi-Sheet Excel Parser
         function handleExcelUpload(event) {
-            if (!isAdminLoggedIn) { alert("এক্সেল আপলোড করতে এডমিন লগইন প্রয়োজন!"); event.target.value = ''; return; }
+            if (!isAdminLoggedIn) { showToast("এক্সেল আপলোড করতে এডমিন লগইন প্রয়োজন!", "warning"); event.target.value = ''; return; }
             const file = event.target.files[0];
             if (!file) return;
 
@@ -2682,10 +2852,10 @@
                     saveToLocalStorage();
                     refreshViews();
                     populateAuthorSuggestions();
-                    alert(`এক্সেল থেকে ${toBnNum(addedBooks)} টি বই সফলভাবে যুক্ত হয়েছে!`);
+                    showToast(`এক্সেল থেকে ${toBnNum(addedBooks)} টি বই যুক্ত হয়েছে!`, "success");
                     switchTab('all-books');
                 } catch(error) {
-                    alert("এক্সেল ফাইলটি পড়তে সমস্যা হয়েছে।");
+                    showToast("এক্সেল ফাইলটি পড়তে সমস্যা হয়েছে।", "error");
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -2752,6 +2922,7 @@
             renderAdminAuthorsList();
             renderLendingList();
             populateAuthorSuggestions();
+            updateAdminFinancials();
         }
 
         function renderOwnerProfile() {
@@ -2793,7 +2964,6 @@
             renderOwnerProfile();
             toggleOwnerEditForm();
 
-            // Vercel Serverless API /api/books এর মাধ্যমে স্বত্বাধিকারীর প্রোফাইল ক্লাউডে সেভ করা
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             try {
                 await fetch('/api/books', {
@@ -2805,7 +2975,7 @@
                 console.log("Owner profile saved locally");
             }
 
-            alert('স্বত্বাধিকারী প্রফাইল সফলভাবে আপডেট হয়েছে এবং ক্লাউডে সংরক্ষিত হয়েছে!');
+            showToast('স্বত্বাধিকারী প্রোফাইল সফলভাবে আপডেট ও ক্লাউডে সংরক্ষিত হয়েছে!', "success");
         }
     </script>
 </body>
