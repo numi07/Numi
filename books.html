@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- Viewport updated with maximum-scale & user-scalable=no to completely prevent auto-zoom on mobile devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</title>
     
     <!-- PWA & Mobile Web App Meta Tags -->
@@ -56,6 +56,7 @@
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
             touch-action: manipulation;
+            box-sizing: border-box;
         }
         body {
             font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
@@ -65,6 +66,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            overflow-x: hidden;
         }
         /* Mobile auto-zoom prevention: Input font size 16px minimum on touch screens */
         input, textarea, select {
@@ -130,10 +132,10 @@
             text-justify: inter-word;
         }
 
-        /* Padding for Mobile App Bar */
+        /* Responsive padding for Mobile App Bar */
         @media (max-width: 1024px) {
             body {
-                padding-bottom: 70px;
+                padding-bottom: 78px;
             }
         }
     </style>
@@ -1322,7 +1324,31 @@
 
             // অটোমেটিক Vercel Serverless API / ক্লাউড থেকে ডাটা লোড
             syncLiveFromGoogleSheet(true);
+
+            // Restore current tab & modal state after reload
+            restoreCurrentState();
         };
+
+        // রিলোড করার পরেও বর্তমান ট্যাব ও মডাল ধরে রাখার ব্যবস্থা
+        function restoreCurrentState() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                if (hash.startsWith('book-')) {
+                    const bId = hash.replace('book-', '');
+                    switchTab('all-books', false);
+                    setTimeout(() => openBookModal(bId), 200);
+                } else if (hash.startsWith('author-')) {
+                    const aName = decodeURIComponent(hash.replace('author-', ''));
+                    switchTab('authors', false);
+                    setTimeout(() => openAuthorModal(aName), 200);
+                } else if (['home', 'all-books', 'authors', 'categories', 'gifts', 'search', 'owner', 'admin'].includes(hash)) {
+                    switchTab(hash, false);
+                }
+            } else {
+                const savedTab = sessionStorage.getItem('chilekotha_active_tab') || 'home';
+                switchTab(savedTab, false);
+            }
+        }
 
         // PWA Setup
         function setupPWAFeatures() {
@@ -1545,6 +1571,7 @@
         }
 
         function switchTab(tabId, pushHistory = true) {
+            sessionStorage.setItem('chilekotha_active_tab', tabId);
             if (pushHistory && tabHistoryStack[tabHistoryStack.length - 1] !== tabId) {
                 tabHistoryStack.push(tabId);
                 history.pushState({ tab: tabId }, '', `#${tabId}`);
@@ -1826,6 +1853,7 @@
         }
 
         function openAuthorModal(authorName) {
+            window.location.hash = `author-${encodeURIComponent(authorName)}`;
             const profile = authorProfiles.find(a => a.name.trim() === authorName.trim()) || {
                 name: authorName,
                 lifespan: 'অনুল্লেখিত',
@@ -1864,6 +1892,8 @@
 
         function closeAuthorModal() {
             document.getElementById('author-modal').classList.add('hidden');
+            const activeTab = sessionStorage.getItem('chilekotha_active_tab') || 'authors';
+            history.replaceState(null, '', `#${activeTab}`);
         }
 
         function viewAuthorProfileFromName(name) {
@@ -1961,10 +1991,11 @@
         }
 
         function openBookModal(bookId) {
-            const book = books.find(b => b.id === bookId);
+            const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
             if (!book) return;
 
-            activeBookId = bookId;
+            activeBookId = book.id;
+            window.location.hash = `book-${book.id}`;
 
             document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
             const acqBadge = document.getElementById('modal-acquisition-badge');
@@ -2040,6 +2071,8 @@
         function closeBookModal() {
             document.getElementById('book-modal').classList.add('hidden');
             activeBookId = null;
+            const activeTab = sessionStorage.getItem('chilekotha_active_tab') || 'all-books';
+            history.replaceState(null, '', `#${activeTab}`);
         }
 
         function updateModalLikeButton(book) {
@@ -2320,14 +2353,41 @@
             document.getElementById('form-summary-input').value = book.summary || '';
         }
 
-        function deleteCurrentBook() {
+        // বই ডিলিট করার সাথে সাথে গুগল শিট থেকেও মুছে ফেলা
+        async function deleteCurrentBook() {
             if (!isAdminLoggedIn) { alert("বই মুছতে এডমিন লগইন প্রয়োজন!"); return; }
             if (!activeBookId) return;
-            if (confirm("আপনি কি নিশ্চিত যে এই বইটি মুছে ফেলতে চান?")) {
+            const book = books.find(b => b.id === activeBookId);
+            if (!book) return;
+
+            if (confirm(`আপনি কি নিশ্চিত যে "${book.title}" বইটি লাইব্রেরি এবং গুগল শিট থেকে সম্পূর্ণ মুছে ফেলতে চান?`)) {
+                const bookToDeleteId = book.id;
+                const bookToDeleteSerial = book.serial;
+                const bookToDeleteTitle = book.title;
+
                 books = books.filter(b => b.id !== activeBookId);
                 saveToLocalStorage();
                 closeBookModal();
                 refreshViews();
+
+                // Call Vercel API to permanently delete from Google Sheet
+                const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
+                try {
+                    await fetch('/api/books', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            action: "deleteBook", 
+                            bookId: bookToDeleteSerial, 
+                            title: bookToDeleteTitle, 
+                            adminPass: adminPass 
+                        })
+                    });
+                } catch(e) {
+                    console.log("Could not trigger remote sheet delete:", e);
+                }
+
+                alert("বইটি ডাটাবেজ ও গুগল শিট থেকে সফলভাবে মুছে ফেলা হয়েছে!");
             }
         }
 
@@ -2416,14 +2476,31 @@
             document.getElementById('edit-author-id').value = '';
         }
 
-        function deleteAuthorProfile(authorId) {
+        // লেখক ডিলিট করার সাথে সাথে গুগল শিট থেকেও মুছে ফেলা
+        async function deleteAuthorProfile(authorId) {
             if (!isAdminLoggedIn) return;
-            if (confirm("আপনি কি নিশ্চিত যে এই লেখকের প্রোফাইল মুছে ফেলতে চান?")) {
+            const author = authorProfiles.find(a => a.id === authorId);
+            if (!author) return;
+
+            if (confirm(`আপনি কি নিশ্চিত যে লেখক "${author.name}"-এর প্রোফাইল গুগল শিট থেকে মুছে ফেলতে চান?`)) {
+                const authorNameToDelete = author.name;
                 authorProfiles = authorProfiles.filter(a => a.id !== authorId);
                 saveAuthorsToLocalStorage();
                 renderAdminAuthorsList();
                 renderAuthors();
                 populateAuthorSuggestions();
+
+                // Delete from Google Sheet
+                const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
+                try {
+                    await fetch('/api/books', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "deleteAuthor", name: authorNameToDelete, adminPass: adminPass })
+                    });
+                } catch(e){}
+
+                alert("লেখক প্রোফাইল শিট থেকে মুছে ফেলা হয়েছে!");
             }
         }
 
