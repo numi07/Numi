@@ -926,7 +926,7 @@
                         <h2 id="author-modal-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
                         <p id="author-modal-lifespan" class="text-sm font-medium text-amber-600 dark:text-amber-400"></p>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
-                            চিলেকোঠা লাইব্রেরিতে বই সংখ্যা: <strong id="author-modal-book-count" class="text-sky-600 dark:text-sky-400">০</strong> টি
+                            চিলেকোঠায় বই সংখ্যা: <strong id="author-modal-book-count" class="text-sky-600 dark:text-sky-400">০</strong> টি
                         </p>
                     </div>
                 </div>
@@ -1135,6 +1135,15 @@
         }
 
         // App States
+        const initialBooks = [];
+        const initialAuthors = [];
+        const initialBorrowings = [];
+        const bookQuotes = [
+            { quote: "বই হচ্ছে এমন এক স্থান যেখানে আপনি বারবার ফিরে যেতে পারেন কোনো প্রশ্ন ছাড়াই।", author: "রিচার্ড গ্লেন" },
+            { quote: "একটি ভালো বইয়ের কোনো শেষ নেই।", author: "আর ডি কামিং" },
+            { quote: "একটি বই হচ্ছে একটি স্বপ্ন যা আপনি আপনার হাতে ধরে রাখতে পারেন।", author: "নীল গেইম্যান" }
+        ];
+
         let books = [];
         let authorProfiles = [];
         let borrowings = [];
@@ -1155,6 +1164,18 @@
             // Load from Local Storage fallback
             const savedBooks = localStorage.getItem('chilekotha_library_books');
             books = savedBooks ? JSON.parse(savedBooks) : initialBooks;
+
+            // Auto-fix falsely assigned gifts from previous Excel imports
+            if (books && books.length > 0) {
+                let giftFixed = false;
+                books.forEach(b => {
+                    if (b.acquisitionType === 'GIFT_RECEIVED' && !b.giftPerson && !b.giftDate) {
+                        b.acquisitionType = 'PURCHASED';
+                        giftFixed = true;
+                    }
+                });
+                if (giftFixed) saveToLocalStorage();
+            }
 
             const savedAuthors = localStorage.getItem('chilekotha_library_authors');
             authorProfiles = savedAuthors ? JSON.parse(savedAuthors) : initialAuthors;
@@ -2296,7 +2317,8 @@
                                     entryDate: (row['EntryDate'] || new Date().toISOString().split('T')[0]).toString().trim(),
                                     summary: (row['Review'] || '').toString().trim(),
                                     images: row['Images'] ? [formatImageUrl(row['Images'])] : [],
-                                    acquisitionType: toEnNum(row['BuyPrice']) > 0 ? 'PURCHASED' : 'GIFT_RECEIVED',
+                                    /* acquisitionType: toEnNum(row['BuyPrice']) > 0 ? 'PURCHASED' : 'GIFT_RECEIVED', */
+                                    acquisitionType: 'PURCHASED',
                                     likes: 0,
                                     comments: []
                                 });
