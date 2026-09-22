@@ -1161,10 +1161,26 @@
         }
 
         function toEnNum(bnStr) {
-            if (!bnStr) return 0;
+            if (!bnStr && bnStr !== 0) return 0;
             const bnToEn = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
             const converted = String(bnStr).replace(/[০-৯]/g, char => bnToEn[char]);
             return parseFloat(converted) || 0;
+        }
+
+        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন (যে কোনো ফিল্ড এবং বাংলা-ইংরেজি উভয় সংখ্যা সাপোর্ট করে)
+        function getBookCopies(b) {
+            if (!b) return 1;
+            const possibleVal = b.quantity !== undefined ? b.quantity : 
+                               (b.Quantity !== undefined ? b.Quantity : 
+                               (b['পরিমাণ'] !== undefined ? b['পরিমাণ'] : 
+                               (b.copies !== undefined ? b.copies : 
+                               (b.Copies !== undefined ? b.Copies : 
+                               (b.copy !== undefined ? b.copy : 
+                               (b.Copy !== undefined ? b.Copy : 
+                               (b.totalSeries !== undefined ? b.totalSeries : 
+                               (b.seriesTotal !== undefined ? b.seriesTotal : 1))))))));
+            const num = parseInt(toEnNum(possibleVal));
+            return (!isNaN(num) && num > 0) ? num : 1;
         }
 
         // Date formatting dd.mm.yyyy (Strictly Bengali Numbers)
@@ -1603,15 +1619,10 @@
             if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
         }
 
-        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (টোটাল কপি সংখ্যা ১ বা ১ এর অধিক যাই থাকুক)
+        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (টোটাল কপি সংখ্যা ১ বা ১ এর অধিক যাই থাকুক তার মোট যোগফল)
         function updateStats() {
             const totalCopies = (books || []).reduce((sum, b) => {
-                let parsedQty = 1;
-                if (b.quantity !== undefined && b.quantity !== null && b.quantity !== '') {
-                    parsedQty = parseInt(toEnNum(b.quantity));
-                    if (isNaN(parsedQty) || parsedQty < 1) parsedQty = 1;
-                }
-                return sum + parsedQty;
+                return sum + getBookCopies(b);
             }, 0);
 
             const authorsSet = new Set(books.map(b => (b.author || '').trim()).filter(Boolean));
@@ -1676,12 +1687,7 @@
             });
 
             const currentFilteredCopies = filtered.reduce((sum, b) => {
-                let parsedQty = 1;
-                if (b.quantity !== undefined && b.quantity !== null && b.quantity !== '') {
-                    parsedQty = parseInt(toEnNum(b.quantity));
-                    if (isNaN(parsedQty) || parsedQty < 1) parsedQty = 1;
-                }
-                return sum + parsedQty;
+                return sum + getBookCopies(b);
             }, 0);
 
             document.getElementById('all-books-count').innerText = toBnNum(currentFilteredCopies);
@@ -2578,7 +2584,7 @@
                                     entryDate: (row['EntryDate'] || new Date().toISOString().split('T')[0]).toString().trim(),
                                     summary: (row['Review'] || '').toString().trim(),
                                     images: row['Images'] ? [formatImageUrl(row['Images'])] : [],
-                                    quantity: parseInt(row['Quantity'] || row['পরিমাণ']) || 1,
+                                    quantity: parseInt(toEnNum(row['Quantity'] || row['quantity'] || row['পরিমাণ'] || row['copies'] || row['Copies'])) || 1,
                                     acquisitionType: 'PURCHASED',
                                     likes: 0,
                                     comments: []
@@ -2640,7 +2646,7 @@
                 'Images': (b.images && b.images[0]) ? b.images[0] : '',
                 'Category': b.category,
                 'EntryDate': b.entryDate || '',
-                'Quantity': b.quantity || 1,
+                'Quantity': getBookCopies(b),
                 'Review': b.summary || '',
                 'SeriesName': b.series || '',
                 'SeriesOrder': b.seriesNum || ''
