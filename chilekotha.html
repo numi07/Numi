@@ -70,7 +70,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
-        /* Centered Logo Watermark Overlay: বড় ও মৃদু স্বচ্ছ */
+        /* Centered Logo Watermark Overlay: বড় ও আরও স্বচ্ছ (Transparent) */
         .center-logo-watermark {
             position: absolute;
             inset: 0;
@@ -82,15 +82,15 @@
             z-index: 25; /* Increased to ensure visibility over images */
         }
         .center-logo-watermark img {
-            opacity: 0.20;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+            opacity: 0.08; /* More transparent */
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
             pointer-events: none;
             user-select: none;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .group:hover .center-logo-watermark img {
-            opacity: 0.28;
-            transform: scale(1.04);
+            opacity: 0.15;
+            transform: scale(1.06);
         }
 
         /* Large background watermark inside modal */
@@ -468,7 +468,7 @@
                                  alt="স্বত্বাধিকারী" class="w-full h-full object-cover">
                             <!-- Centered Soft Watermark Logo -->
                             <div class="center-logo-watermark">
-                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
+                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
                     </div>
@@ -482,7 +482,7 @@
                         <p id="owner-bio-el" class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
                         <p id="owner-quote-el" class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
                         <p id="owner-message-el" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
-                            "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
+                            "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
                         </p>
                     </div>
                 </div>
@@ -607,7 +607,7 @@
                             <i class="fa-solid fa-hand-holding text-emerald-500"></i> বই ধার খাতা
                             <span id="admin-active-borrow-badge" class="bg-emerald-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">০</span>
                         </button>
-                        <button type="button" onclick="switchAdminSubTab('excel')" id="subtab-btn-excel" class="px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="switchAdminSubTab('excel')" id="subtab-btn-excel" class="hidden px-4 py-2.5 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 shrink-0">
                             <i class="fa-solid fa-file-excel text-emerald-600"></i> এক্সেল ইমপোর্ট ও ব্যাকআপ
                         </button>
                     </div>
@@ -644,13 +644,13 @@
                                            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-2">
+                                <div class="grid grid-cols-1 gap-2">
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সিরিজ পর্ব (SeriesOrder)</label>
                                         <input type="text" id="form-series-num-input" placeholder="যেমন: ৩" 
                                                class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                     </div>
-                                    <div>
+                                    <div class="hidden">
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মোট সিরিজ খণ্ড</label>
                                         <input type="text" id="form-series-total-input" placeholder="যেমন: ৫" 
                                                class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
@@ -787,7 +787,7 @@
                                            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                 </div>
 
-                                <div class="md:col-span-2">
+                                <div class="md:col-span-2 hidden">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">উল্লেখযোগ্য সাহিত্যকর্ম</label>
                                     <input type="text" id="author-profile-notable" placeholder="যেমন: পথের পাঁচালী, অপরাজিত..." 
                                            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
@@ -962,7 +962,7 @@
                     </p>
                 </div>
 
-                <div class="space-y-2">
+                <div class="space-y-2 hidden">
                     <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">উল্লেখযোগ্য সাহিত্যকর্ম</h4>
                     <p id="author-modal-notable" class="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
                         অনুল্লেখিত
@@ -1008,7 +1008,7 @@
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-md">
                             <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
                             <div class="center-logo-watermark">
-                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-32 h-32 sm:w-40 sm:h-40 object-contain" onerror="this.style.display='none'">
+                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
                         <div id="modal-thumbnails" class="flex space-x-2 overflow-x-auto pb-2">
@@ -1026,7 +1026,7 @@
                         <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
                             <div>
                                 <span class="text-slate-500 dark:text-slate-400 block">অনুবাদক:</span>
-                                <span id="modal-translator" class="text-slate-800 dark:text-slate-200 font-medium">প্রযোজ্য নয়</span>
+                                <span id="modal-translator" class="text-slate-800 dark:text-slate-200 font-medium">প্রযোজ্য নয়</span>
                             </div>
                             <div>
                                 <span class="text-slate-500 dark:text-slate-400 block">প্রকাশনী:</span>
@@ -1046,18 +1046,18 @@
                             </div>
                             <div>
                                 <span class="text-slate-500 dark:text-slate-400 block">মুদ্রিত মূল্য:</span>
-                                <span id="modal-printed-price" class="text-slate-800 dark:text-slate-200 font-medium">৳ ০</span>
+                                <span id="modal-printed-price" class="text-slate-800 dark:text-slate-200 font-bold">৳ ০</span>
                             </div>
                             <div id="modal-purchase-price-box">
-                                <span class="text-slate-500 dark:text-slate-400 block">ক্রয় মূল্য:</span>
-                                <span id="modal-purchase-price" class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ০</span>
+                                <span class="text-slate-500 dark:text-slate-400 block">ক্রয় মূল্য (এডমিন প্যানেল):</span>
+                                <span id="modal-purchase-price" class="text-rose-600 dark:text-rose-400 font-bold">৳ ০</span>
                             </div>
                         </div>
 
                         <div class="space-y-1">
                             <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সারসংক্ষেপ ও পর্যালোচনা</h4>
                             <p id="modal-summary" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/80">
-                                কোনো বিবরণ যুক্ত করা হয়নি।
+                                কোনো বিবরণ যুক্ত করা হয়নি।
                             </p>
                         </div>
 
@@ -1141,15 +1141,50 @@
             return parseFloat(converted) || 0;
         }
 
-        // Date formatting dd.mm.yyyy
+        // Date formatting dd.mm.yyyy (Strictly Bengali Numbers)
         function formatDateBn(dateStr) {
             if (!dateStr) return '';
-            if (dateStr.includes('-')) {
-                const parts = dateStr.split('-');
+            
+            // Normalize slashes and dots to dashes to make parsing robust
+            let dStr = String(dateStr).trim().split('T')[0].split(' ')[0];
+            dStr = dStr.replace(/\//g, '-').replace(/\./g, '-');
+            
+            if (dStr.includes('-')) {
+                const parts = dStr.split('-');
                 if (parts.length === 3) {
-                    return toBnNum(`${parts[2]}.${parts[1]}.${parts[0]}`);
+                    let year, month, day;
+                    
+                    if (parts[0].length === 4) {
+                        // Assume format is YYYY-MM-DD
+                        year = parts[0];
+                        month = parts[1];
+                        day = parts[2];
+                    } else if (parts[2].length === 4) {
+                        // Assume format is DD-MM-YYYY (or MM-DD-YYYY, standardizing as DD-MM-YYYY)
+                        day = parts[0];
+                        month = parts[1];
+                        year = parts[2];
+                    } else {
+                        return toBnNum(dStr);
+                    }
+                    
+                    // Add leading zero if needed
+                    day = day.padStart(2, '0');
+                    month = month.padStart(2, '0');
+                    
+                    return toBnNum(`${day}.${month}.${year}`);
                 }
             }
+            
+            // Fallback for strict valid date formats parsed globally
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) {
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const year = d.getFullYear();
+                return toBnNum(`${day}.${month}.${year}`);
+            }
+
             return toBnNum(dateStr);
         }
 
@@ -1192,8 +1227,8 @@
         
         let ownerProfile = JSON.parse(localStorage.getItem('chilekotha_owner')) || null;
 
-        // Cloud Google Sheet Web App URL
-        let googleSheetURL = localStorage.getItem('chilekotha_cloud_sheet_url') || '';
+        // Cloud Google Sheet Web App URL Hardcoded
+        let googleSheetURL = localStorage.getItem('chilekotha_cloud_sheet_url') || 'https://script.google.com/macros/s/AKfycbxYTZWOVknPICttONsDBxFvNUKV9afGhzfH7zJ3fDn-ehtKtq_cMDMgqnmicEH2TfHT0g/exec';
 
         window.onload = function() {
             const savedTheme = localStorage.getItem('chilekotha_theme') || 'dark';
@@ -1252,6 +1287,17 @@
                 syncLiveFromGoogleSheet(true);
             }
         };
+
+        // ব্রাউজার ব্যাক বাটনের (Physical/Native) সাপোর্ট এর জন্য Listener
+        window.addEventListener('popstate', function(event) {
+            if (tabHistoryStack.length > 1) {
+                tabHistoryStack.pop(); 
+                const previousTab = tabHistoryStack[tabHistoryStack.length - 1] || 'home';
+                switchTab(previousTab, false);
+            } else {
+                switchTab('home', false);
+            }
+        });
 
         // গুগল শিটের সাথে লাইভ সিঙ্ক ফাংশন
         async function syncLiveFromGoogleSheet(silent = false) {
@@ -1315,6 +1361,7 @@
                 isAdminLoggedIn = true;
                 sessionStorage.setItem('chilekotha_admin_auth', 'true');
                 showAdminPanel();
+                refreshViews(); // UI আপডেট করার জন্য (যেমন- ক্রয়মূল্য দেখাতে)
                 alert("এডমিন প্যানেলে স্বাগতম!");
             } else {
                 alert("ভুল পাসওয়ার্ড!");
@@ -1338,6 +1385,7 @@
             if(ownerEditBtn) ownerEditBtn.classList.add('hidden');
             const ownerEditPanel = document.getElementById('owner-edit-panel');
             if(ownerEditPanel) ownerEditPanel.classList.add('hidden');
+            refreshViews(); // UI আপডেট করার জন্য (যেমন- ক্রয়মূল্য হাইড করতে)
             switchTab('home');
         }
 
@@ -1368,6 +1416,7 @@
         function switchTab(tabId, pushHistory = true) {
             if (pushHistory && tabHistoryStack[tabHistoryStack.length - 1] !== tabId) {
                 tabHistoryStack.push(tabId);
+                history.pushState({ tab: tabId }, '', `#${tabId}`); // ব্রাউজার ஹிস্টোরি আপডেট (native back support)
             }
 
             const tabs = document.querySelectorAll('.tab-content');
@@ -1492,8 +1541,8 @@
             });
 
             filtered.sort((a, b) => {
-                if (sortVal === 'serial-asc') return a.serial - b.serial;
-                if (sortVal === 'serial-desc') return b.serial - a.serial;
+                if (sortVal === 'serial-asc') return (Number(a.serial) || 0) - (Number(b.serial) || 0);
+                if (sortVal === 'serial-desc') return (Number(b.serial) || 0) - (Number(a.serial) || 0);
                 if (sortVal === 'price-desc') return (b.purchasePrice || 0) - (a.purchasePrice || 0);
                 if (sortVal === 'price-asc') return (a.purchasePrice || 0) - (b.purchasePrice || 0);
                 if (sortVal === 'date-desc') return new Date(b.entryDate) - new Date(a.entryDate);
@@ -1510,7 +1559,7 @@
             }
         }
 
-        // Generate Card with Large Centered Soft Logo Watermark
+        // Generate Card with Large Centered Soft Logo Watermark and Dynamic Price View
         function createBookCardHTML(book) {
             const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : 'https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি';
             
@@ -1530,9 +1579,15 @@
                 </span>`;
             }
 
+            // Price display logic: users see printed, admins see both printed & purchase price
+            let adminPriceHTML = '';
+            if (isAdminLoggedIn && book.acquisitionType !== 'GIFT_RECEIVED') {
+                adminPriceHTML = `<br><span class="text-[10px] text-rose-500 dark:text-rose-400 font-semibold block mt-0.5">ক্রয়মূল্য (এডমিন): ৳ ${toBnNum(book.purchasePrice || 0)}</span>`;
+            }
+
             let priceHTML = (book.acquisitionType === 'GIFT_RECEIVED') 
                 ? `<span class="text-emerald-600 dark:text-emerald-400 font-semibold text-xs"><i class="fa-solid fa-gift text-[10px]"></i> উপহার প্রাপ্ত</span>`
-                : `<span class="text-slate-600 dark:text-slate-400 text-xs">ক্রয়: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.purchasePrice || 0)}</strong></span>`;
+                : `<span class="text-slate-600 dark:text-slate-400 text-xs">মূল্য: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.printedPrice || 0)}</strong>${adminPriceHTML}</span>`;
 
             return `
             <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
@@ -1545,7 +1600,7 @@
                     
                     <!-- Centered Large & Transparent Logo Watermark -->
                     <div class="center-logo-watermark">
-                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-24 h-24 sm:w-28 sm:h-28 object-contain" onerror="this.style.display='none'">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
                     </div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
@@ -1776,7 +1831,12 @@
             } else {
                 acqBadge.innerText = 'ক্রয়কৃত';
                 acqBadge.className = 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-2.5 py-1 rounded-full font-bold';
-                purchaseBox.classList.remove('hidden');
+                // ক্রয় মূল্য শুধুমাত্র এডমিন দেখতে পারবে
+                if (isAdminLoggedIn) {
+                    purchaseBox.classList.remove('hidden');
+                } else {
+                    purchaseBox.classList.add('hidden');
+                }
             }
 
             const seriesBadge = document.getElementById('modal-series-badge');
@@ -1877,7 +1937,7 @@
                     <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
                         <div class="flex justify-between font-bold text-sky-700 dark:text-sky-400 mb-1">
                             <span>${c.author}</span>
-                            <span class="text-[10px] text-slate-400 font-normal">${toBnNum(c.date)}</span>
+                            <span class="text-[10px] text-slate-400 font-normal">${formatDateBn(c.date)}</span>
                         </div>
                         <p class="text-slate-700 dark:text-slate-300">${c.text}</p>
                     </div>
@@ -2310,7 +2370,7 @@
                     <div>
                         <strong class="text-sm font-bold text-slate-900 dark:text-slate-100">${b.bookTitle}</strong>
                         <p class="text-slate-600 dark:text-slate-300">গ্রহীতা: <strong class="text-sky-600 dark:text-sky-400">${b.borrowerName}</strong> ${b.borrowerPhone ? `(${toBnNum(b.borrowerPhone)})` : ''}</p>
-                        <p class="text-slate-500 text-[11px]">ধারের তারিখ: ${toBnNum(b.borrowDate)} | ফেরত: ${toBnNum(b.expectedDate) || 'অনির্দিষ্ট'}</p>
+                        <p class="text-slate-500 text-[11px]">ধারের তারিখ: ${formatDateBn(b.borrowDate)} | ফেরত: ${b.expectedDate ? formatDateBn(b.expectedDate) : 'অনির্দিষ্ট'}</p>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         ${!b.isReturned ? `<button onclick="markBookReturned('${b.id}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-semibold text-xs">ফেরত গ্রহণ</button>` : `<span class="text-emerald-500 font-bold">ফেরত সম্পন্ন</span>`}
