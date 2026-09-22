@@ -2,8 +2,17 @@
 <html lang="bn" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport updated with maximum-scale & user-scalable=no to completely prevent auto-zoom on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</title>
+    
+    <!-- PWA & Mobile Web App Meta Tags -->
+    <meta name="theme-color" content="#0284c7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="চিলেকোঠা">
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -46,6 +55,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+            touch-action: manipulation;
         }
         body {
             font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
@@ -56,9 +66,11 @@
             -ms-user-select: none;
             user-select: none;
         }
+        /* Mobile auto-zoom prevention: Input font size 16px minimum on touch screens */
         input, textarea, select {
             -webkit-user-select: text !important;
             user-select: text !important;
+            font-size: 16px !important;
         }
 
         /* Custom scrollbar */
@@ -110,6 +122,13 @@
         }
         .dark .large-watermark::before {
             color: rgba(255, 255, 255, 0.035);
+        }
+
+        /* Padding for Mobile App Bar */
+        @media (max-width: 1024px) {
+            body {
+                padding-bottom: 70px;
+            }
         }
     </style>
 </head>
@@ -1101,6 +1120,26 @@
         </div>
     </div>
 
+    <!-- MOBILE BOTTOM APP-STYLE NAVIGATION BAR (সার্চ, সকল বই, লেখকগণ, স্বত্বাধিকারী) -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 py-2 px-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-center justify-around">
+        <button onclick="switchTab('search')" id="bottom-tab-search" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
+            <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
+            <span class="text-[11px] font-semibold">অনুসন্ধান</span>
+        </button>
+        <button onclick="switchTab('all-books')" id="bottom-tab-all-books" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
+            <i class="fa-solid fa-book-open text-lg mb-1"></i>
+            <span class="text-[11px] font-semibold">সকল বই</span>
+        </button>
+        <button onclick="switchTab('authors')" id="bottom-tab-authors" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
+            <i class="fa-solid fa-pen-nib text-lg mb-1"></i>
+            <span class="text-[11px] font-semibold">লেখকগণ</span>
+        </button>
+        <button onclick="switchTab('owner')" id="bottom-tab-owner" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
+            <i class="fa-solid fa-user-tie text-lg mb-1"></i>
+            <span class="text-[11px] font-semibold">স্বত্বাধিকারী</span>
+        </button>
+    </nav>
+
     <!-- Footer -->
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-12 transition-colors">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -1233,6 +1272,9 @@
         localStorage.setItem('chilekotha_cloud_sheet_url', googleSheetURL);
 
         window.onload = function() {
+            // Setup Web App Manifest & Service Worker dynamically for automatic mobile PWA install
+            setupPWAFeatures();
+
             const savedTheme = localStorage.getItem('chilekotha_theme') || 'dark';
             applyTheme(savedTheme);
 
@@ -1290,6 +1332,51 @@
             }
         };
 
+        // PWA Setup (ইনস্টলযোগ্য মোবাইল অ্যাপ তৈরির ব্যবস্থা)
+        function setupPWAFeatures() {
+            const manifest = {
+                name: "চিলেকোঠা লাইব্রেরি",
+                short_name: "চিলেকোঠা",
+                start_url: window.location.href,
+                display: "standalone",
+                background_color: "#0284c7",
+                theme_color: "#0284c7",
+                description: "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে - চিলেকোঠা লাইব্রেরি",
+                icons: [
+                    {
+                        src: "https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA",
+                        sizes: "192x192",
+                        type: "image/png"
+                    },
+                    {
+                        src: "https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA",
+                        sizes: "512x512",
+                        type: "image/png"
+                    }
+                ]
+            };
+            const manifestString = JSON.stringify(manifest);
+            const blob = new Blob([manifestString], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(blob);
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            document.head.appendChild(link);
+
+            // Register Service Worker for offline capability & full PWA install banner
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', e => self.skipWaiting());
+                    self.addEventListener('activate', e => self.clients.claim());
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+            }
+        }
+
         // ব্রাউজার ব্যাক বাটনের (Physical/Native) সাপোর্ট এর জন্য Listener
         window.addEventListener('popstate', function(event) {
             if (tabHistoryStack.length > 1) {
@@ -1301,7 +1388,7 @@
             }
         });
 
-        // গুগল শিটের সাথে লাইভ সিঙ্ক ফাংশন
+        // গুগল শিটের সাথে লাইভ সিঙ্ক ফাংশন (সার্বজনীন যেকোনো প্রান্ত থেকে ডেটা লোড)
         async function syncLiveFromGoogleSheet(silent = false) {
             if (!googleSheetURL) return;
             try {
@@ -1421,7 +1508,7 @@
         function switchTab(tabId, pushHistory = true) {
             if (pushHistory && tabHistoryStack[tabHistoryStack.length - 1] !== tabId) {
                 tabHistoryStack.push(tabId);
-                history.pushState({ tab: tabId }, '', `#${tabId}`); // ব্রাউজার ஹிস্টোরি আপডেট (native back support)
+                history.pushState({ tab: tabId }, '', `#${tabId}`); // ব্রাউজার ஹிஸ்டোরি আপডেট (native back support)
             }
 
             const tabs = document.querySelectorAll('.tab-content');
@@ -1440,6 +1527,18 @@
             if (currentBtn) {
                 currentBtn.classList.add('text-sky-600', 'dark:text-sky-400', 'bg-sky-50', 'dark:bg-slate-800', 'font-semibold');
                 currentBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+            }
+
+            // Update bottom mobile navigation bar active states
+            const bottomItems = document.querySelectorAll('.bottom-nav-item');
+            bottomItems.forEach(b => {
+                b.classList.remove('text-sky-600', 'dark:text-sky-400', 'font-bold');
+                b.classList.add('text-slate-500', 'dark:text-slate-400');
+            });
+            const activeBottom = document.getElementById(`bottom-tab-${tabId}`);
+            if (activeBottom) {
+                activeBottom.classList.add('text-sky-600', 'dark:text-sky-400', 'font-bold');
+                activeBottom.classList.remove('text-slate-500', 'dark:text-slate-400');
             }
 
             const backWrapper = document.getElementById('global-back-wrapper');
