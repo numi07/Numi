@@ -79,7 +79,7 @@
             justify-content: center;
             pointer-events: none;
             user-select: none;
-            z-index: 15;
+            z-index: 25; /* Increased to ensure visibility over images */
         }
         .center-logo-watermark img {
             opacity: 0.20;
@@ -119,10 +119,10 @@
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md shadow-sm dark:shadow-xl transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo with logo.png & Slogan -->
+                <!-- Logo with updated Link & Slogan -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
                     <div class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 group overflow-hidden p-0.5">
-                        <img src="logo.png" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
                     </div>
                     <div>
                         <span class="text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent">চিলেকোঠা লাইব্রেরি</span>
@@ -327,7 +327,7 @@
                 <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> প্রতিটি বইয়ের জন্য রয়েছে স্বয়ংক্রিয় বাংলা ক্রমিক নম্বর</span>
             </div>
 
-            <div id="all-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="all-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[50vh]">
                 <!-- Dynamic Content Insertion -->
             </div>
         </section>
@@ -451,6 +451,12 @@
         <!-- TAB: OWNER PROFILE -->
         <section id="tab-owner" class="tab-content hidden space-y-8">
             <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+                
+                <!-- ADDED EDIT BUTTON FOR ADMIN -->
+                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-4 right-4 bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold z-30 shadow-md transition-all">
+                    <i class="fa-solid fa-pen"></i> এডিট
+                </button>
+
                 <div class="absolute -right-12 -top-12 text-sky-500/5 dark:text-sky-400/5 text-9xl pointer-events-none">
                     <i class="fa-solid fa-feather-pointed"></i>
                 </div>
@@ -458,24 +464,24 @@
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-8 border-b border-slate-200 dark:border-slate-800 relative z-10">
                     <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-tr from-sky-600 to-indigo-600 p-1 shadow-xl shrink-0">
                         <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-950 relative">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
+                            <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
                                  alt="স্বত্বাধিকারী" class="w-full h-full object-cover">
                             <!-- Centered Soft Watermark Logo -->
                             <div class="center-logo-watermark">
-                                <img src="logo.png" alt="Logo Watermark" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
+                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
                     </div>
                     <div class="text-center sm:text-left space-y-2 flex-grow">
                         <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">চিলেকোঠার পাঠক</h2>
-                            <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-0.5 rounded-full font-bold">
+                            <h2 id="owner-name-el" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">চিলেকোঠার পাঠক</h2>
+                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-0.5 rounded-full font-bold">
                                 ব্যক্তিগত সংগ্রাহক
                             </span>
                         </div>
-                        <p class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
-                        <p class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+                        <p id="owner-bio-el" class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
+                        <p id="owner-quote-el" class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
+                        <p id="owner-message-el" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
                             "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
                         </p>
                     </div>
@@ -500,6 +506,24 @@
                         </p>
                     </div>
                 </div>
+                
+                <!-- OWNER EDIT FORM (Hidden by default) -->
+                <div id="owner-edit-panel" class="hidden mt-8 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative z-10">
+                    <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white">স্বত্বাধিকারী প্রফাইল সম্পাদনা</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
+                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
+                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2"></textarea>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all">সেভ করুন</button>
+                        <button onclick="toggleOwnerEditForm()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-4 py-2 rounded-xl text-sm font-bold transition-all">বাতিল</button>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -919,7 +943,7 @@
                     <div class="w-36 h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group">
                         <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover">
                         <div class="center-logo-watermark">
-                            <img src="logo.png" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
+                            <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <div class="text-center sm:text-left space-y-2">
@@ -984,7 +1008,7 @@
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-md">
                             <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
                             <div class="center-logo-watermark">
-                                <img src="logo.png" alt="Logo Watermark" class="w-32 h-32 sm:w-40 sm:h-40 object-contain" onerror="this.style.display='none'">
+                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-32 h-32 sm:w-40 sm:h-40 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
                         <div id="modal-thumbnails" class="flex space-x-2 overflow-x-auto pb-2">
@@ -1085,7 +1109,7 @@
                 <p class="text-[11px] text-sky-600 dark:text-sky-400">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
             </div>
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
-            <div class="flex space-x-4">
+            <div class="flex space-x-4 hidden">
                 <span><i class="fa-solid fa-cloud text-emerald-500"></i> গুগল শিট লাইভ সংযুক্ত</span>
                 <span><i class="fa-solid fa-circle-half-stroke text-indigo-500"></i> ডার্ক ও লাইট রূপান্তর</span>
             </div>
@@ -1153,6 +1177,8 @@
         let likedBooksSet = new Set();
         let tabHistoryStack = ['home'];
         let isAdminLoggedIn = false;
+        
+        let ownerProfile = JSON.parse(localStorage.getItem('chilekotha_owner')) || null;
 
         // Cloud Google Sheet Web App URL
         let googleSheetURL = localStorage.getItem('chilekotha_cloud_sheet_url') || '';
@@ -1193,6 +1219,7 @@
                 showAdminPanel();
             }
 
+            renderOwnerProfile();
             updateStats();
             renderHomePage();
             populateCategoryFilter();
@@ -1285,6 +1312,8 @@
         function showAdminPanel() {
             document.getElementById('admin-login-box').classList.add('hidden');
             document.getElementById('admin-auth-panel').classList.remove('hidden');
+            const ownerEditBtn = document.getElementById('admin-owner-edit-btn');
+            if(ownerEditBtn) ownerEditBtn.classList.remove('hidden');
         }
 
         function handleAdminLogout() {
@@ -1293,6 +1322,10 @@
             document.getElementById('admin-login-pass').value = '';
             document.getElementById('admin-login-box').classList.remove('hidden');
             document.getElementById('admin-auth-panel').classList.add('hidden');
+            const ownerEditBtn = document.getElementById('admin-owner-edit-btn');
+            if(ownerEditBtn) ownerEditBtn.classList.add('hidden');
+            const ownerEditPanel = document.getElementById('owner-edit-panel');
+            if(ownerEditPanel) ownerEditPanel.classList.add('hidden');
             switchTab('home');
         }
 
@@ -1500,7 +1533,7 @@
                     
                     <!-- Centered Large & Transparent Logo Watermark -->
                     <div class="center-logo-watermark">
-                        <img src="logo.png" alt="Logo Watermark" class="w-24 h-24 sm:w-28 sm:h-28 object-contain" onerror="this.style.display='none'">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-24 h-24 sm:w-28 sm:h-28 object-contain" onerror="this.style.display='none'">
                     </div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
@@ -1567,7 +1600,7 @@
                     <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative">
                         <img src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/0f172a/0284c7?text=লেখক'">
                         <div class="center-logo-watermark">
-                            <img src="logo.png" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
+                            <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <div class="space-y-1 overflow-hidden flex-grow">
@@ -1768,7 +1801,7 @@
                 <div class="relative shrink-0 overflow-hidden rounded-lg group">
                     <img src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=ছবি'">
                     <div class="center-logo-watermark">
-                        <img src="logo.png" alt="Logo Watermark" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
                     </div>
                 </div>
             `).join('');
@@ -2398,6 +2431,47 @@
             renderPendingCommentsAdmin();
             renderAdminAuthorsList();
             renderLendingList();
+        }
+
+        function renderOwnerProfile() {
+            if(ownerProfile) {
+                if(document.getElementById('owner-name-el')) document.getElementById('owner-name-el').innerText = ownerProfile.name;
+                if(document.getElementById('owner-role-el')) document.getElementById('owner-role-el').innerText = ownerProfile.role;
+                if(document.getElementById('owner-bio-el')) document.getElementById('owner-bio-el').innerText = ownerProfile.bio;
+                if(document.getElementById('owner-quote-el')) document.getElementById('owner-quote-el').innerText = ownerProfile.quote;
+                if(document.getElementById('owner-message-el')) document.getElementById('owner-message-el').innerText = ownerProfile.message;
+                if(document.getElementById('owner-photo-el') && ownerProfile.photo) document.getElementById('owner-photo-el').src = formatImageUrl(ownerProfile.photo);
+            }
+        }
+
+        function toggleOwnerEditForm() {
+            const panel = document.getElementById('owner-edit-panel');
+            if (panel.classList.contains('hidden')) {
+                document.getElementById('edit-owner-name').value = document.getElementById('owner-name-el').innerText;
+                document.getElementById('edit-owner-role').value = document.getElementById('owner-role-el').innerText;
+                document.getElementById('edit-owner-bio').value = document.getElementById('owner-bio-el').innerText;
+                document.getElementById('edit-owner-quote').value = document.getElementById('owner-quote-el').innerText;
+                document.getElementById('edit-owner-message').value = document.getElementById('owner-message-el').innerText;
+                document.getElementById('edit-owner-photo').value = document.getElementById('owner-photo-el').src;
+                panel.classList.remove('hidden');
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function saveOwnerProfile() {
+            ownerProfile = {
+                name: document.getElementById('edit-owner-name').value,
+                role: document.getElementById('edit-owner-role').value,
+                bio: document.getElementById('edit-owner-bio').value,
+                quote: document.getElementById('edit-owner-quote').value,
+                message: document.getElementById('edit-owner-message').value,
+                photo: document.getElementById('edit-owner-photo').value
+            };
+            localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
+            renderOwnerProfile();
+            toggleOwnerEditForm();
+            alert('স্বত্বাধিকারী প্রফাইল সফলভাবে আপডেট হয়েছে!');
         }
     </script>
 </body>
