@@ -1141,6 +1141,18 @@
             return parseFloat(converted) || 0;
         }
 
+        // Date formatting dd.mm.yyyy
+        function formatDateBn(dateStr) {
+            if (!dateStr) return '';
+            if (dateStr.includes('-')) {
+                const parts = dateStr.split('-');
+                if (parts.length === 3) {
+                    return toBnNum(`${parts[2]}.${parts[1]}.${parts[0]}`);
+                }
+            }
+            return toBnNum(dateStr);
+        }
+
         // Automatic Google Drive link converter
         function formatImageUrl(url) {
             if (!url) return '';
@@ -1786,7 +1798,7 @@
             document.getElementById('modal-publisher').innerText = book.publisher || 'অনুল্লেখিত';
             document.getElementById('modal-category').innerText = book.category || 'সাধারণ';
             document.getElementById('modal-first-pub').innerText = toBnNum(book.firstPublicationDate) || 'অনুল্লেখিত';
-            document.getElementById('modal-entry-date').innerText = toBnNum(book.entryDate) || 'অনুল্লেখিত';
+            document.getElementById('modal-entry-date').innerText = book.entryDate ? formatDateBn(book.entryDate) : 'অনুল্লেখিত';
             document.getElementById('modal-printed-price').innerText = `৳ ${toBnNum(book.printedPrice || 0)}`;
             document.getElementById('modal-purchase-price').innerText = `৳ ${toBnNum(book.purchasePrice || 0)}`;
             document.getElementById('modal-summary').innerText = book.summary || 'কোনো সারসংক্ষেপ যুক্ত করা হয়নি।';
