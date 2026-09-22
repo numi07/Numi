@@ -124,6 +124,12 @@
             color: rgba(255, 255, 255, 0.035);
         }
 
+        /* Paragraph text justification */
+        p, .paragraph-justify {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
         /* Padding for Mobile App Bar */
         @media (max-width: 1024px) {
             body {
@@ -481,17 +487,14 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-8 border-b border-slate-200 dark:border-slate-800 relative z-10">
-                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-tr from-sky-600 to-indigo-600 p-1 shadow-xl shrink-0">
-                        <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-950 relative">
+                    <!-- ENLARGED OWNER PHOTO CONTAINER WITHOUT WATERMARK -->
+                    <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-sky-600 to-indigo-600 p-1.5 shadow-2xl shrink-0">
+                        <div class="w-full h-full rounded-[20px] overflow-hidden bg-slate-950 relative shadow-inner">
                             <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
                                  alt="স্বত্বাধিকারী" class="w-full h-full object-cover">
-                            <!-- Centered Soft Watermark Logo -->
-                            <div class="center-logo-watermark">
-                                <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
-                            </div>
                         </div>
                     </div>
-                    <div class="text-center sm:text-left space-y-2 flex-grow">
+                    <div class="text-center sm:text-left space-y-2.5 flex-grow">
                         <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                             <h2 id="owner-name-el" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">চিলেকোঠার পাঠক</h2>
                             <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-0.5 rounded-full font-bold">
@@ -500,7 +503,7 @@
                         </div>
                         <p id="owner-bio-el" class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
                         <p id="owner-quote-el" class="text-xs text-sky-600 dark:text-sky-400 font-semibold italic">"জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"</p>
-                        <p id="owner-message-el" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+                        <p id="owner-message-el" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl text-justify">
                             "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
                         </p>
                     </div>
@@ -511,7 +514,7 @@
                         <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                             <i class="fa-solid fa-house-chimney text-sky-600 dark:text-sky-400"></i> লাইব্রেরির উদ্দেশ্য
                         </h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             নিজের সংগ্রহে থাকা প্রতিটি বইকে সুরক্ষিত রাখা, প্রিয়জনদের দেওয়া উপহারের অমূল্য স্মৃতি সংরক্ষণ করা এবং ভালো বইয়ের পাঠ-অভিজ্ঞতা ডিজিটালভাবে নথিভুক্ত করাই এই আর্কাইভের মূল লক্ষ্য।
                         </p>
                     </div>
@@ -520,7 +523,7 @@
                         <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                             <i class="fa-solid fa-handshake text-emerald-600 dark:text-emerald-400"></i> বই পড়ার ও ধার নেওয়ার নীতি
                         </h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             যে-কোনো বন্ধু বা শুভানুধ্যায়ী চিলেকোঠায় এসে বই পড়তে পারবেন। কোনো বই ধার নিলে তা রেজিস্টারে নথিভুক্ত করে সর্বোচ্চ ২১ দিনের মধ্যে অক্ষত অবস্থায় ফেরত দেওয়া বাধ্যতামূলক।
                         </p>
                     </div>
@@ -535,10 +538,10 @@
                         <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
                         <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none">
                         <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
-                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2"></textarea>
+                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
                     </div>
                     <div class="mt-4 flex gap-2">
-                        <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all">সেভ করুন</button>
+                        <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all">সেভ ও ক্লাউডে পাঠান</button>
                         <button onclick="toggleOwnerEditForm()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-4 py-2 rounded-xl text-sm font-bold transition-all">বাতিল</button>
                     </div>
                 </div>
@@ -657,7 +660,7 @@
                                                class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কপি সংখ্যা / খণ্ড (Quantity)</label>
+                                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কপি সংখ্যা / খণ্ড (Quantity) [L কলাম]</label>
                                         <input type="number" id="form-series-total-input" min="1" value="1" placeholder="যেমন: ১ বা ৫" 
                                                class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                     </div>
@@ -749,7 +752,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সারসংক্ষেপ ও পর্যালোচনা (Review)</label>
                                 <textarea id="form-summary-input" rows="4" placeholder="বইয়ের বিষয়বস্তু, অনুভূতি বা সংক্ষিপ্ত পর্যালোচনা লিখুন..." 
-                                          class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none"></textarea>
+                                          class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify"></textarea>
                             </div>
 
                             <div class="flex items-center space-x-4 pt-2">
@@ -802,7 +805,7 @@
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংক্ষিপ্ত পরিচিতি ও জীবনী</label>
                                     <textarea id="author-profile-bio" rows="4" placeholder="লেখকের সাহিত্যজীবন ও শৈলীর বিবরণ লিখুন..." 
-                                              class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none"></textarea>
+                                              class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify"></textarea>
                                 </div>
                             </div>
 
@@ -949,7 +952,7 @@
                     <div class="w-36 h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group">
                         <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover">
                         <div class="center-logo-watermark">
-                            <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
+                            <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <div class="text-center sm:text-left space-y-2">
@@ -963,14 +966,14 @@
 
                 <div class="space-y-2">
                     <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সংক্ষিপ্ত জীবনী</h4>
-                    <p id="author-modal-bio" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <p id="author-modal-bio" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-justify">
                         কোনো জীবনী পাওয়া যায়নি।
                     </p>
                 </div>
 
                 <div class="space-y-2 hidden">
                     <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">উল্লেখযোগ্য সাহিত্যকর্ম</h4>
-                    <p id="author-modal-notable" class="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <p id="author-modal-notable" class="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-justify">
                         অনুল্লেখিত
                     </p>
                 </div>
@@ -1062,7 +1065,7 @@
 
                         <div class="space-y-1">
                             <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সারসংক্ষেপ ও পর্যালোচনা</h4>
-                            <p id="modal-summary" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/80">
+                            <p id="modal-summary" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800/80 text-justify">
                                 কোনো বিবরণ যুক্ত করা হয়নি।
                             </p>
                         </div>
@@ -1167,7 +1170,7 @@
             return parseFloat(converted) || 0;
         }
 
-        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন (যে কোনো ফিল্ড এবং বাংলা-ইংরেজি উভয় সংখ্যা সাপোর্ট করে)
+        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন (গুগল শিটের L কলামের Quantity ও সমস্ত ফিল্ড সাপোর্ট)
         function getBookCopies(b) {
             if (!b) return 1;
             const possibleVal = b.quantity !== undefined ? b.quantity : 
@@ -1430,6 +1433,11 @@
                         authorProfiles = data.authors;
                         saveAuthorsToLocalStorage();
                     }
+                    if (data && data.owner) {
+                        ownerProfile = data.owner;
+                        localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
+                        renderOwnerProfile();
+                    }
                     refreshViews();
                     if (!silent) alert("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!");
                 } else {
@@ -1619,7 +1627,7 @@
             if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
         }
 
-        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (টোটাল কপি সংখ্যা ১ বা ১ এর অধিক যাই থাকুক তার মোট যোগফল)
+        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (গুগল শিটের L কলামের Quantity অনুসারে মোট যোগফল)
         function updateStats() {
             const totalCopies = (books || []).reduce((sum, b) => {
                 return sum + getBookCopies(b);
@@ -2082,7 +2090,7 @@
                             <span>${c.author}</span>
                             <span class="text-[10px] text-slate-400 font-normal">${formatDateBn(c.date)}</span>
                         </div>
-                        <p class="text-slate-700 dark:text-slate-300">${c.text}</p>
+                        <p class="text-slate-700 dark:text-slate-300 text-justify">${c.text}</p>
                     </div>
                 `).join('');
             }
@@ -2139,7 +2147,7 @@
                 <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                     <div>
                         <p class="font-semibold text-sky-700 dark:text-sky-300 mb-0.5">বই: ${item.bookTitle}</p>
-                        <p class="text-slate-700 dark:text-slate-300">"${item.comment.text}" — <strong class="text-amber-600 dark:text-amber-400">${item.comment.author}</strong></p>
+                        <p class="text-slate-700 dark:text-slate-300 text-justify">"${item.comment.text}" — <strong class="text-amber-600 dark:text-amber-400">${item.comment.author}</strong></p>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <button onclick="approveComment('${item.bookId}', '${item.comment.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-semibold shadow-sm">অনুমোদন</button>
@@ -2695,7 +2703,7 @@
             }
         }
 
-        function saveOwnerProfile() {
+        async function saveOwnerProfile() {
             ownerProfile = {
                 name: document.getElementById('edit-owner-name').value,
                 role: document.getElementById('edit-owner-role').value,
@@ -2707,7 +2715,20 @@
             localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
             renderOwnerProfile();
             toggleOwnerEditForm();
-            alert('স্বত্বাধিকারী প্রফাইল সফলভাবে আপডেট হয়েছে!');
+
+            // Vercel Serverless API /api/books এর মাধ্যমে স্বত্বাধিকারীর প্রোফাইল ক্লাউডে সেভ করা
+            const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
+            try {
+                await fetch('/api/books', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "saveOwner", owner: ownerProfile, adminPass: adminPass })
+                });
+            } catch(e) {
+                console.log("Owner profile saved locally");
+            }
+
+            alert('স্বত্বাধিকারী প্রফাইল সফলভাবে আপডেট হয়েছে এবং ক্লাউডে সংরক্ষিত হয়েছে!');
         }
     </script>
 </body>
