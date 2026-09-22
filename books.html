@@ -130,10 +130,10 @@
             text-justify: inter-word;
         }
 
-        /* Responsive padding for Mobile App Bar */
+        /* Responsive padding for Mobile App Bar with Safe Area support */
         @media (max-width: 1024px) {
             body {
-                padding-bottom: 78px;
+                padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
             }
         }
 
@@ -153,7 +153,7 @@
     <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4 w-full max-w-md"></div>
 
     <!-- IN-APP CUSTOM CONFIRM DIALOG MODAL (NO WEBSITE DOMAIN) -->
-    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
             <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
@@ -175,13 +175,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo with updated Link, Slogan & Clean Background -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="switchTab('home')">
                     <div class="relative w-11 h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shadow-sm group overflow-hidden p-1 transition-all group-hover:border-sky-500">
                         <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
                     </div>
-                    <div>
-                        <span class="text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent">চিলেকোঠা লাইব্রেরি</span>
-                        <p class="text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold -mt-1 tracking-wide">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
+                    <div class="overflow-hidden">
+                        <span class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent truncate block">চিলেকোঠা লাইব্রেরি</span>
+                        <p class="text-[10px] sm:text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold -mt-1 tracking-wide truncate">জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে</p>
                     </div>
                 </div>
 
@@ -503,87 +503,93 @@
             </div>
         </section>
 
-        <!-- TAB: OWNER PROFILE (উন্নত ও দৃষ্টিনন্দন আধুনিক ডিজাইন) -->
+        <!-- TAB: OWNER PROFILE (অনুপম, বৃহৎ ছবি ও যেকোনো ডিভাইসে ১০০% রেসপন্সিভ ডিজাইন) -->
         <section id="tab-owner" class="tab-content hidden space-y-8">
-            <div class="max-w-4xl mx-auto bg-gradient-to-b from-white via-white to-slate-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden backdrop-blur-md">
+            <div class="max-w-4xl mx-auto bg-gradient-to-b from-white via-slate-50/50 to-white dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden backdrop-blur-md">
                 
                 <!-- ADMIN EDIT BUTTON -->
-                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-5 right-5 bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold z-30 shadow-md shadow-sky-600/20 transition-all flex items-center gap-1.5">
+                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-4 right-4 sm:top-6 sm:right-6 bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold z-30 shadow-md shadow-sky-600/20 transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-pen-to-square"></i> এডিট
                 </button>
 
-                <!-- Subtle Background Art -->
-                <div class="absolute -right-10 -bottom-10 text-sky-500/[0.03] dark:text-sky-400/[0.04] text-[180px] pointer-events-none select-none">
+                <!-- Subtle Decorative Background Watermark Art -->
+                <div class="absolute -right-8 -bottom-8 text-sky-500/[0.04] dark:text-sky-400/[0.03] text-[200px] pointer-events-none select-none">
                     <i class="fa-solid fa-book-open-reader"></i>
                 </div>
-                <div class="absolute -left-12 -top-12 text-indigo-500/[0.03] dark:text-indigo-400/[0.04] text-[160px] pointer-events-none select-none">
+                <div class="absolute -left-10 -top-10 text-indigo-500/[0.04] dark:text-indigo-400/[0.03] text-[180px] pointer-events-none select-none">
                     <i class="fa-solid fa-feather-pointed"></i>
                 </div>
 
-                <!-- PROFILE HEADER -->
-                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-7 pb-8 border-b border-slate-200/80 dark:border-slate-800 relative z-10">
+                <!-- PROFILE HEADER (ছবি আরও বড় ও পরিচ্ছন্ন বিন্যাস) -->
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 pb-8 border-b border-slate-200/80 dark:border-slate-800 relative z-10">
+                    
+                    <!-- ENLARGED PHOTO CONTAINER -->
                     <div class="relative group shrink-0">
-                        <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-sky-600 p-[3px] shadow-2xl shadow-sky-500/20">
-                            <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-900 relative shadow-inner">
-                                <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
-                                     alt="স্বত্বাধিকারী" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-sky-400 p-1.5 shadow-[0_12px_36px_rgba(2,132,199,0.25)] transition-transform duration-500 group-hover:scale-[1.02]">
+                            <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-950 relative shadow-inner">
+                                <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" 
+                                     alt="স্বত্বাধিকারী" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                             </div>
                         </div>
-                        <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl text-xs shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-900" title="অনলাইন আর্কাইভ">
-                            <i class="fa-solid fa-circle-check"></i>
+                        <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2.5 rounded-2xl text-xs shadow-lg flex items-center justify-center border-4 border-white dark:border-slate-900" title="সক্রিয় ব্যক্তিগত সংগ্রহশালা">
+                            <i class="fa-solid fa-circle-check text-sm"></i>
                         </span>
                     </div>
 
-                    <div class="text-center sm:text-left space-y-2.5 flex-grow">
-                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-                            <h2 id="owner-name-el" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">চিলেকোঠার পাঠক</h2>
-                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold shadow-sm">
-                                ব্যক্তিগত সংগ্রাহক
-                            </span>
-                        </div>
-                        <p id="owner-bio-el" class="text-sm font-medium text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
-                        
-                        <div class="pt-1">
-                            <span id="owner-quote-el" class="inline-block text-xs font-semibold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-slate-800/80 border border-sky-200 dark:border-sky-900/60 px-3 py-1 rounded-xl italic">
-                                "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"
+                    <!-- PROFILE DETAILS -->
+                    <div class="text-center md:text-left space-y-3 flex-grow max-w-xl">
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+                            <h2 id="owner-name-el" class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">চিলেকোঠার পাঠক</h2>
+                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs px-3.5 py-1 rounded-full font-bold shadow-sm inline-flex items-center gap-1.5">
+                                <i class="fa-solid fa-award text-[11px]"></i> ব্যক্তিগত সংগ্রাহক
                             </span>
                         </div>
 
-                        <p id="owner-message-el" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl text-justify pt-1">
-                            "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
-                        </p>
+                        <p id="owner-bio-el" class="text-sm sm:text-base font-semibold text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
+                        
+                        <div>
+                            <span id="owner-quote-el" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-slate-800/80 border border-sky-200 dark:border-sky-900/60 px-4 py-1.5 rounded-2xl italic shadow-sm">
+                                <i class="fa-solid fa-quote-left text-sky-500"></i> "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800/80">
+                            <p id="owner-message-el" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed text-justify">
+                                "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- PURPOSE & LENDING POLICY -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 relative z-10">
-                    <div class="space-y-3 bg-white/60 dark:bg-slate-950/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-sky-500/40 transition-colors">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 pt-6 relative z-10">
+                    <div class="space-y-3 bg-white/70 dark:bg-slate-950/60 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-sky-500/40 transition-colors">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base">
+                            <div class="w-10 h-10 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-lg shadow-sm">
                                 <i class="fa-solid fa-house-chimney"></i>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">লাইব্রেরির উদ্দেশ্য</h3>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">লাইব্রেরির উদ্দেশ্য</h3>
                         </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             নিজের সংগ্রহে থাকা প্রতিটি বইকে সুরক্ষিত রাখা, প্রিয়জনদের দেওয়া উপহারের অমূল্য স্মৃতি সংরক্ষণ করা এবং ভালো বইয়ের পাঠ-অভিজ্ঞতা ডিজিটালভাবে নথিভুক্ত করাই এই আর্কাইভের মূল লক্ষ্য।
                         </p>
                     </div>
 
-                    <div class="space-y-3 bg-white/60 dark:bg-slate-950/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-emerald-500/40 transition-colors">
+                    <div class="space-y-3 bg-white/70 dark:bg-slate-950/60 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-emerald-500/40 transition-colors">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base">
+                            <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm">
                                 <i class="fa-solid fa-handshake"></i>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">বই পড়ার ও ধার নেওয়ার নীতি</h3>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">বই পড়ার ও ধার নেওয়ার নীতি</h3>
                         </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
                             যে-কোনো বন্ধু বা শুভানুধ্যায়ী চিলেকোঠায় এসে বই পড়তে পারবেন। কোনো বই ধার নিলে তা রেজিস্টারে নথিভুক্ত করে সর্বোচ্চ ২১ দিনের মধ্যে অক্ষত অবস্থায় ফেরত দেওয়া বাধ্যতামূলক।
                         </p>
                     </div>
                 </div>
                 
                 <!-- OWNER EDIT FORM (Hidden by default) -->
-                <div id="owner-edit-panel" class="hidden mt-8 bg-white dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative z-10 shadow-inner">
+                <div id="owner-edit-panel" class="hidden mt-8 bg-white dark:bg-slate-950 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 relative z-10 shadow-inner">
                     <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white flex items-center gap-2">
                         <i class="fa-solid fa-pen-clip text-sky-600"></i> স্বত্বাধিকারী প্রোফাইল সম্পাদনা
                     </h3>
@@ -1017,11 +1023,11 @@
 
     </main>
 
-    <!-- AUTHOR PROFILE DETAILS MODAL -->
-    <div id="author-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-8">
+    <!-- AUTHOR PROFILE DETAILS MODAL (Updated Z-Index for Mobile UI) -->
+    <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
-                <button onclick="closeAuthorModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
+                <button onclick="closeAuthorModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
                     <i class="fa-solid fa-arrow-left"></i> পেছনে যান
                 </button>
                 <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
@@ -1032,9 +1038,9 @@
                 </button>
             </div>
 
-            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto relative z-10">
+            <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                    <div class="w-36 h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group">
+                    <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group">
                         <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
@@ -1073,12 +1079,12 @@
         </div>
     </div>
 
-    <!-- BOOK DETAILS MODAL -->
-    <div id="book-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-8">
+    <!-- BOOK DETAILS MODAL (Updated Z-Index for Mobile UI) -->
+    <div id="book-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
                 <div class="flex items-center space-x-2 sm:space-x-3 flex-wrap gap-y-1">
-                    <button onclick="closeBookModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
+                    <button onclick="closeBookModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
                         <i class="fa-solid fa-arrow-left"></i> পেছনে যান
                     </button>
                     <span id="modal-serial-badge" class="bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold">
@@ -1096,7 +1102,7 @@
                 </button>
             </div>
 
-            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto relative z-10">
+            <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-3">
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-md">
@@ -1196,7 +1202,7 @@
     </div>
 
     <!-- MOBILE BOTTOM APP-STYLE NAVIGATION BAR -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 py-2 px-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-center justify-around">
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 py-2 px-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-center justify-around pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <button onclick="switchTab('search')" id="bottom-tab-search" class="bottom-nav-item flex flex-col items-center justify-center flex-1 py-1 text-slate-500 dark:text-slate-400 transition-colors">
             <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
             <span class="text-[11px] font-semibold">অনুসন্ধান</span>
