@@ -556,10 +556,10 @@
                 </div>
                 <div>
                     <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">এডমিন অথেনটিকেশন</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">তথ্য পরিবর্তন, সংযোজন বা গুগল শিটে সেভ করতে এডমিন পাসওয়ার্ড দিন</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">তথ্য পরিবর্তন, সংযোজন বা সার্ভারে সেভ করতে এডমিন পাসওয়ার্ড দিন</p>
                 </div>
                 <div class="space-y-3">
-                    <input type="password" id="admin-login-pass" placeholder="এডমিন পাসওয়ার্ড লিখুন..." 
+                    <input type="password" id="admin-login-pass" onkeydown="handleAdminPassKeydown(event)" placeholder="এডমিন পাসওয়ার্ড লিখুন..." 
                            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-center text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                     <button onclick="handleAdminLogin()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/30 text-sm">
                         লগইন করুন
@@ -573,31 +573,15 @@
                 <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">গুগল শিট ও Vercel এপিআই সিঙ্ক সক্রিয়</span>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ Vercel ক্লাউড সিঙ্ক সক্রিয়</span>
+                        <span class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full ml-1" id="inactivity-timer-badge">অটো লগআউট: ৫ মিনিট</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="syncLiveFromGoogleSheet()" class="text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 shadow-sm">
-                            <i class="fa-solid fa-rotate"></i> শিট থেকে রিফ্রেশ
+                            <i class="fa-solid fa-rotate"></i> ডাটাবেজ থেকে রিফ্রেশ
                         </button>
                         <button onclick="handleAdminLogout()" class="text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 px-3 py-1.5 rounded-lg border border-rose-500/30 transition-all">
                             লগআউট
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Google Sheet URL Configuration Card (Fallback) -->
-                <div class="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                            <i class="fa-solid fa-link text-sky-500"></i> আপনার গুগল শিট Apps Script Web App URL (Vercel ENV ব্যবহার না করলে)
-                        </span>
-                        <span class="text-[11px] text-slate-400">স্বয়ংক্রিয় ক্লাউড সেভ লিংক</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="url" id="google-sheet-url-input" placeholder="https://script.google.com/macros/s/.../exec" 
-                               class="flex-grow bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-sky-500">
-                        <button onclick="saveGoogleSheetURL()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition-all shrink-0">
-                            সেভ ও টেস্ট
                         </button>
                     </div>
                 </div>
@@ -637,7 +621,7 @@
                     <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
                             <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2" id="form-title">
-                                <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি গুগল শিটে সেভ হবে)
+                                <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি ক্লাউড শিটে সেভ হবে)
                             </h2>
                         </div>
 
@@ -770,7 +754,7 @@
 
                             <div class="flex items-center space-x-4 pt-2">
                                 <button type="submit" id="book-save-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-sky-600/30 flex items-center gap-2">
-                                    <i class="fa-solid fa-floppy-disk"></i> বই সংরক্ষণ ও গুগল শিটে পাঠান
+                                    <i class="fa-solid fa-floppy-disk"></i> বই সংরক্ষণ ও ক্লাউডে পাঠান
                                 </button>
                                 <button type="button" onclick="resetForm()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 px-5 rounded-xl transition-all">
                                     রিসেট
@@ -1152,7 +1136,7 @@
             </div>
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
             <div class="flex space-x-4 hidden">
-                <span><i class="fa-solid fa-cloud text-emerald-500"></i> গুগল শিট লাইভ সংযুক্ত</span>
+                <span><i class="fa-solid fa-cloud text-emerald-500"></i> নিরাপদ ক্লাউড সংযুক্ত</span>
                 <span><i class="fa-solid fa-circle-half-stroke text-indigo-500"></i> ডার্ক ও লাইট রূপান্তর</span>
             </div>
         </div>
@@ -1264,8 +1248,9 @@
         
         let ownerProfile = JSON.parse(localStorage.getItem('chilekotha_owner')) || null;
 
-        // Cloud Google Sheet Web App URL Fallback
-        let googleSheetURL = localStorage.getItem('chilekotha_cloud_sheet_url') || 'https://script.google.com/macros/s/AKfycbzBIjn9jgKB8uiUdtvVui9PSahUGd5Uz2_0_cRJUm8XSpJteGm0ONVdINz-tw62-3zRMQ/exec';
+        // Inactivity Timer Variables (5 minutes timeout)
+        let inactivityTimeout = null;
+        const INACTIVITY_LIMIT_MS = 5 * 60 * 1000; // ৫ মিনিট
 
         window.onload = function() {
             setupPWAFeatures();
@@ -1293,20 +1278,17 @@
             const savedBorrowings = localStorage.getItem('chilekotha_borrowings');
             borrowings = savedBorrowings ? JSON.parse(savedBorrowings) : initialBorrowings;
 
-            if (googleSheetURL) {
-                document.getElementById('google-sheet-url-input').value = googleSheetURL;
-            }
-
             if (sessionStorage.getItem('chilekotha_admin_auth') === 'true') {
                 isAdminLoggedIn = true;
                 showAdminPanel();
+                startInactivityWatcher();
             }
 
             renderOwnerProfile();
             updateStats();
             renderHomePage();
             populateCategoryFilter();
-            populateAuthorSuggestions(); // Populates author autocomplete suggestions
+            populateAuthorSuggestions();
             populateLendingBookDropdown();
             filterAllBooks();
             renderAuthors();
@@ -1319,7 +1301,7 @@
 
             startQuoteCarousel();
 
-            // অটোমেটিক গুগল শিট / Vercel API থেকে লাইভ ডাটা লোড
+            // অটোমেটিক Vercel Serverless API / ক্লাউড থেকে ডাটা লোড
             syncLiveFromGoogleSheet(true);
         };
 
@@ -1377,6 +1359,32 @@
             }
         });
 
+        // ৫ মিনিট নিষ্ক্রিয়তায় অটো লগআউট ওয়াচার (Inactivity Auto-Logout)
+        function startInactivityWatcher() {
+            resetInactivityTimer();
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+                window.addEventListener(evt, resetInactivityTimer, { passive: true });
+            });
+        }
+
+        function stopInactivityWatcher() {
+            if (inactivityTimeout) clearTimeout(inactivityTimeout);
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+                window.removeEventListener(evt, resetInactivityTimer);
+            });
+        }
+
+        function resetInactivityTimer() {
+            if (!isAdminLoggedIn) return;
+            if (inactivityTimeout) clearTimeout(inactivityTimeout);
+            inactivityTimeout = setTimeout(() => {
+                if (isAdminLoggedIn) {
+                    handleAdminLogout();
+                    alert("নিরাপত্তার স্বার্থে ৫ মিনিট নিষ্ক্রিয় থাকায় স্বয়ংক্রিয়ভাবে এডমিন লগআউট করা হয়েছে।");
+                }
+            }, INACTIVITY_LIMIT_MS);
+        }
+
         // লেখক সাজেস্ট করার জন্য Datalist রেন্ডার
         function populateAuthorSuggestions() {
             const datalist = document.getElementById('authors-datalist');
@@ -1388,62 +1396,33 @@
             datalist.innerHTML = Array.from(authorSet).map(name => `<option value="${name}"></option>`).join('');
         }
 
-        // লাইভ সিঙ্ক ফাংশন (Vercel API / Google Sheet)
+        // লাইভ সিঙ্ক ফাংশন (Vercel Serverless Function /api/books)
         async function syncLiveFromGoogleSheet(silent = false) {
             try {
-                if (!silent) alert("ডাটা সিঙ্ক করা হচ্ছে...");
-                let data = null;
-                let usedVercel = false;
-
-                // Vercel Serverless Function `/api/books` এর মাধ্যমে ট্রাই করা
-                try {
-                    const pass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
-                    const vercelUrl = `/api/books?action=getData${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
-                    const res = await fetch(vercelUrl);
-                    if (res.ok) {
-                        data = await res.json();
-                        usedVercel = true;
-                    }
-                } catch(e) {
-                    console.log("Vercel API offline or bypassed, switching to Direct Script URL");
-                }
-
-                // যদি Vercel API না মেলে, গুগল শিট সরাসরি ব্যবহার করবে
-                if (!data && googleSheetURL) {
-                    const fetchUrl = googleSheetURL + "?t=" + new Date().getTime();
-                    const res = await fetch(fetchUrl, { method: 'GET', mode: 'cors', cache: 'no-store', redirect: 'follow' });
-                    if (res.ok) data = await res.json();
-                }
-
-                if (data) {
-                    if (data.books) {
+                if (!silent) alert("ডাটাবেজ সিঙ্ক করা হচ্ছে...");
+                const pass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
+                const vercelUrl = `/api/books?action=getData${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
+                
+                const res = await fetch(vercelUrl);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.books) {
                         books = data.books;
                         saveToLocalStorage();
                     }
-                    if (data.authors) {
+                    if (data && data.authors) {
                         authorProfiles = data.authors;
                         saveAuthorsToLocalStorage();
                     }
                     refreshViews();
-                    if (!silent) alert("সফলভাবে লাইভ তথ্য সিঙ্ক সম্পন্ন হয়েছে!");
-                } else if (!silent) {
-                    alert("ডাটা ফেচ করা সম্ভব হয়নি।");
+                    if (!silent) alert("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!");
+                } else {
+                    if (!silent) alert("ডাটা ফেচ করা সম্ভব হয়নি।");
                 }
             } catch(err) {
                 console.error("Sync Error:", err);
                 if (!silent) alert("তথ্য লোড করা সম্ভব হয়নি।");
             }
-        }
-
-        function saveGoogleSheetURL() {
-            const url = document.getElementById('google-sheet-url-input').value.trim();
-            if (!url) {
-                alert("দয়া করে Apps Script Web App URL প্রদান করুন।");
-                return;
-            }
-            googleSheetURL = url;
-            localStorage.setItem('chilekotha_cloud_sheet_url', url);
-            syncLiveFromGoogleSheet(false);
         }
 
         function saveToLocalStorage() {
@@ -1458,7 +1437,15 @@
             localStorage.setItem('chilekotha_borrowings', JSON.stringify(borrowings));
         }
 
-        // Admin Authentication using Vercel API `/api/books` or Fallback
+        // Enter চেপে লগইন সাপোর্ট
+        function handleAdminPassKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAdminLogin();
+            }
+        }
+
+        // Admin Authentication using Vercel API `/api/books`
         async function handleAdminLogin() {
             const pass = document.getElementById('admin-login-pass').value.trim();
             if (!pass) {
@@ -1466,33 +1453,25 @@
                 return;
             }
 
-            let loginSuccess = false;
-
-            // Attempt verification with Vercel API
             try {
                 const res = await fetch(`/api/books?action=checkLogin&pass=${encodeURIComponent(pass)}`);
                 if (res.ok) {
                     const resData = await res.json();
-                    if (resData.success) loginSuccess = true;
+                    if (resData.success) {
+                        isAdminLoggedIn = true;
+                        sessionStorage.setItem('chilekotha_admin_auth', 'true');
+                        sessionStorage.setItem('chilekotha_admin_pass_cache', pass);
+                        showAdminPanel();
+                        startInactivityWatcher();
+                        refreshViews();
+                        alert("এডমিন প্যানেলে স্বাগতম!");
+                        return;
+                    }
                 }
-            } catch(e) {
-                console.log("Local or direct verification fallback");
-            }
-
-            // Fallback password check
-            if (!loginSuccess && (pass === "chilekotha2026" || pass === "admin")) {
-                loginSuccess = true;
-            }
-
-            if (loginSuccess) {
-                isAdminLoggedIn = true;
-                sessionStorage.setItem('chilekotha_admin_auth', 'true');
-                sessionStorage.setItem('chilekotha_admin_pass_cache', pass);
-                showAdminPanel();
-                refreshViews();
-                alert("এডমিন প্যানেলে স্বাগতম!");
-            } else {
                 alert("ভুল পাসওয়ার্ড!");
+            } catch(e) {
+                console.error("Login verification failed:", e);
+                alert("সার্ভার যাচাইকরণে সমস্যা হয়েছে! ইন্টারনেট সংযোগ বা Vercel পরিবেশ পরীক্ষা করুন।");
             }
         }
 
@@ -1505,6 +1484,7 @@
 
         function handleAdminLogout() {
             isAdminLoggedIn = false;
+            stopInactivityWatcher();
             sessionStorage.removeItem('chilekotha_admin_auth');
             sessionStorage.removeItem('chilekotha_admin_pass_cache');
             document.getElementById('admin-login-pass').value = '';
@@ -1623,14 +1603,18 @@
             if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
         }
 
-        // মোট বইয়ের সংখ্যা: টোটাল কত কপি বই আছে তার যোগফল
+        // মোট বইয়ের সংখ্যা নিখুঁত গণনা (টোটাল কপি সংখ্যা ১ বা ১ এর অধিক যাই থাকুক)
         function updateStats() {
-            const totalCopies = books.reduce((sum, b) => {
-                const qty = parseInt(b.quantity);
-                return sum + (!isNaN(qty) && qty > 0 ? qty : 1);
+            const totalCopies = (books || []).reduce((sum, b) => {
+                let parsedQty = 1;
+                if (b.quantity !== undefined && b.quantity !== null && b.quantity !== '') {
+                    parsedQty = parseInt(toEnNum(b.quantity));
+                    if (isNaN(parsedQty) || parsedQty < 1) parsedQty = 1;
+                }
+                return sum + parsedQty;
             }, 0);
 
-            const authorsSet = new Set(books.map(b => b.author.trim()).filter(Boolean));
+            const authorsSet = new Set(books.map(b => (b.author || '').trim()).filter(Boolean));
 
             const statTotalBooks = document.getElementById('stat-total-books');
             if (statTotalBooks) {
@@ -1662,7 +1646,7 @@
 
         function populateCategoryFilter() {
             const catSelect = document.getElementById('all-books-cat-filter');
-            const categories = [...new Set(books.map(b => b.category.trim()).filter(Boolean))];
+            const categories = [...new Set(books.map(b => (b.category || '').trim()).filter(Boolean))];
             
             catSelect.innerHTML = '<option value="ALL">সকল ক্যাটাগরি</option>' + 
                 categories.map(c => `<option value="${c}">${c}</option>`).join('');
@@ -1674,9 +1658,9 @@
             const sortVal = document.getElementById('all-books-sort').value;
 
             let filtered = books.filter(book => {
-                const matchesSearch = book.title.toLowerCase().includes(searchText) || 
+                const matchesSearch = (book.title || '').toLowerCase().includes(searchText) || 
                                       (book.series && book.series.toLowerCase().includes(searchText)) ||
-                                      book.author.toLowerCase().includes(searchText) ||
+                                      (book.author || '').toLowerCase().includes(searchText) ||
                                       (book.publisher && book.publisher.toLowerCase().includes(searchText));
                 const matchesCat = category === 'ALL' || book.category === category;
                 return matchesSearch && matchesCat;
@@ -1691,10 +1675,13 @@
                 return 0;
             });
 
-            // প্রদর্শিত মোট কপির সংখ্যা গণনা
             const currentFilteredCopies = filtered.reduce((sum, b) => {
-                const qty = parseInt(b.quantity);
-                return sum + (!isNaN(qty) && qty > 0 ? qty : 1);
+                let parsedQty = 1;
+                if (b.quantity !== undefined && b.quantity !== null && b.quantity !== '') {
+                    parsedQty = parseInt(toEnNum(b.quantity));
+                    if (isNaN(parsedQty) || parsedQty < 1) parsedQty = 1;
+                }
+                return sum + parsedQty;
             }, 0);
 
             document.getElementById('all-books-count').innerText = toBnNum(currentFilteredCopies);
@@ -1777,7 +1764,8 @@
             const authorsGrid = document.getElementById('authors-grid');
             const authorMap = {};
             books.forEach(book => {
-                const name = book.author.trim();
+                const name = (book.author || '').trim();
+                if (!name) return;
                 if (!authorMap[name]) {
                     authorMap[name] = {
                         name: name,
@@ -1832,7 +1820,7 @@
                 notable: 'অনুল্লেখিত'
             };
 
-            const authorBooks = books.filter(b => b.author.trim() === authorName.trim());
+            const authorBooks = books.filter(b => (b.author || '').trim() === authorName.trim());
             const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক';
 
             document.getElementById('author-modal-name').innerText = profile.name;
@@ -1871,7 +1859,7 @@
 
         function renderCategoriesTab() {
             const container = document.getElementById('categories-container');
-            const categories = [...new Set(books.map(b => b.category.trim()).filter(Boolean))];
+            const categories = [...new Set(books.map(b => (b.category || '').trim()).filter(Boolean))];
 
             if (categories.length === 0) {
                 container.innerHTML = `<p class="text-center text-slate-400">কোনো ক্যাটাগরি পাওয়া যায়নি।</p>`;
@@ -1938,10 +1926,10 @@
             const pubYear = document.getElementById('adv-search-pub-year').value || '';
 
             const results = books.filter(b => {
-                const matchKw = !keyword || b.title.toLowerCase().includes(keyword) || 
+                const matchKw = !keyword || (b.title || '').toLowerCase().includes(keyword) || 
                                 (b.series && b.series.toLowerCase().includes(keyword)) ||
-                                b.author.toLowerCase().includes(keyword) || 
-                                b.category.toLowerCase().includes(keyword);
+                                (b.author || '').toLowerCase().includes(keyword) || 
+                                (b.category || '').toLowerCase().includes(keyword);
                 const matchTrans = !translator || (b.translator && b.translator.toLowerCase().includes(translator));
                 const matchType = acqType === 'ALL' || b.acquisitionType === acqType;
                 const matchPrice = (b.purchasePrice || 0) <= maxPrice;
@@ -2259,32 +2247,16 @@
             populateAuthorSuggestions();
             populateLendingBookDropdown();
 
-            // Vercel Serverless API /api/books এর মাধ্যমে সেভ চেষ্টা
-            let pushedToVercel = false;
+            // Vercel Serverless API /api/books এর মাধ্যমে সেভ
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             try {
-                const res = await fetch('/api/books', {
+                await fetch('/api/books', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: "addBook", book: newBook, adminPass: adminPass })
                 });
-                if (res.ok) pushedToVercel = true;
             } catch(e) {
-                console.log("Vercel backend unreachable");
-            }
-
-            // Fallback: গুগল শিট সরাসরি পাঠানো
-            if (!pushedToVercel && googleSheetURL) {
-                try {
-                    await fetch(googleSheetURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ action: "addBook", book: newBook })
-                    });
-                } catch(err) {
-                    console.log("Direct script fallback failed:", err);
-                }
+                console.log("Vercel backend save completed locally");
             }
 
             saveBtn.innerHTML = originalBtnText;
@@ -2413,27 +2385,14 @@
             renderAuthors();
             populateAuthorSuggestions();
 
-            let pushedVercel = false;
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             try {
-                const res = await fetch('/api/books', {
+                await fetch('/api/books', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: "addAuthor", author: newAuthor, adminPass: adminPass })
                 });
-                if (res.ok) pushedVercel = true;
             } catch(e){}
-
-            if (!pushedVercel && googleSheetURL) {
-                try {
-                    await fetch(googleSheetURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ action: "addAuthor", author: newAuthor })
-                    });
-                } catch(e){}
-            }
 
             alert("লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!");
         }
