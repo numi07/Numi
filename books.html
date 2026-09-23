@@ -145,6 +145,15 @@
         .animate-toast {
             animation: slideInToast 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* Ambient Glow animation for owner profile */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.45; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.04); }
+        }
+        .owner-glow {
+            animation: pulseGlow 6s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="bg-slate-100/90 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white" oncontextmenu="return false;">
@@ -177,7 +186,7 @@
                 <!-- Logo with updated Link, Slogan & Clean Background -->
                 <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="switchTab('home')">
                     <div class="relative w-11 h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shadow-sm group overflow-hidden p-1 transition-all group-hover:border-sky-500">
-                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=চিলেকোঠা';">
+                        <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src=getFallbackLogo();">
                     </div>
                     <div class="overflow-hidden">
                         <span class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-300 bg-clip-text text-transparent truncate block">চিলেকোঠা লাইব্রেরি</span>
@@ -489,53 +498,66 @@
             <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6"></div>
         </section>
 
-        <!-- TAB: OWNER PROFILE -->
+        <!-- TAB: OWNER PROFILE (REDESIGNED, BIGGER & UNIQUE) -->
         <section id="tab-owner" class="tab-content hidden space-y-8">
-            <div class="max-w-5xl mx-auto bg-gradient-to-b from-white via-slate-50/60 to-white dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800 rounded-[2.5rem] p-6 sm:p-10 md:p-12 shadow-2xl relative overflow-hidden backdrop-blur-md">
+            <div class="max-w-6xl mx-auto bg-gradient-to-b from-white via-slate-50/70 to-white dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800/90 rounded-[2.8rem] p-6 sm:p-10 md:p-14 shadow-2xl relative overflow-hidden backdrop-blur-md">
                 
-                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-5 right-5 sm:top-7 sm:right-7 bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-2xl text-xs font-bold z-30 shadow-lg shadow-sky-600/25 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square"></i> এডিট
+                <!-- Ambient Backdrop Aura Glow -->
+                <div class="absolute -top-32 -left-32 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none owner-glow"></div>
+                <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none owner-glow" style="animation-delay: 3s;"></div>
+
+                <button id="admin-owner-edit-btn" onclick="toggleOwnerEditForm()" class="hidden absolute top-6 right-6 sm:top-8 sm:right-8 bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-2xl text-xs font-bold z-30 shadow-xl shadow-sky-600/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> প্রোফাইল এডিট
                 </button>
 
-                <div class="absolute -right-8 -bottom-8 text-sky-500/[0.04] dark:text-sky-400/[0.03] text-[220px] pointer-events-none select-none">
+                <div class="absolute -right-8 -bottom-8 text-sky-500/[0.04] dark:text-sky-400/[0.03] text-[260px] pointer-events-none select-none">
                     <i class="fa-solid fa-book-open-reader"></i>
                 </div>
-                <div class="absolute -left-10 -top-10 text-indigo-500/[0.04] dark:text-indigo-400/[0.03] text-[200px] pointer-events-none select-none">
+                <div class="absolute -left-10 -top-10 text-indigo-500/[0.04] dark:text-indigo-400/[0.03] text-[220px] pointer-events-none select-none">
                     <i class="fa-solid fa-feather-pointed"></i>
                 </div>
 
-                <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8 sm:gap-10 pb-10 border-b border-slate-200/80 dark:border-slate-800 relative z-10">
+                <div class="flex flex-col lg:flex-row items-center lg:items-start gap-10 sm:gap-12 pb-12 border-b border-slate-200/80 dark:border-slate-800 relative z-10">
                     
+                    <!-- Bigger & Stylized Owner Photo Frame -->
                     <div class="relative group shrink-0">
-                        <div class="w-56 h-56 sm:w-68 sm:h-68 md:w-80 md:h-80 rounded-[2.5rem] bg-gradient-to-tr from-sky-500 via-indigo-600 to-sky-400 p-2 shadow-[0_20px_50px_rgba(2,132,199,0.3)] transition-transform duration-500 group-hover:scale-[1.02]">
-                            <div class="w-full h-full rounded-[2.1rem] overflow-hidden bg-slate-950 relative shadow-inner">
-                                <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=700" 
-                                     alt="স্বত্বাধিকারী" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[26rem] lg:h-[26rem] rounded-[3rem] bg-gradient-to-tr from-sky-500 via-indigo-600 to-amber-400 p-[5px] shadow-[0_25px_60px_rgba(2,132,199,0.35)] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-[0_30px_70px_rgba(2,132,199,0.45)]">
+                            <div class="w-full h-full rounded-[2.7rem] overflow-hidden bg-slate-950 relative shadow-inner">
+                                <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=900" 
+                                     alt="স্বত্বাধিকারী" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                                    <span class="text-xs font-bold text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">চিলেকোঠা প্রতিষ্ঠাতা</span>
+                                </div>
                             </div>
                         </div>
-                        <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-3 rounded-2xl text-sm shadow-xl flex items-center justify-center border-4 border-white dark:border-slate-900" title="সক্রিয় ব্যক্তিগত সংগ্রহশালা">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </span>
+
+                        <!-- Active Collector Badge -->
+                        <div class="absolute -bottom-3 -right-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-2xl text-xs font-bold shadow-xl flex items-center gap-2 border-4 border-white dark:border-slate-900" title="সক্রিয় ব্যক্তিগত সংগ্রহশালা">
+                            <i class="fa-solid fa-circle-check text-white"></i>
+                            <span>ভেরিফাইড সংগ্রাহক</span>
+                        </div>
                     </div>
 
                     <div class="text-center lg:text-left space-y-4 flex-grow max-w-2xl">
                         <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3">
                             <h2 id="owner-name-el" class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-slate-100 tracking-tight">চিলেকোঠার পাঠক</h2>
-                            <span id="owner-role-el" class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs sm:text-sm px-4 py-1.5 rounded-full font-bold shadow-sm inline-flex items-center gap-2">
-                                <i class="fa-solid fa-award text-xs"></i> ব্যক্তিগত সংগ্রাহক
+                            <span id="owner-role-el" class="bg-gradient-to-r from-sky-500/15 to-indigo-500/15 text-sky-700 dark:text-sky-300 border border-sky-500/30 text-xs sm:text-sm px-4 py-1.5 rounded-full font-bold shadow-sm inline-flex items-center gap-2">
+                                <i class="fa-solid fa-award text-amber-500 text-xs"></i> ব্যক্তিগত সংগ্রাহক
                             </span>
                         </div>
 
                         <p id="owner-bio-el" class="text-base sm:text-lg font-semibold text-slate-600 dark:text-slate-300">বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা</p>
                         
                         <div>
-                            <span id="owner-quote-el" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-slate-800/80 border border-sky-200 dark:border-sky-900/60 px-5 py-2 rounded-2xl italic shadow-sm">
+                            <span id="owner-quote-el" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-slate-800/80 border border-sky-200 dark:border-sky-900/60 px-5 py-2.5 rounded-2xl italic shadow-sm">
                                 <i class="fa-solid fa-quote-left text-sky-500"></i> "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে"
                             </span>
                         </div>
 
-                        <div class="bg-white/80 dark:bg-slate-950/50 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-                            <p id="owner-message-el" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed text-justify">
+                        <div class="bg-white/80 dark:bg-slate-950/60 p-5 sm:p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm relative overflow-hidden">
+                            <div class="w-1.5 h-full bg-gradient-to-b from-sky-500 to-indigo-600 absolute left-0 top-0"></div>
+                            <p id="owner-message-el" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed text-justify pl-2">
                                 "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
                             </p>
                         </div>
@@ -1018,7 +1040,7 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                     <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group flex items-center justify-center">
-                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover">
+                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -1072,9 +1094,9 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-3">
-                        <!-- নিখুঁত ও সম্পূর্ণ ছবি প্রদর্শনের জন্য object-contain যুক্ত করা হয়েছে -->
-                        <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-md flex items-center justify-center p-2">
-                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
+                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা -->
+                        <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center">
+                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                             <div class="center-logo-watermark">
                                 <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
@@ -1228,6 +1250,47 @@
         });
 
         /* ==========================================================
+           EXACT BENGALI SVG FALLBACKS (NO MORE ???? ON MISSING IMAGES)
+           ========================================================== */
+        function getFallbackBookImage() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+                <defs>
+                    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0f172a"/>
+                        <stop offset="50%" stop-color="#0369a1"/>
+                        <stop offset="100%" stop-color="#0f172a"/>
+                    </linearGradient>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#bookGrad)"/>
+                <rect x="24" y="24" width="352" height="552" rx="16" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 6" opacity="0.4"/>
+                <circle cx="200" cy="240" r="54" fill="#0284c7" opacity="0.25"/>
+                <path d="M175 220 L200 240 L225 220 L225 260 L200 245 L175 260 Z" fill="#38bdf8"/>
+                <text x="50%" y="340" dominant-baseline="middle" text-anchor="middle" fill="#f8fafc" font-family="'Noto Sans Bengali', 'Hind Siliguri', sans-serif" font-size="28" font-weight="bold">চিলেকোঠা লাইব্রেরি</text>
+                <text x="50%" y="380" dominant-baseline="middle" text-anchor="middle" fill="#bae6fd" font-family="'Noto Sans Bengali', 'Hind Siliguri', sans-serif" font-size="16">প্রচ্ছদ উপলব্ধ নয়</text>
+            </svg>`;
+            return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+        }
+
+        function getFallbackAuthorImage() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+                <rect width="100%" height="100%" fill="#0f172a"/>
+                <circle cx="150" cy="150" r="140" fill="#0369a1" opacity="0.2"/>
+                <circle cx="150" cy="115" r="45" fill="#38bdf8" opacity="0.8"/>
+                <path d="M85 235 C85 185, 215 185, 215 235 Z" fill="#38bdf8" opacity="0.8"/>
+                <text x="50%" y="270" dominant-baseline="middle" text-anchor="middle" fill="#f8fafc" font-family="'Noto Sans Bengali', 'Hind Siliguri', sans-serif" font-size="20" font-weight="bold">চিলেকোঠা লাইব্রেরি</text>
+            </svg>`;
+            return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+        }
+
+        function getFallbackLogo() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                <rect width="100" height="100" rx="20" fill="#0284c7"/>
+                <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="'Noto Sans Bengali', 'Hind Siliguri', sans-serif" font-size="20" font-weight="bold">চিলেকোঠা</text>
+            </svg>`;
+            return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+        }
+
+        /* ==========================================================
            CUSTOM IN-APP TOAST & DIALOG (NO BROWSER DOMAIN HEADER)
            ========================================================== */
         function showToast(message, type = 'info') {
@@ -1377,7 +1440,7 @@
             bio: "বইপ্রেমী, পর্যটক ও চিলেকোঠা লাইব্রেরির প্রতিষ্ঠাতা",
             quote: "জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে",
             message: "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।",
-            photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=700"
+            photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=900"
         };
 
         const bookQuotes = [
@@ -1412,7 +1475,7 @@
             const savedTheme = localStorage.getItem('chilekotha_theme') || 'dark';
             applyTheme(savedTheme);
 
-            // নতুন ব্রাউজারে তাত্ক্ষণিক ডাটা লোড
+            // নতুন ব্রাউজারে তাত্ক্ষণিক ক্যাশড ডাটা লোড
             const savedBooks = localStorage.getItem('chilekotha_library_books');
             books = savedBooks ? JSON.parse(savedBooks) : (initialBooks.length ? initialBooks : []);
 
@@ -1439,7 +1502,7 @@
                 startInactivityWatcher();
             }
 
-            // সাইটে প্রবেশ করার সাথে সাথেই তাত্ক্ষণিক রেন্ডার
+            // সাইটে প্রবেশ করার সাথে সাথেই শূন্য বিলম্ব ছাড়াই তাত্ক্ষণিক ভিউ রেন্ডার
             renderOwnerProfile();
             updateStats();
             renderHomePage();
@@ -1458,10 +1521,8 @@
 
             startQuoteCarousel();
 
-            // ব্রাউজারকে ফ্রি রেখে ব্যাকগ্রাউন্ডে গুগল শিট থেকে লাইভ সিঙ্ক
-            setTimeout(() => {
-                syncLiveFromGoogleSheet(true);
-            }, 100);
+            // কোনো লেগ ছাড়াই তৎক্ষণাৎ গুগল শিট ও ক্লাউড ডাটাবেজ থেকে হাই-স্পিড সিঙ্ক
+            syncLiveFromGoogleSheet(true);
         };
 
         // PWA Setup
@@ -1533,14 +1594,24 @@
             datalist.innerHTML = Array.from(authorSet).map(name => `<option value="${name}"></option>`).join('');
         }
 
-        // লাইভ সিঙ্ক ফাংশন (অপ্টিমাইজড ও নন-ব্লকিং)
+        // অতি দ্রুত গতির লাইভ সিঙ্ক ফাংশন (Cache-Busting & High Performance)
         async function syncLiveFromGoogleSheet(silent = false) {
             try {
                 if (!silent) showToast("ডাটাবেজ সিঙ্ক করা হচ্ছে...", "info");
                 const pass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
-                const vercelUrl = `/api/books?action=getData${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
+                // ক্যাশ বাইপাস ও দ্রুততম লোডিংয়ের জন্য টাইমস্ট্যাম্প যুক্ত
+                const vercelUrl = `/api/books?action=getData&_t=${Date.now()}${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
                 
-                const res = await fetch(vercelUrl);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout guard
+
+                const res = await fetch(vercelUrl, {
+                    cache: 'no-store',
+                    headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
                 if (res.ok) {
                     const data = await res.json();
                     if (data && data.books && data.books.length > 0) {
@@ -1563,11 +1634,16 @@
                         localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
                         renderOwnerProfile();
                     }
-                    refreshViews();
+                    
+                    // UI স্মুথ রাখতে দ্রুত ফ্রেম আপডেট
+                    requestAnimationFrame(() => {
+                        refreshViews();
+                    });
+
                     if (!silent) showToast("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!", "success");
                 }
             } catch(err) {
-                console.error("Sync Error:", err);
+                console.warn("Fast Sync Notice:", err);
             }
         }
 
@@ -1600,7 +1676,7 @@
             }
 
             try {
-                const res = await fetch(`/api/books?action=checkLogin&pass=${encodeURIComponent(pass)}`);
+                const res = await fetch(`/api/books?action=checkLogin&pass=${encodeURIComponent(pass)}&_t=${Date.now()}`);
                 if (res.ok) {
                     const resData = await res.json();
                     if (resData.success) {
@@ -1848,9 +1924,9 @@
             }
         }
 
-        // ছবি যাতে কোনোভাবেই কেটে না যায় সেজন্য object-contain নিশ্চিত করা হয়েছে
+        // চারপাশের ফাঁকা দূর করে সম্পূর্ণ ফ্রেমে ফিট হওয়া বুক কার্ড
         function createBookCardHTML(book) {
-            const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : 'https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা';
+            const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : getFallbackBookImage();
             
             let badgeText = "ক্রয়কৃত";
             let badgeClass = "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30";
@@ -1879,12 +1955,13 @@
 
             return `
             <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
-                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
                     #${toBnNum(book.serial)}
                 </div>
 
-                <div class="aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-950 relative flex items-center justify-center p-2">
-                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা'">
+                <!-- সম্পূর্ণ এজ-টু-এজ নিখুঁত ফ্রেমিং, চারিপাশে কোনো ফালতু ফাঁকা নেই -->
+                <div class="aspect-[3/4] w-full overflow-hidden bg-slate-200 dark:bg-slate-950 relative">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                     
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
@@ -1922,7 +1999,7 @@
                 if (!authorMap[name]) {
                     authorMap[name] = {
                         name: name,
-                        photo: formatImageUrl(book.authorPhoto) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        photo: formatImageUrl(book.authorPhoto) || getFallbackAuthorImage(),
                         books: []
                     };
                 }
@@ -1935,7 +2012,7 @@
                 } else {
                     authorMap[ap.name] = {
                         name: ap.name,
-                        photo: formatImageUrl(ap.photo) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        photo: formatImageUrl(ap.photo) || getFallbackAuthorImage(),
                         books: []
                     };
                 }
@@ -1949,8 +2026,8 @@
 
             authorsGrid.innerHTML = authorList.map(author => `
                 <div onclick="openAuthorModal('${author.name}')" class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex items-center space-x-4 cursor-pointer transition-all hover:shadow-lg group shadow-sm">
-                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative">
-                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/0f172a/0284c7?text=লেখক'">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative bg-slate-100 dark:bg-slate-950">
+                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -1975,7 +2052,7 @@
             };
 
             const authorBooks = books.filter(b => (b.author || '').trim() === authorName.trim());
-            const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || 'https://placehold.co/200x200/0f172a/0284c7?text=Empty';
+            const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || getFallbackAuthorImage();
 
             document.getElementById('author-modal-name').innerText = profile.name;
             document.getElementById('author-modal-lifespan').innerText = profile.lifespan ? `জীবনকাল: ${toBnNum(profile.lifespan)}` : '';
@@ -1989,7 +2066,7 @@
             } else {
                 listContainer.innerHTML = authorBooks.map(b => `
                     <div onclick="closeAuthorModal(); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
-                        <img loading="lazy" decoding="async" src="${b.images[0] ? formatImageUrl(b.images[0]) : ''}" class="w-9 h-12 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900" onerror="this.src='https://placehold.co/100x150/0f172a/0284c7?text=বই'">
+                        <img loading="lazy" decoding="async" src="${b.images[0] ? formatImageUrl(b.images[0]) : getFallbackBookImage()}" class="w-10 h-14 object-cover rounded-lg shrink-0 bg-white dark:bg-slate-900" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                         <div class="overflow-hidden">
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
@@ -2160,13 +2237,13 @@
 
             updateModalLikeButton(book);
 
-            const images = (book.images && book.images.length > 0) ? book.images.map(img => formatImageUrl(img)) : ['https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা'];
+            const images = (book.images && book.images.length > 0) ? book.images.map(img => formatImageUrl(img)) : [getFallbackBookImage()];
             document.getElementById('modal-main-image').src = images[0];
 
             const thumbsContainer = document.getElementById('modal-thumbnails');
             thumbsContainer.innerHTML = images.map((img) => `
                 <div class="relative shrink-0 overflow-hidden rounded-lg group">
-                    <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=ছবি'">
+                    <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                 </div>
             `).join('');
 
@@ -2678,7 +2755,7 @@
             container.innerHTML = authorProfiles.map(author => `
                 <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div class="flex items-center space-x-3 overflow-hidden">
-                        <img src="${formatImageUrl(author.photo) || 'https://placehold.co/100x100/0f172a/0284c7?text=লেখক'}" class="w-10 h-10 rounded-full object-cover shrink-0">
+                        <img src="${formatImageUrl(author.photo) || getFallbackAuthorImage()}" class="w-10 h-10 rounded-full object-cover shrink-0" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
                         <div class="overflow-hidden">
                             <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">${author.name}</h4>
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 truncate">${author.lifespan ? 'জীবনকাল: ' + toBnNum(author.lifespan) : ''}</p>
@@ -2934,7 +3011,9 @@
                 if(document.getElementById('owner-bio-el')) document.getElementById('owner-bio-el').innerText = ownerProfile.bio;
                 if(document.getElementById('owner-quote-el')) document.getElementById('owner-quote-el').innerText = ownerProfile.quote;
                 if(document.getElementById('owner-message-el')) document.getElementById('owner-message-el').innerText = ownerProfile.message;
-                if(document.getElementById('owner-photo-el') && ownerProfile.photo) document.getElementById('owner-photo-el').src = formatImageUrl(ownerProfile.photo);
+                if(document.getElementById('owner-photo-el') && ownerProfile.photo) {
+                    document.getElementById('owner-photo-el').src = formatImageUrl(ownerProfile.photo);
+                }
             }
         }
 
