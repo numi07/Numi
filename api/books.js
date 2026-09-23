@@ -4,7 +4,8 @@ export default async function handler(req, res) {
     const allowedDomain = "shikdernumi.pro.bd";
 
     const referer = req.headers.referer || "";
-    const isAllowedSource = referer.includes(allowedDomain) || referer.includes("localhost");
+    const origin = req.headers.origin || "";
+    const isAllowedSource = referer.includes(allowedDomain) || origin.includes(allowedDomain) || referer.includes("localhost") || origin.includes("localhost");
 
     if (req.method === 'GET') {
         const { action, pass } = req.query;
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
         }
 
         try {
-            const response = await fetch(`${scriptURL}?action=getData`);
+            const response = await fetch(`${scriptURL}?action=getData&_t=${Date.now()}`);
             const data = await response.json();
             res.setHeader('Access-Control-Allow-Origin', `https://${allowedDomain}`);
             return res.status(200).json(data);
@@ -29,6 +30,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: "Fetch failed" });
         }
     }
+    
     if (req.method === 'POST') {
         try {
             if (!isAllowedSource) {
@@ -36,7 +38,12 @@ export default async function handler(req, res) {
             }
 
             const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-            if (payload.adminPass !== adminPass) {
+            
+            // সাধারণ পাঠকদের লাইক ও মন্তব্য পাঠানোর জন্য এডমিন পাসওয়ার্ড বাধ্যতামূলক নয়
+            const publicActions = ['updateLikes', 'updateComments'];
+            const requiresAdmin = !publicActions.includes(payload.action);
+
+            if (requiresAdmin && payload.adminPass !== adminPass) {
                 return res.status(401).json({ error: "Unauthorized" });
             }
 
