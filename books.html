@@ -1155,10 +1155,10 @@
                         </div>
 
                         <div class="flex items-center justify-between pt-2">
-                            <!-- টগলযোগ্য লাইক বাটন (কনফার্মেশন সহ) -->
-                            <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors">
+                            <!-- টগলযোগ্য সার্বজনীন লাইক বাটন (যে কেউ দেখতে পারে কতজন পছন্দ করেছেন) -->
+                            <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors font-medium">
                                 <i class="fa-solid fa-heart" id="modal-like-icon"></i>
-                                <span id="modal-like-count">০</span>টি পছন্দ
+                                <span><span id="modal-like-count">০</span> জন পছন্দ করেছেন</span>
                             </button>
 
                             <div id="admin-book-actions" class="hidden space-x-2">
@@ -1313,7 +1313,6 @@
             }, 3200);
         }
 
-        // Custom confirm dialog that avoids displaying website url
         function showCustomConfirm(message) {
             return new Promise((resolve) => {
                 const modal = document.getElementById('custom-confirm-modal');
@@ -1352,7 +1351,6 @@
             return parseFloat(converted) || 0;
         }
 
-        // সার্বজনীন নিখুঁত কপি এক্সট্র্যাক্ট ফাংশন
         function getBookCopies(b) {
             if (!b) return 1;
             const possibleVal = b.quantity !== undefined ? b.quantity : 
@@ -1368,7 +1366,19 @@
             return (!isNaN(num) && num > 0) ? num : 1;
         }
 
-        // Date formatting dd.mm.yyyy (Strictly Bengali Numbers)
+        // সার্বজনীন নির্ভুল লাইক এক্সট্র্যাক্ট ফাংশন (যে কেউ দেখতে পারে)
+        function getBookLikes(b) {
+            if (!b) return 0;
+            const possibleVal = b.likes !== undefined ? b.likes : 
+                               (b.Likes !== undefined ? b.Likes : 
+                               (b.like !== undefined ? b.like : 
+                               (b.Like !== undefined ? b.Like : 
+                               (b['লাইক'] !== undefined ? b['লাইক'] : 
+                               (b['পছন্দ'] !== undefined ? b['পছন্দ'] : 0)))));
+            const num = parseInt(toEnNum(possibleVal));
+            return (!isNaN(num) && num >= 0) ? num : 0;
+        }
+
         function formatDateBn(dateStr) {
             if (!dateStr) return '';
             
@@ -1410,7 +1420,6 @@
             return toBnNum(dateStr);
         }
 
-        // Automatic Google Drive link converter
         function formatImageUrl(url) {
             if (!url) return '';
             url = url.trim();
@@ -1427,7 +1436,6 @@
             return url;
         }
 
-        // নতুন ব্রাউজারে বিদ্যুতগতিতে তাৎক্ষণিক লোড হওয়ার জন্য ডিফল্ট ক্যাশড ডাটা
         const initialBooks = [];
         const initialAuthors = [];
         const initialBorrowings = [];
@@ -1455,6 +1463,7 @@
         let borrowings = [];
         let currentQuoteIndex = 0;
         let activeBookId = null;
+        let activeAuthorModalName = null;
         let currentGiftView = 'received';
         let likedBooksSet = new Set(JSON.parse(localStorage.getItem('chilekotha_user_likes') || '[]'));
         let tabHistoryStack = ['home'];
@@ -1462,7 +1471,6 @@
         
         let ownerProfile = JSON.parse(localStorage.getItem('chilekotha_owner')) || initialOwner;
 
-        // Inactivity Timer Variables (5 minutes timeout)
         let inactivityTimeout = null;
         const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
 
@@ -1472,7 +1480,6 @@
             const savedTheme = localStorage.getItem('chilekotha_theme') || 'dark';
             applyTheme(savedTheme);
 
-            // নতুন ব্রাউজারে তাত্ক্ষণিক ক্যাশড ডাটা লোড
             const savedBooks = localStorage.getItem('chilekotha_library_books');
             books = savedBooks ? JSON.parse(savedBooks) : (initialBooks.length ? initialBooks : []);
 
@@ -1499,7 +1506,6 @@
                 startInactivityWatcher();
             }
 
-            // সাইটে প্রবেশ করার সাথে সাথেই শূন্য বিলম্ব ছাড়াই তাত্ক্ষণিক ভিউ রেন্ডার
             renderOwnerProfile();
             updateStats();
             renderHomePage();
@@ -1518,11 +1524,23 @@
 
             startQuoteCarousel();
 
-            // কোনো লেগ ছাড়াই তৎক্ষণাৎ গুগল শিট ও ক্লাউড ডাটাবেজ থেকে হাই-স্পিড সিঙ্ক
+            // রিলোড দেওয়ার পরও পূর্বে থাকা সক্রিয় ট্যাব ও মডাল হুবহু অক্ষুণ্ণ রাখা
+            const savedActiveTab = sessionStorage.getItem('chilekotha_active_tab') || 'home';
+            if (savedActiveTab !== 'home') {
+                switchTab(savedActiveTab, false);
+            }
+
+            const savedOpenModalType = sessionStorage.getItem('chilekotha_open_modal_type');
+            const savedOpenModalId = sessionStorage.getItem('chilekotha_open_modal_id');
+            if (savedOpenModalType === 'book' && savedOpenModalId) {
+                setTimeout(() => openBookModal(savedOpenModalId), 50);
+            } else if (savedOpenModalType === 'author' && savedOpenModalId) {
+                setTimeout(() => openAuthorModal(savedOpenModalId), 50);
+            }
+
             syncLiveFromGoogleSheet(true);
         };
 
-        // PWA Setup
         function setupPWAFeatures() {
             const manifest = {
                 name: "চিলেকোঠা লাইব্রেরি",
@@ -1546,6 +1564,10 @@
                 closeBookModal();
                 return;
             }
+            if (activeAuthorModalName) {
+                closeAuthorModal();
+                return;
+            }
             if (tabHistoryStack.length > 1) {
                 tabHistoryStack.pop(); 
                 const previousTab = tabHistoryStack[tabHistoryStack.length - 1] || 'home';
@@ -1555,7 +1577,6 @@
             }
         });
 
-        // ৫ মিনিট নিষ্ক্রিয়তায় অটো লগআউট ওয়াচার
         function startInactivityWatcher() {
             resetInactivityTimer();
             ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
@@ -1581,7 +1602,6 @@
             }, INACTIVITY_LIMIT_MS);
         }
 
-        // লেখক সাজেস্ট করার জন্য Datalist রেন্ডার
         function populateAuthorSuggestions() {
             const datalist = document.getElementById('authors-datalist');
             if (!datalist) return;
@@ -1591,7 +1611,7 @@
             datalist.innerHTML = Array.from(authorSet).map(name => `<option value="${name}"></option>`).join('');
         }
 
-        // অতি দ্রুত গতির লাইভ সিঙ্ক ফাংশন (Cache-Busting & High Performance)
+        // সার্বজনীন লাইক সিঙ্ক সহ দ্রুততম লাইভ সিঙ্ক
         async function syncLiveFromGoogleSheet(silent = false) {
             try {
                 if (!silent) showToast("ডাটাবেজ সিঙ্ক করা হচ্ছে...", "info");
@@ -1613,9 +1633,10 @@
                     if (data && data.books && data.books.length > 0) {
                         books = data.books.map(remoteBook => {
                             const localBook = books.find(b => b.id === remoteBook.id || String(b.serial) === String(remoteBook.serial));
+                            const remoteLikes = getBookLikes(remoteBook);
                             return {
                                 ...remoteBook,
-                                likes: remoteBook.likes !== undefined ? remoteBook.likes : (localBook ? localBook.likes : 0),
+                                likes: remoteLikes > 0 ? remoteLikes : (localBook ? getBookLikes(localBook) : 0),
                                 comments: (remoteBook.comments && remoteBook.comments.length) ? remoteBook.comments : (localBook ? localBook.comments : [])
                             };
                         });
@@ -1633,6 +1654,10 @@
                     
                     requestAnimationFrame(() => {
                         refreshViews();
+                        if (activeBookId) {
+                            const currentOpen = books.find(b => b.id === activeBookId);
+                            if (currentOpen) updateModalLikeButton(currentOpen);
+                        }
                     });
 
                     if (!silent) showToast("সফলভাবে তথ্য সিঙ্ক সম্পন্ন হয়েছে!", "success");
@@ -1654,7 +1679,6 @@
             localStorage.setItem('chilekotha_borrowings', JSON.stringify(borrowings));
         }
 
-        // Enter চেপে লগইন সাপোর্ট
         function handleAdminPassKeydown(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1662,7 +1686,6 @@
             }
         }
 
-        // Admin Authentication using Vercel API `/api/books`
         async function handleAdminLogin() {
             const pass = document.getElementById('admin-login-pass').value.trim();
             if (!pass) {
@@ -1739,6 +1762,7 @@
             }
         }
 
+        // ট্যাব সুইচিং এবং রিলোড স্টেট সংরক্ষণ
         function switchTab(tabId, pushHistory = true) {
             sessionStorage.setItem('chilekotha_active_tab', tabId);
             if (pushHistory && tabHistoryStack[tabHistoryStack.length - 1] !== tabId) {
@@ -1822,7 +1846,6 @@
             if (heroAuthor) heroAuthor.innerText = `— ${quoteObj.author}`;
         }
 
-        // মোট বইয়ের সংখ্যা ও এডমিন আর্থিক ক্যালকুলেশন
         function updateStats() {
             const totalCopies = (books || []).reduce((sum, b) => sum + getBookCopies(b), 0);
             const authorsSet = new Set(books.map(b => (b.author || '').trim()).filter(Boolean));
@@ -1840,7 +1863,6 @@
             updateAdminFinancials();
         }
 
-        // এডমিনের জন্য মোট মুদ্রিত ও ক্রয় মূল্যের যোগফল
         function updateAdminFinancials() {
             if (!isAdminLoggedIn) return;
             
@@ -1870,7 +1892,7 @@
             const featuredContainer = document.getElementById('home-featured-books');
             const recentContainer = document.getElementById('home-recent-books');
 
-            const sortedByLikes = [...books].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 4);
+            const sortedByLikes = [...books].sort((a, b) => getBookLikes(b) - getBookLikes(a)).slice(0, 4);
             featuredContainer.innerHTML = sortedByLikes.map(book => createBookCardHTML(book)).join('');
 
             const sortedRecent = [...books].sort((a, b) => b.serial - a.serial).slice(0, 4);
@@ -1919,7 +1941,7 @@
             }
         }
 
-        // সম্পূর্ণ ফ্রেমের ভেতর ছবি প্রদর্শনের জন্য নিখুঁত ডিজাইন (একটুও কেটে যাবে না)
+        // সার্বজনীন উন্মুক্ত লাইক সংখ্যা সহ প্রতিটি বইয়ের কার্ড
         function createBookCardHTML(book) {
             const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : getFallbackBookImage();
             
@@ -1947,6 +1969,8 @@
             let priceHTML = (book.acquisitionType === 'GIFT_RECEIVED') 
                 ? `<span class="text-emerald-600 dark:text-emerald-400 font-semibold text-[10px] sm:text-xs"><i class="fa-solid fa-gift text-[8px] sm:text-[10px]"></i> উপহার</span>`
                 : `<span class="text-slate-600 dark:text-slate-400 text-[10px] sm:text-xs">মুদ্রিত মূল্য: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">৳ ${toBnNum(book.printedPrice || 0)}</strong>${adminPriceHTML}</span>`;
+
+            const publicLikes = getBookLikes(book);
 
             return `
             <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
@@ -1978,8 +2002,9 @@
 
                     <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         ${priceHTML}
-                        <span class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs flex items-center gap-1">
-                            <i class="fa-solid fa-heart text-rose-500"></i> ${toBnNum(book.likes || 0)}
+                        <!-- যে কেউ দেখতে পারে এমন উন্মুক্ত লাইক কাউন্টার -->
+                        <span class="text-slate-600 dark:text-slate-300 text-[10px] sm:text-xs flex items-center gap-1 font-semibold" title="${toBnNum(publicLikes)} জন পাঠক পছন্দ করেছেন">
+                            <i class="fa-solid fa-heart text-rose-500"></i> ${toBnNum(publicLikes)} জন
                         </span>
                     </div>
                 </div>
@@ -2038,8 +2063,12 @@
             `).join('');
         }
 
-        // স্থির ও স্টেবল মডাল ওপেনার
+        // মডাল স্টেট সংরক্ষণ সহ লেখক মডাল ওপেনার
         function openAuthorModal(authorName) {
+            activeAuthorModalName = authorName;
+            sessionStorage.setItem('chilekotha_open_modal_type', 'author');
+            sessionStorage.setItem('chilekotha_open_modal_id', authorName);
+
             const profile = authorProfiles.find(a => a.name.trim() === authorName.trim()) || {
                 name: authorName,
                 lifespan: 'অনুল্লেখিত',
@@ -2079,6 +2108,11 @@
         function closeAuthorModal() {
             document.getElementById('author-modal').classList.add('hidden');
             document.body.style.overflow = '';
+            activeAuthorModalName = null;
+            if (sessionStorage.getItem('chilekotha_open_modal_type') === 'author') {
+                sessionStorage.removeItem('chilekotha_open_modal_type');
+                sessionStorage.removeItem('chilekotha_open_modal_id');
+            }
         }
 
         function viewAuthorProfileFromName(name) {
@@ -2175,12 +2209,14 @@
             }
         }
 
-        // স্থির ও স্টেবল বইয়ের মডাল ওপেনার
+        // মডাল স্টেট সংরক্ষণ সহ বই মডাল ওপেনার
         function openBookModal(bookId) {
             const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
             if (!book) return;
 
             activeBookId = book.id;
+            sessionStorage.setItem('chilekotha_open_modal_type', 'book');
+            sessionStorage.setItem('chilekotha_open_modal_id', book.id);
 
             document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
             const acqBadge = document.getElementById('modal-acquisition-badge');
@@ -2268,14 +2304,20 @@
             document.getElementById('book-modal').classList.add('hidden');
             document.body.style.overflow = '';
             activeBookId = null;
+            if (sessionStorage.getItem('chilekotha_open_modal_type') === 'book') {
+                sessionStorage.removeItem('chilekotha_open_modal_type');
+                sessionStorage.removeItem('chilekotha_open_modal_id');
+            }
         }
 
+        // সার্বজনীন উন্মুক্ত লাইক বাটন ও কাউন্ট হ্যান্ডলার
         function updateModalLikeButton(book) {
             const likeBtn = document.getElementById('modal-like-btn');
             const likeIcon = document.getElementById('modal-like-icon');
             const likeCount = document.getElementById('modal-like-count');
 
-            likeCount.innerText = toBnNum(book.likes || 0);
+            const totalLikes = getBookLikes(book);
+            likeCount.innerText = toBnNum(totalLikes);
 
             if (likedBooksSet.has(book.id)) {
                 likeBtn.classList.add('bg-rose-500/25', 'text-rose-600', 'dark:text-rose-300');
@@ -2286,16 +2328,18 @@
             }
         }
 
-        // লাইক দেওয়া ও প্রত্যাহার (Unlike) নিশ্চিতকরণ সহ
+        // লাইক দেওয়া ও প্রত্যাহার (কনফার্মেশন ও সার্বজনীন সিঙ্ক সহ)
         async function toggleLikeCurrentBook() {
             if (!activeBookId) return;
             const book = books.find(b => b.id === activeBookId);
             if (!book) return;
 
+            let currentLikes = getBookLikes(book);
+
             if (likedBooksSet.has(book.id)) {
                 const confirmed = await showCustomConfirm("আপনি কি এই বই থেকে আপনার পছন্দ (Like) প্রত্যাহার করতে চান?");
                 if (confirmed) {
-                    book.likes = Math.max(0, (book.likes || 1) - 1);
+                    book.likes = Math.max(0, currentLikes - 1);
                     likedBooksSet.delete(book.id);
                     localStorage.setItem('chilekotha_user_likes', JSON.stringify(Array.from(likedBooksSet)));
                     saveToLocalStorage();
@@ -2304,10 +2348,10 @@
                     filterAllBooks();
                     showToast("পছন্দ প্রত্যাহার করা হয়েছে।", "info");
 
-                    syncBookLikeToServer(book.id, book.likes);
+                    syncBookLikeToServer(book.id, book.serial, book.title, book.likes);
                 }
             } else {
-                book.likes = (book.likes || 0) + 1;
+                book.likes = currentLikes + 1;
                 likedBooksSet.add(book.id);
                 localStorage.setItem('chilekotha_user_likes', JSON.stringify(Array.from(likedBooksSet)));
                 saveToLocalStorage();
@@ -2316,16 +2360,16 @@
                 filterAllBooks();
                 showToast("বইটি আপনার পছন্দ তালিকায় যুক্ত হয়েছে!", "success");
 
-                syncBookLikeToServer(book.id, book.likes);
+                syncBookLikeToServer(book.id, book.serial, book.title, book.likes);
             }
         }
 
-        async function syncBookLikeToServer(bookId, likesCount) {
+        async function syncBookLikeToServer(bookId, serial, title, likesCount) {
             try {
                 await fetch('/api/books', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: "updateLikes", bookId, likes: likesCount })
+                    body: JSON.stringify({ action: "updateLikes", bookId, serial, title, likes: likesCount })
                 });
             } catch(e) {}
         }
@@ -2394,7 +2438,6 @@
             } catch(e) {}
         }
 
-        // মন্তব্য অনুমোদন ও ডিলিট প্যানেল
         function renderPendingCommentsAdmin() {
             const container = document.getElementById('admin-pending-comments');
             if (!container) return;
@@ -2483,7 +2526,6 @@
             }
         }
 
-        // Book Form Submit with In-App Dialogs (No Website URL Header)
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
@@ -2607,7 +2649,6 @@
             document.getElementById('form-summary-input').value = book.summary || '';
         }
 
-        // বই ডিলিট (No Website Domain Pop-up)
         async function deleteCurrentBook() {
             if (!isAdminLoggedIn) { showToast("বই মুছতে এডমিন লগইন প্রয়োজন!", "warning"); return; }
             if (!activeBookId) return;
@@ -2682,7 +2723,6 @@
             }
         }
 
-        // Author Form Submit
         async function handleAuthorFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("এডমিন লগইন প্রয়োজন!", "warning"); return; }
@@ -2776,7 +2816,6 @@
             `).join('');
         }
 
-        // Lending System
         function populateLendingBookDropdown() {
             const select = document.getElementById('lending-book-select');
             if (!select) return;
@@ -2878,7 +2917,6 @@
             `).join('');
         }
 
-        // Multi-Sheet Excel Parser
         function handleExcelUpload(event) {
             if (!isAdminLoggedIn) { showToast("এক্সেল আপলোড করতে এডমিন লগইন প্রয়োজন!", "warning"); event.target.value = ''; return; }
             const file = event.target.files[0];
@@ -2904,6 +2942,7 @@
                                 if (!title || !author) return;
 
                                 const nextSerial = books.length > 0 ? Math.max(...books.map(b => b.serial || 0)) + 1 : 1;
+                                const excelLikes = parseInt(toEnNum(row['Likes'] || row['likes'] || row['লাইক'] || row['পছন্দ'])) || 0;
                                 books.push({
                                     id: 'b_' + Date.now() + Math.random().toString(36).substr(2, 4),
                                     serial: nextSerial,
@@ -2924,7 +2963,7 @@
                                     images: row['Images'] ? [formatImageUrl(row['Images'])] : [],
                                     quantity: parseInt(toEnNum(row['Quantity'] || row['quantity'] || row['পরিমাণ'] || row['copies'] || row['Copies'])) || 1,
                                     acquisitionType: 'PURCHASED',
-                                    likes: 0,
+                                    likes: excelLikes,
                                     comments: []
                                 });
                                 addedBooks++;
@@ -2965,7 +3004,8 @@
                     'Quantity': 1,
                     'Review': 'চমৎকার একটি বই।',
                     'SeriesName': '',
-                    'SeriesOrder': ''
+                    'SeriesOrder': '',
+                    'Likes': 12
                 }
             ];
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(booksData), "Books");
@@ -2991,7 +3031,8 @@
                 'Quantity': getBookCopies(b),
                 'Review': b.summary || '',
                 'SeriesName': b.series || '',
-                'SeriesOrder': b.seriesNum || ''
+                'SeriesOrder': b.seriesNum || '',
+                'Likes': getBookLikes(b)
             }));
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(booksExport), "Books");
             XLSX.writeFile(wb, `চিলেকোঠা_লাইব্রেরি_ডাটাবেজ.xlsx`);
