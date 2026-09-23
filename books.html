@@ -2026,7 +2026,7 @@
                 </div>
 
                 <div class="aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=চিলেকোঠা+লাইব্রেরি'">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/0f172a/0284c7?text=Empty'">
                     
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
@@ -2066,7 +2066,7 @@
                 if (!authorMap[name]) {
                     authorMap[name] = {
                         name: name,
-                        photo: formatImageUrl(book.authorPhoto) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        photo: formatImageUrl(book.authorPhoto) || 'https://placehold.co/200x200/0f172a/0284c7?text=Empty',
                         books: []
                     };
                 }
@@ -2079,7 +2079,7 @@
                 } else {
                     authorMap[ap.name] = {
                         name: ap.name,
-                        photo: formatImageUrl(ap.photo) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক',
+                        photo: formatImageUrl(ap.photo) || 'https://placehold.co/200x200/0f172a/0284c7?text=Empty',
                         books: []
                     };
                 }
@@ -2119,7 +2119,7 @@
             };
 
             const authorBooks = books.filter(b => (b.author || '').trim() === authorName.trim());
-            const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || 'https://placehold.co/200x200/0f172a/0284c7?text=লেখক';
+            const photo = formatImageUrl(profile.photo) || (authorBooks[0] && formatImageUrl(authorBooks[0].authorPhoto)) || 'https://placehold.co/200x200/0f172a/0284c7?text=Empty';
 
             document.getElementById('author-modal-name').innerText = profile.name;
             document.getElementById('author-modal-lifespan').innerText = profile.lifespan ? `জীবনকাল: ${toBnNum(profile.lifespan)}` : '';
