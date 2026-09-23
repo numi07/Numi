@@ -183,7 +183,7 @@
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md shadow-sm dark:shadow-xl transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo with updated Link, Slogan & Clean Background -->
+                <!-- Logo with Link, Slogan & Clean Background -->
                 <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="switchTab('home')">
                     <div class="relative w-11 h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shadow-sm group overflow-hidden p-1 transition-all group-hover:border-sky-500">
                         <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src=getFallbackLogo();">
@@ -522,13 +522,9 @@
                     <!-- Bigger & Stylized Owner Photo Frame -->
                     <div class="relative group shrink-0">
                         <div class="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[26rem] lg:h-[26rem] rounded-[3rem] bg-gradient-to-tr from-sky-500 via-indigo-600 to-amber-400 p-[5px] shadow-[0_25px_60px_rgba(2,132,199,0.35)] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-[0_30px_70px_rgba(2,132,199,0.45)]">
-                            <div class="w-full h-full rounded-[2.7rem] overflow-hidden bg-slate-950 relative shadow-inner">
+                            <div class="w-full h-full rounded-[2.7rem] overflow-hidden bg-slate-950 relative shadow-inner flex items-center justify-center">
                                 <img id="owner-photo-el" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=900" 
                                      alt="স্বত্বাধিকারী" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
-                                
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-                                    <span class="text-xs font-bold text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">চিলেকোঠা প্রতিষ্ঠাতা</span>
-                                </div>
                             </div>
                         </div>
 
@@ -1039,8 +1035,8 @@
 
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                    <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group flex items-center justify-center">
-                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
+                    <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group flex items-center justify-center p-1">
+                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -1094,9 +1090,10 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-3">
-                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা -->
-                        <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center">
-                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা (একটুও কাটা পড়বে না) -->
+                        <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center p-2">
+                            <img id="modal-backdrop-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 dark:opacity-25 scale-110 pointer-events-none" onerror="this.style.display='none'">
+                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                             <div class="center-logo-watermark">
                                 <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
@@ -1599,11 +1596,10 @@
             try {
                 if (!silent) showToast("ডাটাবেজ সিঙ্ক করা হচ্ছে...", "info");
                 const pass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
-                // ক্যাশ বাইপাস ও দ্রুততম লোডিংয়ের জন্য টাইমস্ট্যাম্প যুক্ত
                 const vercelUrl = `/api/books?action=getData&_t=${Date.now()}${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
                 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout guard
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                 const res = await fetch(vercelUrl, {
                     cache: 'no-store',
@@ -1635,7 +1631,6 @@
                         renderOwnerProfile();
                     }
                     
-                    // UI স্মুথ রাখতে দ্রুত ফ্রেম আপডেট
                     requestAnimationFrame(() => {
                         refreshViews();
                     });
@@ -1924,7 +1919,7 @@
             }
         }
 
-        // চারপাশের ফাঁকা দূর করে সম্পূর্ণ ফ্রেমে ফিট হওয়া বুক কার্ড
+        // সম্পূর্ণ ফ্রেমের ভেতর ছবি প্রদর্শনের জন্য নিখুঁত ডিজাইন (একটুও কেটে যাবে না)
         function createBookCardHTML(book) {
             const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : getFallbackBookImage();
             
@@ -1959,9 +1954,11 @@
                     #${toBnNum(book.serial)}
                 </div>
 
-                <!-- সম্পূর্ণ এজ-টু-এজ নিখুঁত ফ্রেমিং, চারিপাশে কোনো ফালতু ফাঁকা নেই -->
-                <div class="aspect-[3/4] w-full overflow-hidden bg-slate-200 dark:bg-slate-950 relative">
-                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                <!-- ফ্রেমের মধ্যে কোনো অংশ না কেটে নিখুঁত ছবি প্রদর্শন -->
+                <div class="aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative flex items-center justify-center p-1.5">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-25 dark:opacity-30 scale-110 pointer-events-none" onerror="this.style.display='none'">
+                    
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm rounded-md" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                     
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
@@ -2041,7 +2038,7 @@
             `).join('');
         }
 
-        // স্থির ও স্টেবল মডাল ওপেনার (লাফালাফি সম্পূর্ণ বন্ধ)
+        // স্থির ও স্টেবল মডাল ওপেনার
         function openAuthorModal(authorName) {
             const profile = authorProfiles.find(a => a.name.trim() === authorName.trim()) || {
                 name: authorName,
@@ -2066,7 +2063,7 @@
             } else {
                 listContainer.innerHTML = authorBooks.map(b => `
                     <div onclick="closeAuthorModal(); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
-                        <img loading="lazy" decoding="async" src="${b.images[0] ? formatImageUrl(b.images[0]) : getFallbackBookImage()}" class="w-10 h-14 object-cover rounded-lg shrink-0 bg-white dark:bg-slate-900" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                        <img loading="lazy" decoding="async" src="${b.images[0] ? formatImageUrl(b.images[0]) : getFallbackBookImage()}" class="w-10 h-14 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900 p-0.5" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                         <div class="overflow-hidden">
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
@@ -2238,12 +2235,20 @@
             updateModalLikeButton(book);
 
             const images = (book.images && book.images.length > 0) ? book.images.map(img => formatImageUrl(img)) : [getFallbackBookImage()];
-            document.getElementById('modal-main-image').src = images[0];
+            
+            const mainImgEl = document.getElementById('modal-main-image');
+            const backdropImgEl = document.getElementById('modal-backdrop-image');
+            
+            mainImgEl.src = images[0];
+            if (backdropImgEl) {
+                backdropImgEl.src = images[0];
+                backdropImgEl.style.display = 'block';
+            }
 
             const thumbsContainer = document.getElementById('modal-thumbnails');
             thumbsContainer.innerHTML = images.map((img) => `
                 <div class="relative shrink-0 overflow-hidden rounded-lg group">
-                    <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-cover rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                    <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900 p-0.5" onerror="this.onerror=null; this.src=getFallbackBookImage();">
                 </div>
             `).join('');
 
@@ -2253,7 +2258,10 @@
         }
 
         function setModalMainImage(imgUrl) {
-            document.getElementById('modal-main-image').src = imgUrl;
+            const mainImg = document.getElementById('modal-main-image');
+            const backdropImg = document.getElementById('modal-backdrop-image');
+            if (mainImg) mainImg.src = imgUrl;
+            if (backdropImg) backdropImg.src = imgUrl;
         }
 
         function closeBookModal() {
