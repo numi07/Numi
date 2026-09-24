@@ -449,7 +449,6 @@
 
             <div id="gifts-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6"></div>
         </section>
-
         <!-- TAB: SEARCH -->
         <section id="tab-search" class="tab-content hidden space-y-6">
             <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
@@ -1090,7 +1089,7 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-3">
-                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা (একটুও কাটা পড়বে না) -->
+                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা (একটুও কাটা পড়বে বিন্দু মাত্র) -->
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center p-2">
                             <img id="modal-backdrop-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 dark:opacity-25 scale-110 pointer-events-none" onerror="this.style.display='none'">
                             <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="this.onerror=null; this.src=getFallbackBookImage();">
@@ -2723,13 +2722,32 @@
             }
         }
 
+        function editAuthorProfile(authorId) {
+            if (!isAdminLoggedIn) return;
+            const author = authorProfiles.find(a => a.id === authorId);
+            if (!author) return;
+
+            document.getElementById('edit-author-id').value = author.id;
+            document.getElementById('author-profile-name').value = author.name || '';
+            document.getElementById('author-profile-lifespan').value = author.lifespan || '';
+            document.getElementById('author-profile-photo').value = author.photo || '';
+            document.getElementById('author-profile-notable').value = author.notable || '';
+            document.getElementById('author-profile-bio').value = author.bio || '';
+
+            document.getElementById('author-form-title').innerHTML = `<i class="fa-solid fa-pen text-sky-500"></i> লেখক প্রোফাইল সম্পাদনা করুন`;
+            document.getElementById('author-save-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> আপডেট করুন`;
+            
+            window.scrollTo({ top: document.getElementById('admin-sub-authors').offsetTop - 50, behavior: 'smooth' });
+        }
+
         async function handleAuthorFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("এডমিন লগইন প্রয়োজন!", "warning"); return; }
 
+            const editId = document.getElementById('edit-author-id').value;
             const name = document.getElementById('author-profile-name').value.trim();
 
-            const isDuplicateAuthor = authorProfiles.some(a => a.name.toLowerCase() === name.toLowerCase());
+            const isDuplicateAuthor = authorProfiles.some(a => a.name.toLowerCase() === name.toLowerCase() && a.id !== editId);
             if (isDuplicateAuthor) {
                 const proceed = await showCustomConfirm(`"${name}" নামের লেখক প্রোফাইল আগে থেকেই সংরক্ষিত আছে! আপনি কি তবুও নতুন করে এন্ট্রি দিতে চান?`);
                 if (!proceed) return;
@@ -2740,8 +2758,14 @@
             const notable = document.getElementById('author-profile-notable').value.trim();
             const bio = document.getElementById('author-profile-bio').value.trim();
 
-            const newAuthor = { id: 'auth_' + Date.now(), name, lifespan, photo, notable, bio };
-            authorProfiles.push(newAuthor);
+            const newAuthor = { id: editId || ('auth_' + Date.now()), name, lifespan, photo, notable, bio };
+            
+            if (editId) {
+                const idx = authorProfiles.findIndex(a => a.id === editId);
+                if (idx !== -1) authorProfiles[idx] = newAuthor;
+            } else {
+                authorProfiles.push(newAuthor);
+            }
 
             saveAuthorsToLocalStorage();
             resetAuthorForm();
@@ -2758,12 +2782,14 @@
                 });
             } catch(e){}
 
-            showToast("লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!", "success");
+            showToast(editId ? "লেখক প্রোফাইল সফলভাবে আপডেট হয়েছে!" : "লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!", "success");
         }
 
         function resetAuthorForm() {
             document.getElementById('author-profile-form').reset();
             document.getElementById('edit-author-id').value = '';
+            document.getElementById('author-form-title').innerHTML = `<i class="fa-solid fa-feather-pointed text-amber-500"></i> নতুন লেখক প্রোফাইল তৈরি করুন`;
+            document.getElementById('author-save-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> লেখক সেভ করুন`;
         }
 
         async function deleteAuthorProfile(authorId) {
@@ -2796,7 +2822,7 @@
         function renderAdminAuthorsList() {
             const container = document.getElementById('admin-authors-list');
             if (authorProfiles.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 italic">এখনও কোনো লেখক প্রোফাইল নেই।</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">এখনও কোনো লেখক প্রোফাইল নেই。</p>`;
                 return;
             }
 
@@ -2809,9 +2835,14 @@
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 truncate">${author.lifespan ? 'জীবনকাল: ' + toBnNum(author.lifespan) : ''}</p>
                         </div>
                     </div>
-                    <button onclick="deleteAuthorProfile('${author.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 px-3 py-1.5 rounded-xl text-xs font-semibold">
-                        মুছুন
-                    </button>
+                    <div class="flex items-center shrink-0">
+                        <button onclick="editAuthorProfile('${author.id}')" class="bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-400 px-3 py-1.5 rounded-xl text-xs font-semibold mr-2 transition-colors">
+                            এডিট
+                        </button>
+                        <button onclick="deleteAuthorProfile('${author.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors">
+                            মুছুন
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
