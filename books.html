@@ -402,7 +402,7 @@
 
             <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 px-1">
                 <span>প্রদর্শিত বই: <strong id="all-books-count" class="text-sky-600 dark:text-sky-400">০</strong> টি</span>
-                <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> সিরিজের নামের ওপর চাপ দিলে সিরিজের সকল পর্ব দেখতে পারবেন</span>
+                <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> সিরিজের নামের ওপর চাপ দিলে পর্ব ১ থেকে শেষ পর্ব পর্যন্ত ক্রমানুসারে দেখতে পারবেন</span>
             </div>
 
             <div id="all-books-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 min-h-[50vh]"></div>
@@ -851,9 +851,9 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                        <i class="fa-solid fa-images text-indigo-500"></i> অতিরিক্ত ছবির লিংক (কমা দিয়ে একাধিক)
+                                        <i class="fa-solid fa-images text-indigo-500"></i> অতিরিক্ত ছবির লিংক (কমা দিয়ে একাধিক গুগল ড্রাইভ লিংক)
                                     </label>
-                                    <input type="text" id="form-extra-images-input" placeholder="https://img2.jpg, https://img3.jpg" 
+                                    <input type="text" id="form-extra-images-input" placeholder="https://drive.google.com/..., https://..." 
                                            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
                                 </div>
                             </div>
@@ -1039,13 +1039,13 @@
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
-                <button onclick="closeAuthorModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
+                <button onclick="closeAuthorModal(true)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
                     <i class="fa-solid fa-arrow-left"></i> পেছনে যান
                 </button>
                 <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
                     লেখক পরিচিতি
                 </span>
-                <button onclick="closeAuthorModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <button onclick="closeAuthorModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
@@ -1053,7 +1053,7 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                     <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group flex items-center justify-center p-1">
-                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
+                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover rounded-xl" onerror="handleImageFallback(this, 'author');">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -1087,7 +1087,7 @@
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
                 <div class="flex items-center space-x-2 sm:space-x-3 flex-wrap gap-y-1">
-                    <button onclick="closeBookModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
+                    <button onclick="closeBookModal(true)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
                         <i class="fa-solid fa-arrow-left"></i> পেছনে যান
                     </button>
                     <span id="modal-serial-badge" class="bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold">
@@ -1096,14 +1096,14 @@
                     <span id="modal-acquisition-badge" class="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         ক্রয়কৃত
                     </span>
-                    <span id="modal-series-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-xs px-3 py-1 rounded-full font-bold cursor-pointer hover:bg-indigo-500/20" title="এই সিরিজের সকল বই দেখতে চাপ দিন">
+                    <span id="modal-series-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-xs px-3 py-1 rounded-full font-bold cursor-pointer hover:bg-indigo-500/20" title="এই সিরিজের সকল বই পর্ব ১ থেকে দেখতে চাপ দিন">
                     </span>
                     <!-- এডমিন কপি ব্যাজ -->
                     <span id="modal-copies-badge" class="hidden bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         <i class="fa-solid fa-copy"></i> মজুদ কপি: <strong id="modal-copies-val">১</strong> টি
                     </span>
                 </div>
-                <button onclick="closeBookModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <button onclick="closeBookModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
@@ -1114,12 +1114,12 @@
                         <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা -->
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center p-2">
                             <img id="modal-backdrop-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 dark:opacity-25 scale-110 pointer-events-none" onerror="this.style.display='none'">
-                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="handleImageFallback(this, 'book');">
                             <div class="center-logo-watermark">
                                 <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
-                        <!-- গ্যালারি থাম্বনেইল তালিকা -->
+                        <!-- একাধিক গুগল ড্রাইভ ফটোর থাম্বনেইল গ্যালারি -->
                         <div id="modal-thumbnails" class="flex space-x-2 overflow-x-auto pb-2 scrollbar-thin"></div>
                     </div>
 
@@ -1127,7 +1127,7 @@
                         <div>
                             <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
                             <p class="text-sky-600 dark:text-sky-400 text-lg font-semibold mt-0.5 cursor-pointer hover:underline" id="modal-author" onclick="viewAuthorProfileFromName(this.innerText)"></p>
-                            <p id="modal-series-text" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 hidden cursor-pointer hover:underline" title="সিরিজের সকল বই দেখুন"></p>
+                            <p id="modal-series-text" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 hidden cursor-pointer hover:underline" title="সিরিজের সকল বই পর্ব ১ থেকে দেখতে ক্লিক করুন"></p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
@@ -1269,7 +1269,7 @@
         });
 
         /* ==========================================================
-           EXACT BENGALI SVG FALLBACKS (NO MORE ???? ON MISSING IMAGES)
+           EXACT BENGALI SVG FALLBACKS & SMART IMAGE RECOVERY
            ========================================================== */
         function getFallbackBookImage() {
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
@@ -1309,8 +1309,88 @@
             return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
         }
 
+        // গুগল ড্রাইভ ও অন্যান্য ছবির স্মার্ট লোডিং এবং ডিভাইস অল্টারনেটিভ হ্যান্ডলার
+        function handleImageFallback(imgEl, type = 'book') {
+            if (!imgEl) return;
+            const currentSrc = imgEl.src || '';
+            
+            // যদি গুগল ড্রাইভ lh3 লিঙ্ক লোড হতে ব্যর্থ হয়, তাহলে ড্রাইভ থাম্বনেইল দিয়ে চেষ্টা করা
+            if (currentSrc.includes('googleusercontent.com/d/')) {
+                const id = currentSrc.split('googleusercontent.com/d/')[1].split('=')[0].split('?')[0];
+                if (id) {
+                    imgEl.src = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+                    return;
+                }
+            } else if (currentSrc.includes('drive.google.com/thumbnail')) {
+                const match = currentSrc.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    imgEl.src = `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                    return;
+                }
+            }
+
+            imgEl.onerror = null;
+            imgEl.src = (type === 'author') ? getFallbackAuthorImage() : getFallbackBookImage();
+        }
+
+        // গুগল ড্রাইভ ফাইল আইডি নিষ্কাশনকারী (সকল ধরণের ড্রাইভ লিংক সমর্থন করে)
+        function extractGoogleDriveId(url) {
+            if (!url) return '';
+            const cleanUrl = String(url).trim();
+            const match1 = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (match1 && match1[1]) return match1[1];
+            const match2 = cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (match2 && match2[1]) return match2[1];
+            const match3 = cleanUrl.match(/googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+            if (match3 && match3[1]) return match3[1];
+            const match4 = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match4 && match4[1]) return match4[1];
+            return '';
+        }
+
+        // ছবির লিঙ্ক ফরম্যাটার (যেকোনো ডিভাইস থেকে গুগল ড্রাইভ ছবি দেখার জন্য অপ্টিমাইজড)
+        function formatImageUrl(url) {
+            if (!url) return '';
+            let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
+            if (cleanUrl.includes('drive.google.com') || cleanUrl.includes('googleusercontent.com')) {
+                const id = extractGoogleDriveId(cleanUrl);
+                if (id) {
+                    return `https://lh3.googleusercontent.com/d/${id}`;
+                }
+            }
+            return cleanUrl;
+        }
+
+        // যেকোনো বইয়ের একাধিক ছবিকে যথাযথ অ্যারেতে রূপান্তর (কমা বা নিউলাইন সেপারেটেড হলেও নির্ভরযোগ্য)
+        function getBookImages(book) {
+            if (!book) return [getFallbackBookImage()];
+            let raw = book.images;
+            if (!raw && book.Images) raw = book.Images;
+            if (!raw && book.image) raw = book.image;
+            if (!raw && book['ছবি']) raw = book['ছবি'];
+
+            let result = [];
+            if (Array.isArray(raw)) {
+                raw.forEach(item => {
+                    if (typeof item === 'string') {
+                        item.split(/[,;\n]+/).forEach(u => {
+                            const formatted = formatImageUrl(u);
+                            if (formatted && !result.includes(formatted)) result.push(formatted);
+                        });
+                    }
+                });
+            } else if (typeof raw === 'string' && raw.trim()) {
+                raw.split(/[,;\n]+/).forEach(u => {
+                    const formatted = formatImageUrl(u);
+                    if (formatted && !result.includes(formatted)) result.push(formatted);
+                });
+            }
+
+            return result.length > 0 ? result : [getFallbackBookImage()];
+        }
+
         /* ==========================================================
-           CUSTOM IN-APP TOAST & DIALOG (NO BROWSER DOMAIN HEADER)
+           CUSTOM IN-APP TOAST & DIALOG
            ========================================================== */
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -1388,7 +1468,6 @@
             return (!isNaN(num) && num > 0) ? num : 1;
         }
 
-        // সার্বজনীন নির্ভুল লাইক এক্সট্র্যাক্ট ফাংশন
         function getBookLikes(b) {
             if (!b) return 0;
             const possibleVal = b.likes !== undefined ? b.likes : 
@@ -1403,7 +1482,6 @@
 
         function formatDateBn(dateStr) {
             if (!dateStr) return '';
-            
             let dStr = String(dateStr).trim().split('T')[0].split(' ')[0];
             dStr = dStr.replace(/\//g, '-').replace(/\./g, '-');
             
@@ -1411,7 +1489,6 @@
                 const parts = dStr.split('-');
                 if (parts.length === 3) {
                     let year, month, day;
-                    
                     if (parts[0].length === 4) {
                         year = parts[0];
                         month = parts[1];
@@ -1423,10 +1500,8 @@
                     } else {
                         return toBnNum(dStr);
                     }
-                    
                     day = day.padStart(2, '0');
                     month = month.padStart(2, '0');
-                    
                     return toBnNum(`${day}.${month}.${year}`);
                 }
             }
@@ -1442,7 +1517,6 @@
             return toBnNum(dateStr);
         }
 
-        // ইনপুট টাইপ ডেটের জন্য সঠিক ফরম্যাট রূপান্তর (YYYY-MM-DD)
         function toInputDateFormat(dateStr) {
             if (!dateStr) return '';
             let s = String(dateStr).trim().split('T')[0].split(' ')[0];
@@ -1460,22 +1534,6 @@
                 return d.toISOString().split('T')[0];
             }
             return s;
-        }
-
-        function formatImageUrl(url) {
-            if (!url) return '';
-            url = url.trim();
-            if (url.includes('drive.google.com')) {
-                let id = '';
-                const match1 = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                if (match1 && match1[1]) id = match1[1];
-                const match2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                if (match2 && match2[1]) id = match2[1];
-                if (id) {
-                    return `https://lh3.googleusercontent.com/d/${id}`;
-                }
-            }
-            return url;
         }
 
         const initialBooks = [];
@@ -1566,12 +1624,11 @@
 
             startQuoteCarousel();
 
-            // ব্রাউজার হিস্ট্রি স্টেট ইনিশিয়ালাইজেশন (স্টেপ বাই স্টেপ ব্যাক)
+            // ব্রাউজার হিস্ট্রি স্টেট ব্যবস্থাপনা
             if (!history.state) {
                 history.replaceState({ tab: 'home', modal: null }, '');
             }
 
-            // রিলোড দেওয়ার পরও পূর্বে থাকা সক্রিয় ট্যাব ও মডাল অক্ষুণ্ণ রাখা
             const savedActiveTab = sessionStorage.getItem('chilekotha_active_tab') || 'home';
             if (savedActiveTab !== 'home') {
                 switchTab(savedActiveTab, false);
@@ -1585,7 +1642,6 @@
                 setTimeout(() => openAuthorModal(savedOpenModalId, false), 50);
             }
 
-            // ব্যাকগ্রাউন্ডে দ্রুততম গুগল শিট সিঙ্ক
             syncLiveFromGoogleSheet(true);
         };
 
@@ -1607,7 +1663,7 @@
             document.head.appendChild(link);
         }
 
-        // মোবাইল ব্যাক বাটনে স্টেপ-বাই-স্টেপ পেছনে যাওয়া (অ্যাপ বা সাইট থেকে বের না হয়ে)
+        // স্টেপ-বাই-স্টেপ নিখুঁত ব্যাক বাটন কন্ট্রোল (কখনোই অপ্রত্যাশিতভাবে বের হবে না)
         window.addEventListener('popstate', function(event) {
             if (activeBookId) {
                 closeBookModal(false);
@@ -1662,7 +1718,6 @@
             datalist.innerHTML = Array.from(authorSet).map(name => `<option value="${name}"></option>`).join('');
         }
 
-        // গুগল শিট থেকে দ্রুততম লাইভ সিঙ্ক (Fast & Aggressive Cache Buster)
         async function syncLiveFromGoogleSheet(silent = false) {
             try {
                 if (!silent) showToast("ডাটাবেজ দ্রুত সিঙ্ক করা হচ্ছে...", "info");
@@ -1670,7 +1725,7 @@
                 const vercelUrl = `/api/books?action=getData&refresh=1&_t=${Date.now()}${pass ? '&pass=' + encodeURIComponent(pass) : ''}`;
                 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const timeoutId = setTimeout(() => controller.abort(), 9000);
 
                 const res = await fetch(vercelUrl, {
                     cache: 'no-store',
@@ -1688,6 +1743,7 @@
                             return {
                                 ...remoteBook,
                                 entryDate: remoteBook.entryDate || (localBook ? localBook.entryDate : ''),
+                                images: getBookImages(remoteBook),
                                 likes: remoteLikes > 0 ? remoteLikes : (localBook ? getBookLikes(localBook) : 0),
                                 comments: (remoteBook.comments && remoteBook.comments.length) ? remoteBook.comments : (localBook ? localBook.comments : [])
                             };
@@ -1772,7 +1828,6 @@
             const ownerEditBtn = document.getElementById('admin-owner-edit-btn');
             if(ownerEditBtn) ownerEditBtn.classList.remove('hidden');
 
-            // এডমিন লগইন হলে ডেডিকেটেড ট্যাব দৃশ্যমান করা
             const addBookNav = document.getElementById('tab-btn-admin-addbook');
             const authorNav = document.getElementById('tab-btn-admin-authors');
             const mAddBookNav = document.getElementById('mobile-tab-btn-admin-addbook');
@@ -1800,7 +1855,6 @@
             const ownerEditPanel = document.getElementById('owner-edit-panel');
             if(ownerEditPanel) ownerEditPanel.classList.add('hidden');
 
-            // এডমিন ট্যাব লুকানো
             const addBookNav = document.getElementById('tab-btn-admin-addbook');
             const authorNav = document.getElementById('tab-btn-admin-authors');
             const mAddBookNav = document.getElementById('mobile-tab-btn-admin-addbook');
@@ -1816,7 +1870,6 @@
             showToast("এডমিন লগআউট সফল হয়েছে!", "info");
         }
 
-        // সরাসরি এডমিন সাব-ট্যাব খোলার ফাংশন
         function openAdminSubTabDirect(subTab) {
             if (!isAdminLoggedIn) {
                 switchTab('admin');
@@ -1849,7 +1902,6 @@
             }
         }
 
-        // ট্যাব সুইচিং ও হিস্ট্রি ট্র্যাকিং
         function switchTab(tabId, pushHistory = true) {
             sessionStorage.setItem('chilekotha_active_tab', tabId);
             if (pushHistory) {
@@ -1901,17 +1953,15 @@
 
         function goBack() {
             if (activeBookId) {
-                closeBookModal();
+                closeBookModal(true);
                 return;
             }
             if (activeAuthorModalName) {
-                closeAuthorModal();
+                closeAuthorModal(true);
                 return;
             }
             if (tabHistoryStack.length > 1) {
-                tabHistoryStack.pop();
-                const previousTab = tabHistoryStack[tabHistoryStack.length - 1];
-                switchTab(previousTab, false);
+                history.back();
             } else {
                 switchTab('home', false);
             }
@@ -2005,21 +2055,23 @@
                 categories.map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
-        // সিরিজ অনুসারে সকল বই ফিল্টার করার ফাংশন
+        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন
         function filterBySeries(seriesName) {
             if (!seriesName) return;
-            if (activeBookId) closeBookModal();
-            if (activeAuthorModalName) closeAuthorModal();
+            if (activeBookId) closeBookModal(false);
+            if (activeAuthorModalName) closeAuthorModal(false);
 
             switchTab('all-books');
             const searchInput = document.getElementById('all-books-search');
             const catFilter = document.getElementById('all-books-cat-filter');
+            const sortSelect = document.getElementById('all-books-sort');
             
             if (searchInput) searchInput.value = seriesName;
             if (catFilter) catFilter.value = 'ALL';
+            if (sortSelect) sortSelect.value = 'serial-asc'; // শুরু থেকে শেষ
             
             filterAllBooks();
-            showToast(`"${seriesName}" সিরিজের বইসমূহ প্রদর্শিত হচ্ছে`, "info");
+            showToast(`"${seriesName}" সিরিজের বইসমূহ পর্ব ১ থেকে ক্রমানুসারে সাজানো হয়েছে`, "info");
         }
 
         function filterAllBooks() {
@@ -2038,7 +2090,15 @@
             });
 
             filtered.sort((a, b) => {
-                if (sortVal === 'serial-asc') return (Number(a.serial) || 0) - (Number(b.serial) || 0);
+                if (sortVal === 'serial-asc') {
+                    // সিরিজের পর্ব থাকলে পর্ব ১ থেকে শুরু হবে, শেষ থেকে নয়
+                    const sNumA = toEnNum(a.seriesNum);
+                    const sNumB = toEnNum(b.seriesNum);
+                    if (sNumA && sNumB && sNumA !== sNumB) {
+                        return sNumA - sNumB;
+                    }
+                    return (Number(a.serial) || 0) - (Number(b.serial) || 0);
+                }
                 if (sortVal === 'serial-desc') return (Number(b.serial) || 0) - (Number(a.serial) || 0);
                 if (sortVal === 'price-desc') return (b.purchasePrice || 0) - (a.purchasePrice || 0);
                 if (sortVal === 'price-asc') return (a.purchasePrice || 0) - (b.purchasePrice || 0);
@@ -2057,9 +2117,10 @@
             }
         }
 
-        // কার্ড তৈরিকরণ: এডমিনের জন্য কপি সংখ্যা প্রদর্শন ও সিরিজ ক্লিকেবল সুবিধা
+        // কার্ড তৈরিকরণ: যে কোনো ডিভাইস থেকে নির্ভরযোগ্য গুগল ড্রাইভ ফটো ও এডমিন কপি প্রদর্শন
         function createBookCardHTML(book) {
-            const imgUrl = (book.images && book.images.length > 0 && book.images[0]) ? formatImageUrl(book.images[0]) : getFallbackBookImage();
+            const images = getBookImages(book);
+            const imgUrl = images[0];
             
             let badgeText = "ক্রয়কৃত";
             let badgeClass = "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30";
@@ -2068,19 +2129,17 @@
                 badgeClass = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
             }
 
-            // সিরিজ ব্যাজ (ক্লিক করলে এই সিরিজের সকল বই দেখাবে)
             let seriesHTML = '';
             if (book.series) {
                 const partInfo = book.seriesNum ? ` • পর্ব ${toBnNum(book.seriesNum)}` : '';
                 const escapedSeries = book.series.replace(/'/g, "\\'");
                 seriesHTML = `
-                <span onclick="event.stopPropagation(); filterBySeries('${escapedSeries}');" title="সিরিজের সকল বই দেখতে ক্লিক করুন" 
+                <span onclick="event.stopPropagation(); filterBySeries('${escapedSeries}');" title="সিরিজের সকল বই পর্ব ১ থেকে দেখতে ক্লিক করুন" 
                       class="cursor-pointer text-[9.5px] font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md truncate max-w-[140px] transition-colors">
                     <i class="fa-solid fa-layer-group text-[8px]"></i> ${book.series}${partInfo}
                 </span>`;
             }
 
-            // এডমিন কপি ব্যাজ (১ কপি, ২ কপি ইত্যাদি স্পষ্ট প্রদর্শন)
             let adminCopyHTML = '';
             let adminPriceHTML = '';
             const copies = getBookCopies(book);
@@ -2110,11 +2169,10 @@
 
                 ${adminCopyHTML}
 
-                <!-- ফ্রেমের মধ্যে নিখুঁত ছবি প্রদর্শন -->
                 <div class="aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative flex items-center justify-center p-1.5">
                     <img loading="lazy" decoding="async" src="${imgUrl}" alt="" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-25 dark:opacity-30 scale-110 pointer-events-none" onerror="this.style.display='none'">
                     
-                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm rounded-md" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm rounded-md" onerror="handleImageFallback(this, 'book');">
                     
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
@@ -2180,7 +2238,7 @@
             authorsGrid.innerHTML = authorList.map(author => `
                 <div onclick="openAuthorModal('${author.name}')" class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex items-center space-x-4 cursor-pointer transition-all hover:shadow-lg group shadow-sm">
                     <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative bg-slate-100 dark:bg-slate-950">
-                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
+                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="handleImageFallback(this, 'author');">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -2194,7 +2252,6 @@
             `).join('');
         }
 
-        // মডাল স্টেট ও হিস্ট্রি সমর্থন সহ লেখক মডাল ওপেনার
         function openAuthorModal(authorName, pushHistory = true) {
             activeAuthorModalName = authorName;
             sessionStorage.setItem('chilekotha_open_modal_type', 'author');
@@ -2225,15 +2282,17 @@
             if (authorBooks.length === 0) {
                 listContainer.innerHTML = `<p class="col-span-full text-xs text-slate-400 italic">চিলেকোঠায় এই লেখকের কোনো বই এখনও তালিকায় ওঠেনি।</p>`;
             } else {
-                listContainer.innerHTML = authorBooks.map(b => `
+                listContainer.innerHTML = authorBooks.map(b => {
+                    const bImgs = getBookImages(b);
+                    return `
                     <div onclick="closeAuthorModal(false); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
-                        <img loading="lazy" decoding="async" src="${(b.images && b.images[0]) ? formatImageUrl(b.images[0]) : getFallbackBookImage()}" class="w-10 h-14 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900 p-0.5" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                        <img loading="lazy" decoding="async" src="${bImgs[0]}" class="w-10 h-14 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900 p-0.5" onerror="handleImageFallback(this, 'book');">
                         <div class="overflow-hidden">
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
                         </div>
                     </div>
-                `).join('');
+                `;}).join('');
             }
 
             document.body.style.overflow = 'hidden';
@@ -2241,13 +2300,15 @@
         }
 
         function closeAuthorModal(triggerHistoryBack = true) {
-            document.getElementById('author-modal').classList.add('hidden');
+            const modal = document.getElementById('author-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            modal.classList.add('hidden');
             document.body.style.overflow = '';
             activeAuthorModalName = null;
-            if (sessionStorage.getItem('chilekotha_open_modal_type') === 'author') {
-                sessionStorage.removeItem('chilekotha_open_modal_type');
-                sessionStorage.removeItem('chilekotha_open_modal_id');
-            }
+            sessionStorage.removeItem('chilekotha_open_modal_type');
+            sessionStorage.removeItem('chilekotha_open_modal_id');
+
             if (triggerHistoryBack && history.state && history.state.modal === 'author') {
                 history.back();
             }
@@ -2347,7 +2408,7 @@
             }
         }
 
-        // বইয়ের বিস্তারিত মডাল ওপেনার (একাধিক ফটো, কপি সংখ্যা ও সিরিজ ফিল্টার সহ)
+        // বইয়ের বিস্তারিত মডাল ওপেনার (একাধিক গুগল ড্রাইভ ফটো ও যেকোনো ডিভাইসে প্রদর্শন সহ)
         function openBookModal(bookId, pushHistory = true) {
             const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
             if (!book) return;
@@ -2393,7 +2454,7 @@
                 if (copiesBadge) copiesBadge.classList.add('hidden');
             }
 
-            // সিরিজ ব্যাজ ও ক্লিক করলে সিরিজ ফিল্টার
+            // সিরিজ ব্যাজ ও ক্লিক করলে সিরিজ পর্ব ১ থেকে ক্রমানুসারে সাজানো
             const seriesBadge = document.getElementById('modal-series-badge');
             const seriesText = document.getElementById('modal-series-text');
             if (book.series) {
@@ -2402,7 +2463,7 @@
                 seriesBadge.onclick = () => filterBySeries(book.series);
                 seriesBadge.classList.remove('hidden');
 
-                seriesText.innerHTML = `<i class="fa-solid fa-layer-group"></i> সিরিজ: <strong>${book.series}</strong> ${partInfo} <span class="text-[10px] text-sky-500 underline ml-1">(সকল পর্ব দেখুন)</span>`;
+                seriesText.innerHTML = `<i class="fa-solid fa-layer-group"></i> সিরিজ: <strong>${book.series}</strong> ${partInfo} <span class="text-[10px] text-sky-500 underline ml-1">(পর্ব ১ থেকে দেখুন)</span>`;
                 seriesText.onclick = () => filterBySeries(book.series);
                 seriesText.classList.remove('hidden');
             } else {
@@ -2425,14 +2486,8 @@
 
             updateModalLikeButton(book);
 
-            // একাধিক ছবি সঠিক লোডিং ও থাম্বনেইল গ্যালারি
-            let images = [];
-            if (Array.isArray(book.images) && book.images.length > 0) {
-                images = book.images.map(img => formatImageUrl(img)).filter(Boolean);
-            }
-            if (images.length === 0) {
-                images = [getFallbackBookImage()];
-            }
+            // একাধিক ছবির গ্যালারি ও প্রিভিউ নিয়ন্ত্রণ
+            const images = getBookImages(book);
             
             const mainImgEl = document.getElementById('modal-main-image');
             const backdropImgEl = document.getElementById('modal-backdrop-image');
@@ -2448,7 +2503,7 @@
                 thumbsContainer.classList.remove('hidden');
                 thumbsContainer.innerHTML = images.map((img) => `
                     <div class="relative shrink-0 overflow-hidden rounded-lg group p-0.5">
-                        <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900 transition-all" onerror="this.onerror=null; this.src=getFallbackBookImage();">
+                        <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900 transition-all" onerror="handleImageFallback(this, 'book');">
                     </div>
                 `).join('');
             } else {
@@ -2469,13 +2524,15 @@
         }
 
         function closeBookModal(triggerHistoryBack = true) {
-            document.getElementById('book-modal').classList.add('hidden');
+            const modal = document.getElementById('book-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            modal.classList.add('hidden');
             document.body.style.overflow = '';
             activeBookId = null;
-            if (sessionStorage.getItem('chilekotha_open_modal_type') === 'book') {
-                sessionStorage.removeItem('chilekotha_open_modal_type');
-                sessionStorage.removeItem('chilekotha_open_modal_id');
-            }
+            sessionStorage.removeItem('chilekotha_open_modal_type');
+            sessionStorage.removeItem('chilekotha_open_modal_id');
+
             if (triggerHistoryBack && history.state && history.state.modal === 'book') {
                 history.back();
             }
@@ -2695,7 +2752,7 @@
             }
         }
 
-        // দ্রুততম গতিতে নতুন বই সংযোজন ও সংরক্ষণ (Optimistic Fast Save)
+        // দ্রুততম গতিতে নতুন বই সংযোজন ও ক্লাউড সংরক্ষণ
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
@@ -2734,12 +2791,15 @@
             const printedPrice = toEnNum(document.getElementById('form-printed-price-input').value) || 0;
             const purchasePrice = (acquisitionType === 'GIFT_RECEIVED') ? 0 : toEnNum(document.getElementById('form-purchase-price-input').value) || 0;
 
-            // একাধিক ফটোর লিংক ঠিকঠাক সংরক্ষণ
+            // একাধিক ফটোর লিংক ঠিকঠাক ফরম্যাটিং ও সংরক্ষণ
             const mainImg = document.getElementById('form-main-image-input').value.trim();
             const extraImgsInput = document.getElementById('form-extra-images-input').value.trim();
             
             let images = [];
-            if (mainImg) images.push(formatImageUrl(mainImg));
+            if (mainImg) {
+                const mainFormatted = formatImageUrl(mainImg);
+                if (mainFormatted) images.push(mainFormatted);
+            }
             if (extraImgsInput) {
                 const extraList = extraImgsInput.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
                 extraList.forEach(u => {
@@ -2761,7 +2821,7 @@
                 comments: editId ? (existingBook?.comments || []) : []
             };
 
-            // লোকাল স্টেটে তৎক্ষণাৎ সংরক্ষণ (০ মিলিসেকেন্ডে সেভ)
+            // লোকাল স্টেটে তৎক্ষণাৎ সংরক্ষণ
             if (editId) {
                 const idx = books.findIndex(b => b.id === editId);
                 if (idx !== -1) books[idx] = newBook;
@@ -2775,7 +2835,7 @@
             populateAuthorSuggestions();
             populateLendingBookDropdown();
 
-            // ব্যাকগ্রাউন্ডে ক্লাউড ও গুগল শিট সিঙ্ক (ইউজারকে ব্লক না করে)
+            // ব্যাকগ্রাউন্ডে ক্লাউড ও গুগল শিট সিঙ্ক
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             fetch('/api/books', {
                 method: 'POST',
@@ -2783,7 +2843,7 @@
                 body: JSON.stringify({ action: "addBook", book: newBook, adminPass: adminPass })
             }).catch(err => console.warn("Background book save sync error:", err));
 
-            // নতুন বই এন্ট্রি করার পরে হোম পেজ এ না গিয়ে বই এন্ট্রির ট্যাব এই থাকবে
+            // নতুন বই এন্ট্রি করার পরে হোম পেজে না গিয়ে সরাসরি এই বই এন্ট্রির ট্যাবেই থাকা
             resetForm();
             showToast("বই সফলভাবে সংরক্ষিত হয়েছে! পরবর্তী বইয়ের তথ্য দিন।", "success");
             switchTab('admin');
@@ -2800,7 +2860,7 @@
             handleAcquisitionTypeChange();
         }
 
-        // বই এডিটে এন্ট্রি তারিখ ও অতিরিক্ত ছবি অক্ষুণ্ণ রেখে লোড করা
+        // বই এডিটে এন্ট্রি তারিখ ও অতিরিক্ত ছবি অক্ষুণ্ণ রেখে নির্ভুল লোড করা
         function editCurrentBook() {
             if (!isAdminLoggedIn) { showToast("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!", "warning"); switchTab('admin'); return; }
             if (!activeBookId) return;
@@ -2830,20 +2890,19 @@
             document.getElementById('form-edition-input').value = book.edition || '';
             document.getElementById('form-edition-year-input').value = toBnNum(book.editionYear) || '';
             
-            // এন্ট্রি তারিখ সঠিকভাবে ইনপুটে সেট করা (মুছে না গিয়ে পূর্বের তারিখ অপরিবর্তিত থাকবে)
+            // এন্ট্রি তারিখ অক্ষুণ্ণ রাখা
             document.getElementById('form-entry-date-input').value = toInputDateFormat(book.entryDate);
             
             document.getElementById('form-printed-price-input').value = toBnNum(book.printedPrice) || '';
             document.getElementById('form-purchase-price-input').value = toBnNum(book.purchasePrice) || '';
             
-            // ছবির লিংকসমূহ ফিল্ডে আনা
-            if (book.images && book.images.length > 0) {
-                document.getElementById('form-main-image-input').value = book.images[0] || '';
-                document.getElementById('form-extra-images-input').value = book.images.slice(1).join(', ');
-            } else {
-                document.getElementById('form-main-image-input').value = '';
-                document.getElementById('form-extra-images-input').value = '';
-            }
+            // ছবির সব লিঙ্ক আলাদা করে ফিল্ডে দেওয়া
+            const imgs = getBookImages(book);
+            const fallback = getFallbackBookImage();
+            const validImgs = imgs.filter(url => url !== fallback);
+            
+            document.getElementById('form-main-image-input').value = validImgs[0] || '';
+            document.getElementById('form-extra-images-input').value = validImgs.slice(1).join(', ');
 
             document.getElementById('form-summary-input').value = book.summary || '';
             window.scrollTo({ top: document.getElementById('book-form').offsetTop - 60, behavior: 'smooth' });
@@ -3026,7 +3085,7 @@
             container.innerHTML = authorProfiles.map(author => `
                 <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div class="flex items-center space-x-3 overflow-hidden">
-                        <img src="${formatImageUrl(author.photo) || getFallbackAuthorImage()}" class="w-10 h-10 rounded-full object-cover shrink-0" onerror="this.onerror=null; this.src=getFallbackAuthorImage();">
+                        <img src="${formatImageUrl(author.photo) || getFallbackAuthorImage()}" class="w-10 h-10 rounded-full object-cover shrink-0" onerror="handleImageFallback(this, 'author');">
                         <div class="overflow-hidden">
                             <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">${author.name}</h4>
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 truncate">${author.lifespan ? 'জীবনকাল: ' + toBnNum(author.lifespan) : ''}</p>
@@ -3230,7 +3289,7 @@
                     'EditionYear': '2024',
                     'MRP': 860,
                     'BuyPrice': 645,
-                    'Images': 'https://drive.google.com/..., https://img2.jpg',
+                    'Images': 'https://drive.google.com/..., https://drive.google.com/...',
                     'Category': 'উপন্যাস',
                     'EntryDate': '2024-04-23',
                     'Quantity': 1,
