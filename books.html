@@ -402,7 +402,7 @@
 
             <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 px-1">
                 <span>প্রদর্শিত বই: <strong id="all-books-count" class="text-sky-600 dark:text-sky-400">০</strong> টি</span>
-                <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> সিরিজের নামের ওপর চাপ দিলে পর্ব ১ থেকে শেষ পর্ব পর্যন্ত ক্রমানুসারে দেখতে পারবেন</span>
+                <span class="hidden sm:inline-block"><i class="fa-solid fa-circle-info"></i> সিরিজের নামের ওপর চাপ দিলে পর্ব ১ থেকে ক্রমানুসারে দেখতে পারবেন</span>
             </div>
 
             <div id="all-books-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 min-h-[50vh]"></div>
@@ -840,7 +840,7 @@
                                 </div>
                             </div>
 
-                            <!-- Book Photos -->
+                            <!-- Book Photos: একাধিক গুগল ড্রাইভ ফটোর সমর্থন -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -1035,6 +1035,7 @@
         </section>
 
     </main>
+
 <!-- AUTHOR PROFILE DETAILS MODAL -->
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
@@ -2055,7 +2056,7 @@
                 categories.map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
-        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন
+        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন (কোনো পপ-আপ ছাড়াই)
         function filterBySeries(seriesName) {
             if (!seriesName) return;
             if (activeBookId) closeBookModal(false);
@@ -2068,10 +2069,9 @@
             
             if (searchInput) searchInput.value = seriesName;
             if (catFilter) catFilter.value = 'ALL';
-            if (sortSelect) sortSelect.value = 'serial-asc'; // শুরু থেকে শেষ
+            if (sortSelect) sortSelect.value = 'serial-asc'; // শুরু থেকে শেষ (পর্ব ১ থেকে)
             
             filterAllBooks();
-            showToast(`"${seriesName}" সিরিজের বইসমূহ পর্ব ১ থেকে ক্রমানুসারে সাজানো হয়েছে`, "info");
         }
 
         function filterAllBooks() {
@@ -2752,7 +2752,7 @@
             }
         }
 
-        // দ্রুততম গতিতে নতুন বই সংযোজন ও ক্লাউড সংরক্ষণ
+        // দ্রুততম গতিতে নতুন বই সংযোজন ও ক্লাউড সংরক্ষণ (সর্বশেষ গুগল অ্যাপস স্ক্রিপ্ট অনুযায়ী একাধিক ছবির নিখুঁত প্রসেসিং)
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
@@ -2795,18 +2795,15 @@
             const mainImg = document.getElementById('form-main-image-input').value.trim();
             const extraImgsInput = document.getElementById('form-extra-images-input').value.trim();
             
+            let rawList = [];
+            if (mainImg) rawList.push(...mainImg.split(/[,;\n]+/));
+            if (extraImgsInput) rawList.push(...extraImgsInput.split(/[,;\n]+/));
+
             let images = [];
-            if (mainImg) {
-                const mainFormatted = formatImageUrl(mainImg);
-                if (mainFormatted) images.push(mainFormatted);
-            }
-            if (extraImgsInput) {
-                const extraList = extraImgsInput.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
-                extraList.forEach(u => {
-                    const fmt = formatImageUrl(u);
-                    if (fmt && !images.includes(fmt)) images.push(fmt);
-                });
-            }
+            rawList.map(s => s.trim()).filter(Boolean).forEach(u => {
+                const fmt = formatImageUrl(u);
+                if (fmt && !images.includes(fmt)) images.push(fmt);
+            });
 
             const summary = document.getElementById('form-summary-input').value.trim();
 
