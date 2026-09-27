@@ -1040,7 +1040,7 @@
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
-                <button onclick="closeAuthorModal(true)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors">
+                <button onclick="closeAuthorModal(true)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:text-sky-600 transition-colors mr-1">
                     <i class="fa-solid fa-arrow-left"></i> পেছনে যান
                 </button>
                 <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
@@ -1082,7 +1082,6 @@
             </div>
         </div>
     </div>
-
     <!-- BOOK DETAILS MODAL -->
     <div id="book-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
@@ -1575,6 +1574,42 @@
         let inactivityTimeout = null;
         const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
 
+        // মাল্টি-ট্যাব তাৎক্ষণিক সিঙ্ক চ্যানেল
+        let syncBroadcastChannel = null;
+        try {
+            if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+                syncBroadcastChannel = new BroadcastChannel('chilekotha_live_sync');
+                syncBroadcastChannel.onmessage = function(event) {
+                    if (event.data && event.data.type === 'REFRESH_NOW') {
+                        loadLocalDataDirect();
+                        refreshViews();
+                    }
+                };
+            }
+        } catch(e) {}
+
+        function notifyTabsUpdate() {
+            try {
+                if (syncBroadcastChannel) {
+                    syncBroadcastChannel.postMessage({ type: 'REFRESH_NOW', time: Date.now() });
+                }
+            } catch(e) {}
+        }
+
+        function loadLocalDataDirect() {
+            try {
+                const b = localStorage.getItem('chilekotha_library_books');
+                if (b) books = JSON.parse(b);
+                const a = localStorage.getItem('chilekotha_library_authors');
+                if (a) authorProfiles = JSON.parse(a);
+                const o = localStorage.getItem('chilekotha_owner');
+                if (o) {
+                    ownerProfile = JSON.parse(o);
+                    renderOwnerProfile();
+                }
+            } catch(e) {}
+        }
+
         window.onload = function() {
             setupPWAFeatures();
 
@@ -1643,7 +1678,31 @@
                 setTimeout(() => openAuthorModal(savedOpenModalId, false), 50);
             }
 
+            // প্রথমবার লোড হওয়া মাত্রই ক্লাউড থেকে ফ্রেশ ডাটা আনা
             syncLiveFromGoogleSheet(true);
+
+            // রানিং ব্রাউজারে স্বয়ংক্রিয় ব্যাকগ্রাউন্ড সিঙ্ক (প্রতি ১২ সেকেন্ড পর পর)
+            setInterval(() => {
+                syncLiveFromGoogleSheet(true);
+            }, 12000);
+
+            // ব্রাউজার ট্যাবে ফিরে আসা বা ফোন আনলক করা মাত্রই তাৎক্ষণিক আপডেট চেক
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    syncLiveFromGoogleSheet(true);
+                }
+            });
+
+            window.addEventListener('focus', function() {
+                syncLiveFromGoogleSheet(true);
+            });
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'chilekotha_library_books' || e.key === 'chilekotha_library_authors' || e.key === 'chilekotha_owner') {
+                    loadLocalDataDirect();
+                    refreshViews();
+                }
+            });
         };
 
         function setupPWAFeatures() {
@@ -1737,8 +1796,10 @@
 
                 if (res.ok) {
                     const data = await res.json();
-                    if (data && data.books && data.books.length > 0) {
-                        books = data.books.map(remoteBook => {
+                    let isChanged = false;
+
+                    if (data && data.books && Array.isArray(data.books)) {
+                        const newBooks = data.books.map(remoteBook => {
                             const localBook = books.find(b => b.id === remoteBook.id || String(b.serial) === String(remoteBook.serial));
                             const remoteLikes = getBookLikes(remoteBook);
                             return {
@@ -1749,25 +1810,42 @@
                                 comments: (remoteBook.comments && remoteBook.comments.length) ? remoteBook.comments : (localBook ? localBook.comments : [])
                             };
                         });
-                        saveToLocalStorage();
+
+                        // পরিবর্তনের সত্যতা যাচাই
+                        if (JSON.stringify(newBooks) !== JSON.stringify(books)) {
+                            books = newBooks;
+                            saveToLocalStorage();
+                            isChanged = true;
+                        }
                     }
-                    if (data && data.authors && data.authors.length > 0) {
-                        authorProfiles = data.authors;
-                        saveAuthorsToLocalStorage();
+
+                    if (data && data.authors && Array.isArray(data.authors)) {
+                        if (JSON.stringify(data.authors) !== JSON.stringify(authorProfiles)) {
+                            authorProfiles = data.authors;
+                            saveAuthorsToLocalStorage();
+                            isChanged = true;
+                        }
                     }
+
                     if (data && data.owner) {
-                        ownerProfile = data.owner;
-                        localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
-                        renderOwnerProfile();
+                        if (JSON.stringify(data.owner) !== JSON.stringify(ownerProfile)) {
+                            ownerProfile = data.owner;
+                            localStorage.setItem('chilekotha_owner', JSON.stringify(ownerProfile));
+                            renderOwnerProfile();
+                            isChanged = true;
+                        }
                     }
                     
-                    requestAnimationFrame(() => {
-                        refreshViews();
-                        if (activeBookId) {
-                            const currentOpen = books.find(b => b.id === activeBookId);
-                            if (currentOpen) updateModalLikeButton(currentOpen);
-                        }
-                    });
+                    if (isChanged || !silent) {
+                        requestAnimationFrame(() => {
+                            refreshViews();
+                            if (activeBookId) {
+                                const currentOpen = books.find(b => b.id === activeBookId);
+                                if (currentOpen) updateModalLikeButton(currentOpen);
+                            }
+                        });
+                        notifyTabsUpdate();
+                    }
 
                     if (!silent) showToast("সফলভাবে নতুন তথ্য সিঙ্ক সম্পন্ন হয়েছে!", "success");
                 }
@@ -1778,10 +1856,12 @@
 
         function saveToLocalStorage() {
             localStorage.setItem('chilekotha_library_books', JSON.stringify(books));
+            notifyTabsUpdate();
         }
 
         function saveAuthorsToLocalStorage() {
             localStorage.setItem('chilekotha_library_authors', JSON.stringify(authorProfiles));
+            notifyTabsUpdate();
         }
 
         function saveBorrowingsToLocalStorage() {
@@ -2838,6 +2918,8 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: "addBook", book: newBook, adminPass: adminPass })
+            }).then(() => {
+                syncLiveFromGoogleSheet(true);
             }).catch(err => console.warn("Background book save sync error:", err));
 
             // নতুন বই এন্ট্রি করার পরে হোম পেজে না গিয়ে সরাসরি এই বই এন্ট্রির ট্যাবেই থাকা
@@ -2932,6 +3014,8 @@
                             title: bookToDeleteTitle, 
                             adminPass: adminPass 
                         })
+                    }).then(() => {
+                        syncLiveFromGoogleSheet(true);
                     });
                 } catch(e) {}
 
@@ -3035,6 +3119,8 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: "addAuthor", author: newAuthor, adminPass: adminPass })
+            }).then(() => {
+                syncLiveFromGoogleSheet(true);
             }).catch(e => {});
 
             showToast(editId ? "লেখক প্রোফাইল সফলভাবে আপডেট হয়েছে!" : "লেখক প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!", "success");
@@ -3066,6 +3152,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: "deleteAuthor", name: authorNameToDelete, adminPass: adminPass })
+                }).then(() => {
+                    syncLiveFromGoogleSheet(true);
                 }).catch(e => {});
 
                 showToast("লেখক প্রোফাইল শিট থেকে মুছে ফেলা হয়েছে!", "success");
@@ -3388,6 +3476,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: "saveOwner", owner: ownerProfile, adminPass: adminPass })
+                }).then(() => {
+                    syncLiveFromGoogleSheet(true);
                 });
             } catch(e) {
                 console.log("Owner profile saved locally");
