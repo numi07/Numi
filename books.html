@@ -1036,7 +1036,7 @@
 
     </main>
 
-<!-- AUTHOR PROFILE DETAILS MODAL -->
+    <!-- AUTHOR PROFILE DETAILS MODAL (WITH DIRECT EDIT OPTION) -->
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
@@ -1046,9 +1046,15 @@
                 <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
                     লেখক পরিচিতি
                 </span>
-                <button onclick="closeAuthorModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+                <div class="flex items-center gap-2">
+                    <!-- সরাসরি লেখক প্রোফাইল এডিট করার বাটন -->
+                    <button id="author-modal-edit-btn" onclick="editAuthorFromModal()" title="এই লেখকের প্রোফাইল এডিট করুন" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 transition-all shadow-sm">
+                        <i class="fa-solid fa-pen-to-square"></i> প্রোফাইল এডিট
+                    </button>
+                    <button onclick="closeAuthorModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
@@ -1059,8 +1065,13 @@
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
                     </div>
-                    <div class="text-center sm:text-left space-y-2">
-                        <h2 id="author-modal-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
+                    <div class="text-center sm:text-left space-y-2 flex-grow">
+                        <div class="flex items-center justify-center sm:justify-start gap-3 flex-wrap">
+                            <h2 id="author-modal-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100"></h2>
+                            <button onclick="editAuthorFromModal()" class="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg font-bold transition-all inline-flex items-center gap-1.5 shadow-sm" title="লেখকের তথ্য সম্পাদনা করুন">
+                                <i class="fa-solid fa-pen-to-square"></i> এডিট
+                            </button>
+                        </div>
                         <p id="author-modal-lifespan" class="text-sm font-medium text-amber-600 dark:text-amber-400"></p>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
                             চিলেকোঠায় বই সংখ্যা: <strong id="author-modal-book-count" class="text-sky-600 dark:text-sky-400">০</strong> টি
@@ -1069,7 +1080,12 @@
                 </div>
 
                 <div class="space-y-2">
-                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সংক্ষিপ্ত জীবনী</h4>
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">সংক্ষিপ্ত জীবনী</h4>
+                        <button onclick="editAuthorFromModal()" class="text-[11px] text-amber-600 dark:text-amber-400 hover:underline font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-pen text-[10px]"></i> জীবনী এডিট
+                        </button>
+                    </div>
                     <p id="author-modal-bio" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-justify">
                         কোনো জীবনী পাওয়া যায়নি।
                     </p>
@@ -1082,6 +1098,7 @@
             </div>
         </div>
     </div>
+
     <!-- BOOK DETAILS MODAL -->
     <div id="book-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
@@ -2377,6 +2394,39 @@
 
             document.body.style.overflow = 'hidden';
             document.getElementById('author-modal').classList.remove('hidden');
+        }
+
+        // সরাসরি লেখকের প্রোফাইল থেকে এডিট অপশন চালু করার হ্যান্ডলার
+        function editAuthorFromModal() {
+            if (!activeAuthorModalName) return;
+
+            if (!isAdminLoggedIn) {
+                showToast("লেখক প্রোফাইল সম্পাদনা করতে অনুগ্রহ করে এডমিন পাসওয়ার্ড দিয়ে লগইন করুন!", "warning");
+                closeAuthorModal(false);
+                switchTab('admin');
+                return;
+            }
+
+            let profile = authorProfiles.find(a => a.name.trim() === activeAuthorModalName.trim());
+            
+            // পূর্বে প্রোফাইল সংরক্ষিত না থাকলে স্বয়ংক্রিয় এন্ট্রি প্রস্তুত করা
+            if (!profile) {
+                profile = {
+                    id: 'auth_' + Date.now(),
+                    name: activeAuthorModalName,
+                    lifespan: '',
+                    photo: '',
+                    notable: '',
+                    bio: ''
+                };
+                authorProfiles.push(profile);
+                saveAuthorsToLocalStorage();
+            }
+
+            closeAuthorModal(false);
+            switchTab('admin');
+            switchAdminSubTab('authors');
+            editAuthorProfile(profile.id);
         }
 
         function closeAuthorModal(triggerHistoryBack = true) {
