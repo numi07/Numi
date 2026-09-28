@@ -179,6 +179,28 @@
         </div>
     </div>
 
+    <!-- লেখক এডিট দ্রুত এডমিন যাচাইকরণ পপ-আপ -->
+    <div id="author-admin-auth-modal" class="fixed inset-0 z-[120] hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <div>
+                <h4 class="text-base font-bold text-slate-900 dark:text-slate-100">এডমিন অনুমোদন প্রয়োজন</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">লেখক প্রোফাইলের তথ্য পরিবর্তন বা সম্পাদনা করতে এডমিন পাসওয়ার্ড দিন</p>
+            </div>
+            <input type="password" id="author-admin-quick-pass" onkeydown="if(event.key==='Enter') verifyAuthorAdminLogin()" placeholder="এডমিন পাসওয়ার্ড লিখুন..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-center text-slate-900 dark:text-slate-100 focus:border-amber-500 outline-none">
+            <div class="flex items-center justify-center gap-2 pt-1">
+                <button onclick="closeAuthorAdminAuthModal()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all">
+                    বাতিল
+                </button>
+                <button onclick="verifyAuthorAdminLogin()" class="px-5 py-2 text-xs font-bold rounded-xl bg-amber-600 hover:bg-amber-500 text-white shadow-md transition-all">
+                    লগইন ও এডিট
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header Navigation -->
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md shadow-sm dark:shadow-xl transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1036,7 +1058,7 @@
 
     </main>
 
-    <!-- AUTHOR PROFILE DETAILS MODAL (WITH DIRECT EDIT OPTION) -->
+    <!-- AUTHOR PROFILE DETAILS MODAL (WITH SECURE IN-MODAL ADMIN EDIT) -->
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
@@ -1047,8 +1069,8 @@
                     লেখক পরিচিতি
                 </span>
                 <div class="flex items-center gap-2">
-                    <!-- সরাসরি লেখক প্রোফাইল এডিট করার বাটন -->
-                    <button id="author-modal-edit-btn" onclick="editAuthorFromModal()" title="এই লেখকের প্রোফাইল এডিট করুন" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 transition-all shadow-sm">
+                    <!-- সরাসরি লেখক প্রোফাইল এডিট করার বাটন (এডমিন সুরক্ষিত) -->
+                    <button id="author-modal-edit-btn" onclick="editAuthorFromModal()" title="এই লেখকের প্রোফাইল এডিট করুন" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 transition-all shadow-sm">
                         <i class="fa-solid fa-pen-to-square"></i> প্রোফাইল এডিট
                     </button>
                     <button onclick="closeAuthorModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -1089,6 +1111,42 @@
                     <p id="author-modal-bio" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-justify">
                         কোনো জীবনী পাওয়া যায়নি।
                     </p>
+                </div>
+
+                <!-- ইন-মডাল সরাসরি লেখক প্রোফাইল সম্পাদনা প্যানেল (এডমিন অনলি) -->
+                <div id="author-modal-inline-edit" class="hidden bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 rounded-2xl border border-amber-500/40 space-y-4 shadow-inner">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                        <h4 class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-pen"></i> লেখক প্রোফাইল সম্পাদনা (এডমিন যাচাইকৃত)
+                        </h4>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">অনুমোদিত এডমিন</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের পুরো নাম <span class="text-rose-500">*</span></label>
+                            <input type="text" id="inline-edit-author-name" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:border-amber-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">জীবনকাল (যেমন: ১৮৯৪ - ১৯৫০)</label>
+                            <input type="text" id="inline-edit-author-lifespan" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:border-amber-500 outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">ছবির ওয়েব লিংক (URL / Google Drive Link)</label>
+                            <input type="url" id="inline-edit-author-photo" placeholder="https://..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:border-amber-500 outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">সংক্ষিপ্ত পরিচিতি ও জীবনী</label>
+                            <textarea id="inline-edit-author-bio" rows="4" placeholder="লেখকের বিস্তারিত জীবনী..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 focus:border-amber-500 outline-none text-justify"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 pt-1">
+                        <button onclick="saveInlineAuthorEdit()" class="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-amber-600/20 transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-floppy-disk"></i> তথ্য সেভ ও ক্লাউডে পাঠান
+                        </button>
+                        <button onclick="toggleInlineAuthorEdit(false)" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all">
+                            বাতিল
+                        </button>
+                    </div>
                 </div>
 
                 <div class="space-y-3 pt-2">
@@ -1267,14 +1325,9 @@
                 </div>
             </div>
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
-            <div class="flex space-x-4 hidden">
-                <span><i class="fa-solid fa-cloud text-emerald-500"></i> নিরাপদ ক্লাউড সংযুক্ত</span>
-                <span><i class="fa-solid fa-circle-half-stroke text-indigo-500"></i> ডার্ক ও লাইট রূপান্তর</span>
-            </div>
-        </div>
     </footer>
 
-    <script>
+     <script>
         // Anti-Scraping Listeners
         document.addEventListener('keydown', function(e) {
             if (e.keyCode === 123 || 
@@ -1740,7 +1793,7 @@
             document.head.appendChild(link);
         }
 
-        // স্টেপ-বাই-স্টেপ নিখুঁত ব্যাক বাটন কন্ট্রোল (কখনোই অপ্রত্যাশিতভাবে বের হবে না)
+        // স্টেপ-বাই-স্টেপ নিখুঁত ব্যাক বাটন কন্ট্রোল
         window.addEventListener('popstate', function(event) {
             if (activeBookId) {
                 closeBookModal(false);
@@ -2153,7 +2206,7 @@
                 categories.map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
-        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন (কোনো পপ-আপ ছাড়াই)
+        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন
         function filterBySeries(seriesName) {
             if (!seriesName) return;
             if (activeBookId) closeBookModal(false);
@@ -2166,7 +2219,7 @@
             
             if (searchInput) searchInput.value = seriesName;
             if (catFilter) catFilter.value = 'ALL';
-            if (sortSelect) sortSelect.value = 'serial-asc'; // শুরু থেকে শেষ (পর্ব ১ থেকে)
+            if (sortSelect) sortSelect.value = 'serial-asc';
             
             filterAllBooks();
         }
@@ -2188,7 +2241,6 @@
 
             filtered.sort((a, b) => {
                 if (sortVal === 'serial-asc') {
-                    // সিরিজের পর্ব থাকলে পর্ব ১ থেকে শুরু হবে, শেষ থেকে নয়
                     const sNumA = toEnNum(a.seriesNum);
                     const sNumB = toEnNum(b.seriesNum);
                     if (sNumA && sNumB && sNumA !== sNumB) {
@@ -2375,6 +2427,9 @@
             document.getElementById('author-modal-bio').innerText = profile.bio || 'কোনো জীবনী পাওয়া যায়নি।';
             document.getElementById('author-modal-book-count').innerText = toBnNum(authorBooks.length);
 
+            // নিশ্চিতভাবে এডিট ফর্ম বন্ধ রাখা প্রাথমিক অবস্থায়
+            toggleInlineAuthorEdit(false);
+
             const listContainer = document.getElementById('author-modal-books-list');
             if (authorBooks.length === 0) {
                 listContainer.innerHTML = `<p class="col-span-full text-xs text-slate-400 italic">চিলেকোঠায় এই লেখকের কোনো বই এখনও তালিকায় ওঠেনি।</p>`;
@@ -2396,24 +2451,78 @@
             document.getElementById('author-modal').classList.remove('hidden');
         }
 
-        // সরাসরি লেখকের প্রোফাইল থেকে এডিট অপশন চালু করার হ্যান্ডলার
+        /* ==========================================================
+           এডমিন সুরক্ষিত লেখক প্রোফাইল সরাসরি সম্পাদনা লজিক
+           ========================================================== */
         function editAuthorFromModal() {
             if (!activeAuthorModalName) return;
 
+            // এডমিন লগইন না থাকলে পাসওয়ার্ড পপ-আপ খোলা হবে
             if (!isAdminLoggedIn) {
-                showToast("লেখক প্রোফাইল সম্পাদনা করতে অনুগ্রহ করে এডমিন পাসওয়ার্ড দিয়ে লগইন করুন!", "warning");
-                closeAuthorModal(false);
-                switchTab('admin');
+                openAuthorAdminAuthModal();
                 return;
             }
 
-            let profile = authorProfiles.find(a => a.name.trim() === activeAuthorModalName.trim());
-            
-            // পূর্বে প্রোফাইল সংরক্ষিত না থাকলে স্বয়ংক্রিয় এন্ট্রি প্রস্তুত করা
+            // এডমিন লগইন থাকলে সরাসরি ইন-মডাল এডিট প্যানেল চালু হবে
+            openInlineAuthorEdit();
+        }
+
+        function openAuthorAdminAuthModal() {
+            const modal = document.getElementById('author-admin-auth-modal');
+            const passInput = document.getElementById('author-admin-quick-pass');
+            if (modal) {
+                modal.classList.remove('hidden');
+                if (passInput) {
+                    passInput.value = '';
+                    setTimeout(() => passInput.focus(), 100);
+                }
+            }
+        }
+
+        function closeAuthorAdminAuthModal() {
+            const modal = document.getElementById('author-admin-auth-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function verifyAuthorAdminLogin() {
+            const passInput = document.getElementById('author-admin-quick-pass');
+            const pass = passInput ? passInput.value.trim() : '';
+            if (!pass) {
+                showToast("দয়া করে এডমিন পাসওয়ার্ড লিখুন!", "warning");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/books?action=checkLogin&pass=${encodeURIComponent(pass)}&_t=${Date.now()}`);
+                if (res.ok) {
+                    const resData = await res.json();
+                    if (resData.success) {
+                        isAdminLoggedIn = true;
+                        sessionStorage.setItem('chilekotha_admin_auth', 'true');
+                        sessionStorage.setItem('chilekotha_admin_pass_cache', pass);
+                        showAdminPanel();
+                        startInactivityWatcher();
+                        refreshViews();
+                        closeAuthorAdminAuthModal();
+                        showToast("এডমিন ভেরিফিকেশন সফল হয়েছে!", "success");
+                        openInlineAuthorEdit();
+                        return;
+                    }
+                }
+                showToast("ভুল পাসওয়ার্ড! সাধারণ ভিজিটরদের এডিট করার অনুমতি নেই।", "error");
+            } catch(e) {
+                showToast("সার্ভার যাচাইকরণে সমস্যা হয়েছে! ইন্টারনেট সংযোগ পরীক্ষা করুন।", "error");
+            }
+        }
+
+        function openInlineAuthorEdit() {
+            if (!activeAuthorModalName) return;
+            const authorName = activeAuthorModalName;
+            let profile = authorProfiles.find(a => a.name.trim() === authorName.trim());
             if (!profile) {
                 profile = {
                     id: 'auth_' + Date.now(),
-                    name: activeAuthorModalName,
+                    name: authorName,
                     lifespan: '',
                     photo: '',
                     notable: '',
@@ -2423,10 +2532,84 @@
                 saveAuthorsToLocalStorage();
             }
 
-            closeAuthorModal(false);
-            switchTab('admin');
-            switchAdminSubTab('authors');
-            editAuthorProfile(profile.id);
+            const editPanel = document.getElementById('author-modal-inline-edit');
+            if (editPanel) {
+                document.getElementById('inline-edit-author-name').value = profile.name || '';
+                document.getElementById('inline-edit-author-lifespan').value = profile.lifespan || '';
+                document.getElementById('inline-edit-author-photo').value = profile.photo || '';
+                document.getElementById('inline-edit-author-bio').value = profile.bio || '';
+                editPanel.classList.remove('hidden');
+                editPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function toggleInlineAuthorEdit(show) {
+            const editPanel = document.getElementById('author-modal-inline-edit');
+            if (!editPanel) return;
+            if (show) {
+                editPanel.classList.remove('hidden');
+            } else {
+                editPanel.classList.add('hidden');
+            }
+        }
+
+        async function saveInlineAuthorEdit() {
+            if (!isAdminLoggedIn) {
+                showToast("অননুমোদিত চেষ্টা! শুধুমাত্র এডমিন এডিট করতে পারবেন।", "error");
+                return;
+            }
+            const name = document.getElementById('inline-edit-author-name').value.trim();
+            if (!name) {
+                showToast("দয়া করে লেখকের নাম লিখুন!", "warning");
+                return;
+            }
+            const lifespan = document.getElementById('inline-edit-author-lifespan').value.trim();
+            const photo = formatImageUrl(document.getElementById('inline-edit-author-photo').value.trim());
+            const bio = document.getElementById('inline-edit-author-bio').value.trim();
+
+            let profile = authorProfiles.find(a => a.name.trim() === activeAuthorModalName.trim());
+            if (profile) {
+                profile.name = name;
+                profile.lifespan = lifespan;
+                profile.photo = photo;
+                profile.bio = bio;
+            } else {
+                profile = {
+                    id: 'auth_' + Date.now(),
+                    name,
+                    lifespan,
+                    photo,
+                    notable: '',
+                    bio
+                };
+                authorProfiles.push(profile);
+            }
+
+            saveAuthorsToLocalStorage();
+            renderAuthors();
+            renderAdminAuthorsList();
+            populateAuthorSuggestions();
+
+            // মডালের তথ্য লাইভ আপডেট
+            document.getElementById('author-modal-name').innerText = profile.name;
+            document.getElementById('author-modal-lifespan').innerText = profile.lifespan ? `জীবনকাল: ${toBnNum(profile.lifespan)}` : '';
+            if (photo) document.getElementById('author-modal-photo').src = photo;
+            document.getElementById('author-modal-bio').innerText = profile.bio || 'কোনো জীবনী পাওয়া যায়নি।';
+            activeAuthorModalName = profile.name;
+
+            toggleInlineAuthorEdit(false);
+
+            // ক্লাউড ও গুগল শিট সিঙ্ক
+            const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
+            fetch('/api/books', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: "addAuthor", author: profile, adminPass: adminPass })
+            }).then(() => {
+                syncLiveFromGoogleSheet(true);
+            }).catch(e => {});
+
+            showToast("লেখক প্রোফাইল সফলভাবে আপডেট ও ক্লাউডে সংরক্ষিত হয়েছে!", "success");
         }
 
         function closeAuthorModal(triggerHistoryBack = true) {
@@ -2538,7 +2721,7 @@
             }
         }
 
-        // বইয়ের বিস্তারিত মডাল ওপেনার (একাধিক গুগল ড্রাইভ ফটো ও যেকোনো ডিভাইসে প্রদর্শন সহ)
+        // বইয়ের বিস্তারিত মডাল ওপেনার
         function openBookModal(bookId, pushHistory = true) {
             const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
             if (!book) return;
@@ -2882,7 +3065,7 @@
             }
         }
 
-        // দ্রুততম গতিতে নতুন বই সংযোজন ও ক্লাউড সংরক্ষণ (সর্বশেষ গুগল অ্যাপস স্ক্রিপ্ট অনুযায়ী একাধিক ছবির নিখুঁত প্রসেসিং)
+        // দ্রুততম গতিতে নতুন বই সংযোজন ও ক্লাউড সংরক্ষণ
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
@@ -2972,7 +3155,6 @@
                 syncLiveFromGoogleSheet(true);
             }).catch(err => console.warn("Background book save sync error:", err));
 
-            // নতুন বই এন্ট্রি করার পরে হোম পেজে না গিয়ে সরাসরি এই বই এন্ট্রির ট্যাবেই থাকা
             resetForm();
             showToast("বই সফলভাবে সংরক্ষিত হয়েছে! পরবর্তী বইয়ের তথ্য দিন।", "success");
             switchTab('admin');
@@ -2989,7 +3171,6 @@
             handleAcquisitionTypeChange();
         }
 
-        // বই এডিটে এন্ট্রি তারিখ ও অতিরিক্ত ছবি অক্ষুণ্ণ রেখে নির্ভুল লোড করা
         function editCurrentBook() {
             if (!isAdminLoggedIn) { showToast("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!", "warning"); switchTab('admin'); return; }
             if (!activeBookId) return;
@@ -3019,13 +3200,11 @@
             document.getElementById('form-edition-input').value = book.edition || '';
             document.getElementById('form-edition-year-input').value = toBnNum(book.editionYear) || '';
             
-            // এন্ট্রি তারিখ অক্ষুণ্ণ রাখা
             document.getElementById('form-entry-date-input').value = toInputDateFormat(book.entryDate);
             
             document.getElementById('form-printed-price-input').value = toBnNum(book.printedPrice) || '';
             document.getElementById('form-purchase-price-input').value = toBnNum(book.purchasePrice) || '';
             
-            // ছবির সব লিঙ্ক আলাদা করে ফিল্ডে দেওয়া
             const imgs = getBookImages(book);
             const fallback = getFallbackBookImage();
             const validImgs = imgs.filter(url => url !== fallback);
