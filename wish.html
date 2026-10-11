@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💖 Special Love Card 💖</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Hind Siliguri', 'Outfit', sans-serif;
+      background: radial-gradient(circle at 50% 15%, #2a0824 0%, #120315 50%, #060109 100%);
+      color: #fdf2f8;
+      overflow-x: hidden;
+    }
+
+    .handwriting { font-family: 'Caveat', cursive; }
+
+    /* 3D Context */
+    .perspective-2000 { perspective: 2000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+
+    /* Realistic 3D Heart Pulse */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1) translateZ(60px); filter: drop-shadow(0 0 15px #f43f5e); }
+      15% { transform: scale(1.22) translateZ(75px); filter: drop-shadow(0 0 35px #ec4899); }
+      30% { transform: scale(1.05) translateZ(65px); filter: drop-shadow(0 0 20px #f43f5e); }
+      45% { transform: scale(1.3) translateZ(85px); filter: drop-shadow(0 0 45px #fb7185); }
+    }
+    .animate-heartbeat { animation: heartbeat 2.2s infinite ease-in-out; }
+
+    /* 3D Orbit Rings */
+    @keyframes orbit3d {
+      0% { transform: rotateX(65deg) rotateZ(0deg); }
+      100% { transform: rotateX(65deg) rotateZ(360deg); }
+    }
+    .animate-orbit { animation: orbit3d 5s linear infinite; }
+
+    @keyframes orbitReverse {
+      0% { transform: rotateX(-55deg) rotateZ(360deg); }
+      100% { transform: rotateX(-55deg) rotateZ(0deg); }
+    }
+    .animate-orbit-reverse { animation: orbitReverse 7s linear infinite; }
+
+    /* Photo Sway Animation */
+    @keyframes swayPhoto {
+      0%, 100% { transform: translateZ(55px) translateY(0px) rotateZ(-3deg); }
+      50% { transform: translateZ(75px) translateY(-10px) rotateZ(3deg); }
+    }
+    .animate-sway-photo { animation: swayPhoto 5s ease-in-out infinite; }
+
+    /* Holographic Shimmer */
+    .text-shimmer {
+      background: linear-gradient(120deg, #fb7185, #ffffff, #f472b6, #fda4af, #ffffff);
+      background-size: 250% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      animation: shimmer 4s ease infinite;
+    }
+    @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+    /* Polaroid 3D Cards */
+    .photo-polaroid-3d {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(244, 63, 94, 0.3);
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    }
+
+    .photo-polaroid-3d:hover {
+      transform: translateZ(110px) scale(1.08) rotateZ(0deg) !important;
+      border-color: rgba(251, 113, 133, 0.8);
+      box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(244, 63, 94, 0.65);
+      z-index: 50;
+    }
+
+    .photo-sheen {
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-sheen::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 60%);
+      transform: rotate(35deg);
+      transition: all 0.8s ease;
+      pointer-events: none;
+    }
+    .photo-polaroid-3d:hover .photo-sheen::after {
+      top: 100%;
+      left: 100%;
+    }
+
+    /* Ambient Romantic Particle Canvas */
+    #hearts-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Interactive Cursor Hearts */
+    .cursor-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      animation: floatUpFade 1s forwards ease-out;
+    }
+    @keyframes floatUpFade {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+      100% { opacity: 0; transform: translate(-50%, -100px) scale(1.4) rotate(25deg); }
+    }
+
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: #f43f5e; border-radius: 99px; }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-rose-500 selection:text-white flex flex-col justify-between relative">
+
+  <!-- Ambient Floating Hearts Canvas -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- Ambient Glow -->
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] rounded-full bg-rose-600/15 blur-[140px] pointer-events-none -z-10"></div>
+
+  <!-- Instant Loader -->
+  <div id="loader" class="fixed inset-0 bg-[#09010c]/90 backdrop-blur-xl z-50 flex flex-col items-center justify-center transition-opacity duration-150">
+    <div class="relative w-16 h-16 flex items-center justify-center">
+      <i class="fa-solid fa-heart text-5xl text-rose-500 animate-ping absolute"></i>
+      <i class="fa-solid fa-heart text-5xl text-rose-400 relative z-10"></i>
+    </div>
+    <p class="text-rose-300 font-bold tracking-widest text-xs mt-4 animate-pulse">লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="border-b border-rose-500/20 bg-[#0c020f]/80 backdrop-blur-xl fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center shadow-lg">
+    <a href="javascript:void(0)" onclick="goHome()" class="text-xl md:text-2xl font-black text-shimmer flex items-center gap-2">
+      <i class="fa-solid fa-heart text-rose-500 animate-pulse"></i> Forever Love
+    </a>
+    <div id="nav-actions"></div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="pt-24 pb-12 px-4 max-w-4xl mx-auto w-full relative z-10">
+
+    <!-- 1. AUTHENTICATION -->
+    <section id="auth-section" class="hidden max-w-md mx-auto bg-slate-900/80 p-8 rounded-3xl border border-rose-500/20 shadow-2xl backdrop-blur-2xl mt-8">
+      <div class="flex border-b border-white/10 mb-6">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 pb-3 font-bold border-b-2 border-rose-500 text-rose-400 transition">লগইন</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 pb-3 font-bold text-slate-400 transition">রেজিস্ট্রেশন</button>
+      </div>
+
+      <form onsubmit="handleAuth(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider mb-1.5 text-slate-400 font-semibold">ইমেইল</label>
+          <input type="email" id="auth-email" required class="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-rose-500">
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider mb-1.5 text-slate-400 font-semibold">পাসওয়ার্ড</label>
+          <input type="password" id="auth-password" required class="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-rose-500">
+        </div>
+        <button type="submit" id="auth-btn" class="w-full bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 hover:brightness-110 py-3.5 rounded-xl font-bold shadow-lg shadow-rose-500/30 transition">
+          প্রবেশ করুন
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. DASHBOARD -->
+    <section id="dashboard-section" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/60 p-6 rounded-3xl border border-rose-500/20 backdrop-blur-xl">
+        <div>
+          <h2 class="text-2xl font-black text-white">আমার উইশ গ্যালারি</h2>
+          <p id="user-display" class="text-xs text-rose-300 mt-1"></p>
+        </div>
+        <button onclick="openEditor()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:brightness-110 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-rose-500/30 flex items-center gap-2 transition hover:scale-105 active:scale-95">
+          <i class="fa-solid fa-heart-circle-plus"></i> নতুন 3D উইশ কার্ড
+        </button>
+      </div>
+
+      <div id="wish-list" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- 3. EDITOR (With Delete & Multi-photo Support) -->
+    <section id="editor-section" class="hidden bg-slate-900/80 p-8 rounded-3xl border border-rose-500/20 shadow-2xl backdrop-blur-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="editor-title" class="text-2xl font-black text-shimmer">নতুন ৩ডি রোমান্টিক কার্ড</h2>
+        <button onclick="showSection('dashboard-section')" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form onsubmit="saveWish(event)" class="space-y-5">
+        <input type="hidden" id="edit-wish-id">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs uppercase tracking-wider mb-2 text-slate-400 font-semibold">ক্যাটাগরি</label>
+            <select id="wish-category" class="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3.5 text-white focus:outline-none focus:border-rose-500">
+              <option value="love">💖 লাভ & রোমান্টিক (My Love)</option>
+              <option value="birthday">🎂 শুভ জন্মদিন (Birthday Queen)</option>
+              <option value="special">✨ স্পেশাল ডে / অ্যানিভার্সারি</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider mb-2 text-slate-400 font-semibold">তার নাম</label>
+            <input type="text" id="wish-name" required placeholder="যেমন: প্রিয়তমা / ময়না..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3.5 text-white focus:outline-none focus:border-rose-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider mb-2 text-slate-400 font-semibold">ভালোবাসার চিঠি / বার্তা</label>
+          <textarea id="wish-message" rows="4" required placeholder="হৃদয়ের অনুভূতিগুলো লিখুন..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3.5 text-white focus:outline-none focus:border-rose-500"></textarea>
+        </div>
+
+        <!-- Multi Photo Upload & Delete Area -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider mb-2 text-slate-400 font-semibold">রোমান্টিক ছবি আপলোড করুন (একের অধিক ছবি দেওয়া যাবে)</label>
+          <input type="file" id="wish-images" multiple accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-rose-600 file:text-white hover:file:bg-rose-500 cursor-pointer">
+          <p class="text-[11px] text-rose-300/80 mt-1.5"><i class="fa-solid fa-sparkles mr-1"></i> ছবিগুলো স্বয়ংক্রিয়ভাবে অপ্টিমাইজড হবে। কোনো ছবি ডিলিট করতে চাইলে ছবির ওপরের ❌ বাটনে ক্লিক করুন।</p>
+          
+          <div id="image-previews" class="flex gap-4 mt-3 overflow-x-auto py-3"></div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-4">
+          <button type="button" onclick="showSection('dashboard-section')" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl font-bold transition">বাতিল</button>
+          <button type="submit" id="save-btn" class="px-8 py-3 bg-gradient-to-r from-rose-500 to-pink-600 hover:brightness-110 rounded-xl font-bold shadow-lg shadow-rose-500/20 transition">সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 4. PUBLIC VIEW -->
+    <section id="view-section" class="hidden min-h-[78vh] flex flex-col items-center justify-center perspective-2000 py-6">
+      
+      <!-- Unbox Stage -->
+      <div id="gift-stage" class="text-center cursor-pointer select-none group" onclick="revealCard()">
+        <div class="w-40 h-40 md:w-48 md:h-48 mx-auto mb-6 relative">
+          <div class="absolute inset-0 rounded-full bg-rose-500/30 blur-3xl animate-ping"></div>
+          
+          <div class="relative w-full h-full bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700 rounded-3xl shadow-2xl flex items-center justify-center border-2 border-white/30 transform group-hover:scale-110 group-hover:rotate-3 transition duration-500 animate-bounce">
+            <i class="fa-solid fa-gift text-6xl md:text-7xl text-white drop-shadow-xl"></i>
+            <span class="absolute -top-3 -right-3 w-9 h-9 bg-rose-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+              <i class="fa-solid fa-heart text-white text-sm"></i>
+            </span>
+          </div>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-black text-shimmer mb-2">তোমাকে দেওয়ার মতো একটি সারপ্রাইজ! ❤️</h3>
+        <p class="text-sm text-rose-300 font-semibold animate-pulse flex items-center justify-center gap-2">
+          <i class="fa-solid fa-hand-pointer"></i> খুলতে এখানে স্পর্শ করো
+        </p>
+      </div>
+
+      <!-- 3D Card Stage -->
+      <div id="card-stage" class="hidden w-full max-w-xl transition-all duration-300 transform-style-3d"></div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox-modal" onclick="closeLightbox()" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="relative max-w-lg w-full flex flex-col items-center" onclick="event.stopPropagation()">
+      <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white/80 hover:text-white text-3xl font-bold">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="photo-polaroid-3d p-3 pb-8 rounded-2xl w-full">
+        <img id="lightbox-img" src="" class="w-full max-h-[70vh] object-contain rounded-xl">
+        <p class="text-center text-rose-300 handwriting text-3xl mt-3">Forever with You ❤️</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 border-t border-rose-500/10 text-xs text-rose-300/50 relative z-10">
+    ভালোবাসার অনন্ত অনুভূতি ❤️
+  </footer>
+
+  <script>
+    // 🔒 Vercel API Proxy (গুগল শিটের গোপন লিংক সম্পূর্ণ নিরাপদ থাকবে):
+    const API_URL = "/api/card";
+
+    let currentUser = localStorage.getItem("wish_user_email") || null;
+    let authMode = "login";
+    let base64Images = []; // Stores active images
+    let currentWishData = null;
+    let audioCtx = null;
+    let isMusicPlaying = false;
+    let musicInterval = null;
+
+    // ⚡ INSTANT LINK LOAD LOGIC
+    (function checkInstantWish() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const wishId = urlParams.get('id');
+      if (wishId) {
+        showSection('view-section');
+        fetch(`${API_URL}?id=${wishId}`)
+          .then(res => res.json())
+          .then(result => {
+            hideLoader();
+            if (result.success) {
+              currentWishData = result.data;
+              document.getElementById('gift-stage').classList.remove('hidden');
+              document.getElementById('card-stage').classList.add('hidden');
+            } else {
+              document.getElementById('view-section').innerHTML = `<p class="text-rose-400 text-lg font-bold">${result.message}</p>`;
+            }
+          })
+          .catch(() => {
+            hideLoader();
+            document.getElementById('view-section').innerHTML = `<p class="text-rose-400">কার্ড লোড করা সম্ভব হয়নি।</p>`;
+          });
+      }
+    })();
+
+    window.onload = () => {
+      initFloatingHearts();
+      initCursorHearts();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.get('id')) {
+        hideLoader();
+        if (currentUser) {
+          showDashboard();
+        } else {
+          showSection('auth-section');
+        }
+      }
+      updateNav();
+    };
+
+    function showLoader() {
+      const el = document.getElementById('loader');
+      el.style.display = 'flex';
+      el.style.opacity = '1';
+    }
+
+    function hideLoader() {
+      const el = document.getElementById('loader');
+      el.style.opacity = '0';
+      setTimeout(() => el.style.display = 'none', 150);
+    }
+
+    function goHome() {
+      window.location.href = window.location.pathname;
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-actions');
+      if (currentUser) {
+        nav.innerHTML = `
+          <button onclick="logout()" class="text-xs bg-slate-900/80 hover:bg-slate-800 border border-rose-500/20 px-4 py-2 rounded-xl text-rose-200 font-semibold transition flex items-center gap-2">
+            <i class="fa-solid fa-power-off text-rose-500"></i> লগআউট
+          </button>
+        `;
+      } else {
+        nav.innerHTML = ``;
+      }
+    }
+
+    function showSection(id) {
+      ['auth-section', 'dashboard-section', 'editor-section', 'view-section'].forEach(s => {
+        document.getElementById(s).classList.add('hidden');
+      });
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function switchAuthTab(mode) {
+      authMode = mode;
+      document.getElementById('tab-login').className = mode === 'login' ? 'w-1/2 pb-3 font-bold border-b-2 border-rose-500 text-rose-400 transition' : 'w-1/2 pb-3 font-bold text-slate-400 transition';
+      document.getElementById('tab-register').className = mode === 'register' ? 'w-1/2 pb-3 font-bold border-b-2 border-rose-500 text-rose-400 transition' : 'w-1/2 pb-3 font-bold text-slate-400 transition';
+      document.getElementById('auth-btn').innerText = mode === 'login' ? 'প্রবেশ করুন' : 'সাইন আপ করুন';
+    }
+
+    async function handleAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const btn = document.getElementById('auth-btn');
+
+      btn.disabled = true;
+      btn.innerText = "যাচাই করা হচ্ছে...";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: authMode, email, password })
+        });
+        const result = await res.json();
+        alert(result.message);
+        if (result.success) {
+          if (authMode === 'login') {
+            currentUser = email.trim().toLowerCase();
+            localStorage.setItem("wish_user_email", currentUser);
+            updateNav();
+            showDashboard();
+          } else {
+            switchAuthTab('login');
+          }
+        }
+      } catch (err) {
+        alert("সার্ভার সমস্যা! আবার চেষ্টা করুন।");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = authMode === 'login' ? 'প্রবেশ করুন' : 'সাইন আপ করুন';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("wish_user_email");
+      currentUser = null;
+      goHome();
+    }
+
+    async function showDashboard() {
+      showSection('dashboard-section');
+      document.getElementById('user-display').innerText = `অ্যাকাউন্ট: ${currentUser}`;
+      const listContainer = document.getElementById('wish-list');
+      listContainer.innerHTML = `<div class="col-span-2 text-center py-12 text-rose-300 animate-pulse">উইশ কার্ডগুলো লোড হচ্ছে...</div>`;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "getUserWishes", userEmail: currentUser })
+        });
+        const result = await res.json();
+
+        if (result.success && result.data.length > 0) {
+          listContainer.innerHTML = result.data.map(item => `
+            <div class="bg-slate-900/60 p-6 rounded-3xl border border-rose-500/20 hover:border-rose-500/50 transition duration-300 flex flex-col justify-between shadow-xl backdrop-blur-xl group">
+              <div>
+                <span class="text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30">
+                  ${item.category}
+                </span>
+                <h3 class="font-black text-xl mt-3 text-white group-hover:text-rose-400 transition">${item.recipientName}</h3>
+                <p class="text-slate-300 text-sm line-clamp-2 mt-2 leading-relaxed">${item.message}</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-white/5 flex justify-between items-center text-xs">
+                <button onclick="copyWishLink('${item.id}')" class="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1.5 transition">
+                  <i class="fa-regular fa-copy"></i> লিংক কপি
+                </button>
+                <div class="flex items-center gap-3">
+                  <button onclick="shareWhatsApp('${item.id}', '${item.recipientName}')" title="WhatsApp-এ শেয়ার করুন" class="text-emerald-400 hover:text-emerald-300 text-base"><i class="fa-brands fa-whatsapp"></i></button>
+                  <button onclick='editWish(${JSON.stringify(item)})' title="এডিট করুন" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button onclick="deleteWish('${item.id}')" title="মুছে ফেলুন" class="text-rose-500 hover:text-rose-400 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          listContainer.innerHTML = `<div class="col-span-2 text-center py-12 text-slate-500">এখনো কোনো কার্ড নেই। নতুন রোমান্টিক কার্ড তৈরি করো!</div>`;
+        }
+      } catch (err) {
+        listContainer.innerHTML = `<div class="col-span-2 text-center py-12 text-rose-400">ডাটা লোড হয়নি!</div>`;
+      }
+    }
+
+    // 🌟 ULTRA-COMPRESS IMAGE TO ENSURE MULTIPLE PHOTOS WORK IN GOOGLE SHEETS
+    function compressImage(file, maxWidth = 380, quality = 0.45) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+        };
+      });
+    }
+
+    // MULTIPLE IMAGE UPLOAD WITH REAL-TIME PREVIEW
+    document.getElementById('wish-images').addEventListener('change', async function(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      for (const file of files) {
+        const compressed = await compressImage(file);
+        base64Images.push(compressed);
+      }
+      renderImagePreviews();
+      e.target.value = ''; // Reset input to allow re-upload
+    });
+
+    // RENDER PREVIEWS WITH DELETE BUTTON
+    function renderImagePreviews() {
+      const previewContainer = document.getElementById('image-previews');
+      previewContainer.innerHTML = '';
+
+      base64Images.forEach((img, idx) => {
+        previewContainer.innerHTML += `
+          <div class="relative photo-polaroid-3d p-1.5 pb-2.5 rounded-xl flex-shrink-0 group">
+            <button type="button" onclick="removePhoto(${idx})" class="absolute -top-2 -right-2 bg-rose-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow-lg hover:scale-110 active:scale-95 transition z-20">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img src="${img}" class="w-16 h-16 object-cover rounded-lg">
+          </div>
+        `;
+      });
+    }
+
+    // 🗑️ REMOVE PHOTO (Removes from UI and from Cloud when Saved)
+    function removePhoto(index) {
+      base64Images.splice(index, 1);
+      renderImagePreviews();
+    }
+
+    function openEditor() {
+      document.getElementById('edit-wish-id').value = '';
+      document.getElementById('wish-name').value = '';
+      document.getElementById('wish-message').value = '';
+      document.getElementById('editor-title').innerText = "নতুন ৩ডি রোমান্টিক কার্ড";
+      base64Images = [];
+      renderImagePreviews();
+      showSection('editor-section');
+    }
+
+    function editWish(item) {
+      document.getElementById('edit-wish-id').value = item.id;
+      document.getElementById('wish-category').value = item.category;
+      document.getElementById('wish-name').value = item.recipientName;
+      document.getElementById('wish-message').value = item.message;
+      document.getElementById('editor-title').innerText = "কার্ডটি এডিট করো";
+      
+      // Ensure images array is properly parsed
+      let imgs = item.images;
+      if (typeof imgs === 'string') {
+        try { imgs = JSON.parse(imgs); } catch(e) { imgs = []; }
+      }
+      base64Images = Array.isArray(imgs) ? [...imgs] : [];
+      renderImagePreviews();
+      showSection('editor-section');
+    }
+
+    async function saveWish(e) {
+      e.preventDefault();
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      btn.innerText = "সংরক্ষণ হচ্ছে...";
+
+      const payload = {
+        action: "saveWish",
+        id: document.getElementById('edit-wish-id').value || null,
+        userEmail: currentUser,
+        category: document.getElementById('wish-category').value,
+        recipientName: document.getElementById('wish-name').value,
+        message: document.getElementById('wish-message').value,
+        images: base64Images
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        alert(result.message);
+        if (result.success) showDashboard();
+      } catch (err) {
+        alert("সংরক্ষণ ব্যর্থ হয়েছে!");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "সংরক্ষণ করুন";
+      }
+    }
+
+    async function deleteWish(id) {
+      if (!confirm("কার্ডটি মুছে ফেলতে চাও?")) return;
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteWish", id, userEmail: currentUser })
+        });
+        const result = await res.json();
+        alert(result.message);
+        if (result.success) showDashboard();
+      } catch (err) {
+        alert("মুছে ফেলা সম্ভব হয়নি!");
+      }
+    }
+
+    function copyWishLink(id) {
+      const link = `${window.location.origin}${window.location.pathname}?id=${id}`;
+      navigator.clipboard.writeText(link);
+      alert("ভালোবাসার লিংক কপি হয়েছে! পাঠিয়ে দাও তাকে ❤️");
+    }
+
+    function shareWhatsApp(id, name) {
+      const link = `${window.location.origin}${window.location.pathname}?id=${id}`;
+      const text = encodeURIComponent(`💖 প্রিয় ${name}, তোমার জন্য বিশেষ একটি ৩ডি সারপ্রাইজ গিফট আছে! এখানে ক্লিক করে খোলো:\n${link}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    // Reveal Unbox Action
+    function revealCard() {
+      if (!currentWishData) return;
+
+      startRomanticMusicBox();
+      document.getElementById('gift-stage').classList.add('hidden');
+      const cardStage = document.getElementById('card-stage');
+      cardStage.classList.remove('hidden');
+
+      renderCardContent(currentWishData);
+      triggerLoveExplosion();
+      initMultiLayer3DParallax();
+    }
+
+    /* ==========================================================
+       💖 ৩ডি কার্ড রেন্ডারিং (একাধিক ফটোর গ্যারান্টেড সাপোর্ট)
+       ========================================================== */
+    function renderCardContent(data) {
+      const cardStage = document.getElementById('card-stage');
+      const rotations = [-5, 4, -3, 5, -2];
+
+      // Handle images array safely
+      let imagesList = data.images;
+      if (typeof imagesList === 'string') {
+        try { imagesList = JSON.parse(imagesList); } catch(e) { imagesList = []; }
+      }
+      if (!Array.isArray(imagesList)) imagesList = [];
+
+      let imagesHtml = '';
+      if (imagesList.length > 0) {
+        imagesHtml = `
+          <div class="relative my-7 py-3 transform-style-3d">
+            <div class="flex gap-4 overflow-x-auto py-5 px-3 snap-x items-center justify-start scrollbar-none transform-style-3d">
+              ${imagesList.map((img, index) => {
+                const rot = rotations[index % rotations.length];
+                return `
+                  <div class="photo-polaroid-3d animate-sway-photo p-2.5 pb-6 rounded-2xl flex-shrink-0 cursor-pointer snap-center group"
+                       style="transform: translateZ(65px) rotateZ(${rot}deg); animation-delay: ${index * 0.3}s;"
+                       onclick="openLightbox('${img}')"
+                       data-depth="80">
+                    
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border border-white/40 z-20">
+                      <i class="fa-solid fa-heart text-white text-xs"></i>
+                    </div>
+
+                    <div class="photo-sheen rounded-xl overflow-hidden relative">
+                      <img src="${img}" class="w-44 h-52 md:w-52 md:h-60 object-cover rounded-xl transition duration-500 group-hover:scale-105">
+                    </div>
+
+                    <p class="text-center text-rose-300 handwriting text-2xl mt-2 tracking-wide">
+                      Our Moments #0${index + 1}
+                    </p>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <p class="text-[11px] text-rose-300/80 mt-1 flex items-center justify-center gap-1.5" style="transform: translateZ(40px);">
+              <i class="fa-solid fa-magnifying-glass-plus text-rose-400"></i> বড় করে দেখতে ছবিতে টাচ করো
+            </p>
+          </div>
+        `;
+      }
+
+      cardStage.innerHTML = `
+        <div id="tilt-box" class="bg-gradient-to-b from-[#240a25]/95 via-[#18051a]/95 to-[#0e0210]/95 backdrop-blur-2xl p-7 md:p-10 rounded-[2.5rem] border border-rose-500/30 text-center shadow-[0_0_60px_rgba(244,63,94,0.35)] relative transform-style-3d transition-transform duration-200">
+          
+          <!-- Music Toggle -->
+          <button onclick="toggleMusic()" id="music-btn" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 flex items-center justify-center text-sm transition shadow-lg z-30" style="transform: translateZ(50px);">
+            <i class="fa-solid fa-volume-high text-rose-300"></i>
+          </button>
+
+          <!-- 🌟 Multiple 3D Rotating Orbiting Hearts -->
+          <div class="relative w-32 h-32 mx-auto mb-2 flex items-center justify-center transform-style-3d">
+            <div class="absolute w-28 h-28 rounded-full border-2 border-dashed border-rose-400/60 animate-orbit pointer-events-none"></div>
+            <div class="absolute w-24 h-24 rounded-full border border-pink-400/40 animate-orbit-reverse pointer-events-none"></div>
+            
+            <!-- Center 3D Pulsing Crystal Heart -->
+            <div class="animate-heartbeat flex items-center justify-center">
+              <i class="fa-solid fa-heart text-6xl md:text-7xl text-rose-500 drop-shadow-[0_0_25px_#f43f5e]"></i>
+            </div>
+          </div>
+
+          <div style="transform: translateZ(40px);" class="flex items-center justify-center gap-2">
+            <span class="text-xs">💖</span>
+            <span class="text-[11px] uppercase tracking-widest text-rose-300 font-extrabold px-4 py-1 bg-rose-500/20 rounded-full border border-rose-500/30">
+              Forever & Always
+            </span>
+            <span class="text-xs">💖</span>
+          </div>
+
+          <h1 class="text-3xl md:text-5xl font-black text-shimmer mt-4 mb-2 tracking-wide" style="transform: translateZ(55px);">
+            ${data.recipientName}
+          </h1>
+
+          <!-- 3D Photos List -->
+          ${imagesHtml}
+
+          <!-- Romantic Note -->
+          <div class="bg-black/40 border border-rose-500/20 p-6 md:p-7 rounded-3xl mt-4 shadow-inner relative overflow-hidden" style="transform: translateZ(50px);">
+            <div class="absolute -right-6 -bottom-6 text-7xl text-rose-500/5 pointer-events-none">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <p class="text-rose-100 text-lg md:text-xl leading-relaxed whitespace-pre-line font-medium handwriting">
+              "${data.message}"
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="mt-8 flex flex-wrap justify-center gap-3" style="transform: translateZ(60px);">
+            <button onclick="triggerLoveExplosion()" class="bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 hover:brightness-110 text-white font-extrabold px-8 py-3.5 rounded-full shadow-lg shadow-rose-500/30 active:scale-95 transition flex items-center gap-2 text-base">
+              <i class="fa-solid fa-heart text-white animate-bounce"></i> অনেক ভালোবাসি!
+            </button>
+
+            <!-- 🔒 Admin Only WhatsApp Share -->
+            ${currentUser ? `
+              <button onclick="shareWhatsApp('${data.id}', '${data.recipientName}')" title="এডমিন প্রিভিউ শেয়ার" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3.5 rounded-full shadow-lg active:scale-95 transition flex items-center gap-2 text-sm">
+                <i class="fa-brands fa-whatsapp text-lg"></i> শেয়ার করো (এডমিন)
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Lightbox Controls
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    // Multi-Layer 3D Depth Parallax
+    function initMultiLayer3DParallax() {
+      const box = document.getElementById('tilt-box');
+      if (!box) return;
+
+      const handleMove = (e) => {
+        const rect = box.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        if (!clientX || !clientY) return;
+
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -16;
+        const rotateY = ((x - centerX) / centerX) * 16;
+
+        box.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+        const polaroids = box.querySelectorAll('.photo-polaroid-3d');
+        polaroids.forEach((item) => {
+          const depth = parseFloat(item.getAttribute('data-depth')) || 60;
+          const shiftX = ((x - centerX) / centerX) * (depth * 0.25);
+          const shiftY = ((y - centerY) / centerY) * (depth * 0.25);
+          item.style.transform = `translateZ(${depth}px) translate(${shiftX}px, ${shiftY}px)`;
+        });
+      };
+
+      const handleLeave = () => {
+        box.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        const polaroids = box.querySelectorAll('.photo-polaroid-3d');
+        polaroids.forEach((item) => {
+          item.style.transform = `translateZ(65px)`;
+        });
+      };
+
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('touchmove', handleMove);
+      box.addEventListener('mouseleave', handleLeave);
+    }
+
+    // Web Audio Synthesizer (Music Box)
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playNote(freq, time, duration, gainValue = 0.2) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, time);
+
+      gain.gain.setValueAtTime(gainValue, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(time);
+      osc.stop(time + duration);
+    }
+
+    function startRomanticMusicBox() {
+      try {
+        initAudio();
+        isMusicPlaying = true;
+        updateMusicBtnUI();
+
+        const notes = [523.25, 659.25, 783.99, 1046.50, 880.00, 659.25, 523.25, 587.33, 659.25, 783.99, 987.77, 880.00];
+        let noteIdx = 0;
+        if (musicInterval) clearInterval(musicInterval);
+
+        musicInterval = setInterval(() => {
+          if (!isMusicPlaying || !audioCtx) return;
+          const now = audioCtx.currentTime;
+          playNote(notes[noteIdx % notes.length], now, 1.2, 0.25);
+          noteIdx++;
+        }, 420);
+      } catch (err) {}
+    }
+
+    function toggleMusic() {
+      if (!audioCtx) {
+        startRomanticMusicBox();
+        return;
+      }
+      isMusicPlaying = !isMusicPlaying;
+      if (!isMusicPlaying && musicInterval) {
+        clearInterval(musicInterval);
+      } else {
+        startRomanticMusicBox();
+      }
+      updateMusicBtnUI();
+    }
+
+    function updateMusicBtnUI() {
+      const btn = document.getElementById('music-btn');
+      if (!btn) return;
+      if (isMusicPlaying) {
+        btn.innerHTML = `<i class="fa-solid fa-volume-high text-rose-400"></i>`;
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-volume-xmark text-slate-400"></i>`;
+      }
+    }
+
+    // Confetti Explosion
+    function triggerLoveExplosion() {
+      const heartShape = confetti.shapeFromText({ text: '❤️', scalar: 2 });
+      const sparkleShape = confetti.shapeFromText({ text: '💖', scalar: 2 });
+      confetti({
+        shapes: [heartShape, sparkleShape],
+        particleCount: 50,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#f43f5e', '#fb7185', '#ec4899', '#ffffff', '#fda4af']
+      });
+    }
+
+    // Interactive Cursor Heart Trails
+    function initCursorHearts() {
+      const heartIcons = ['💖', '💕', '✨', '❤️', '💗'];
+      const createHeart = (x, y) => {
+        const el = document.createElement('div');
+        el.className = 'cursor-heart';
+        el.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+      };
+
+      let throttle = 0;
+      window.addEventListener('mousemove', (e) => {
+        if (Date.now() - throttle > 60) {
+          createHeart(e.clientX, e.clientY);
+          throttle = Date.now();
+        }
+      });
+      window.addEventListener('touchmove', (e) => {
+        if (Date.now() - throttle > 80 && e.touches[0]) {
+          createHeart(e.touches[0].clientX, e.touches[0].clientY);
+          throttle = Date.now();
+        }
+      });
+    }
+
+    // Canvas Background Floating Hearts
+    function initFloatingHearts() {
+      const canvas = document.getElementById('hearts-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const hearts = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 20 + 8,
+        speedY: Math.random() * 0.9 + 0.3,
+        speedX: Math.sin(Math.random() * Math.PI) * 0.5,
+        opacity: Math.random() * 0.5 + 0.1
+      }));
+
+      function drawHeart(x, y, size, opacity) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(x, y);
+        ctx.scale(size / 30, size / 30);
+        ctx.fillStyle = `rgba(244, 63, 94, ${opacity})`;
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-10, -10, -20, 5, 0, 20);
+        ctx.bezierCurveTo(20, 5, 10, -10, 0, 0);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        hearts.forEach(h => {
+          h.y -= h.speedY;
+          h.x += h.speedX;
+          if (h.y < -30) {
+            h.y = height + 30;
+            h.x = Math.random() * width;
+          }
+          drawHeart(h.x, h.y, h.size, h.opacity);
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
