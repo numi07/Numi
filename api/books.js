@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     const isAllowedSource = referer.includes(allowedDomain) || origin.includes(allowedDomain) || referer.includes("localhost") || origin.includes("localhost");
 
     if (req.method === 'GET') {
-        const { action, pass } = req.query;
+        const { action, pass, refresh } = req.query;
 
         if (action === 'checkLogin') {
             if (pass === adminPass) return res.status(200).json({ success: true });
@@ -22,9 +22,17 @@ export default async function handler(req, res) {
         }
 
         try {
-            const response = await fetch(`${scriptURL}?action=getData&_t=${Date.now()}`);
-            const data = await response.json();
+            // Vercel Edge ক্যাশ হেডার: বিশ্বব্যাপী ব্যবহারকারীদের জন্য ০.০০১ সেকেন্ডে ডেলিভারি
             res.setHeader('Access-Control-Allow-Origin', `https://${allowedDomain}`);
+            if (!refresh && !pass) {
+                res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=86400');
+            } else {
+                res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            }
+
+            const fetchUrl = `${scriptURL}?action=getData${refresh ? '&refresh=1' : ''}&_t=${Date.now()}`;
+            const response = await fetch(fetchUrl);
+            const data = await response.json();
             return res.status(200).json(data);
         } catch (error) {
             return res.status(500).json({ error: "Fetch failed" });
@@ -39,7 +47,6 @@ export default async function handler(req, res) {
 
             const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
             
-            // সাধারণ পাঠকদের লাইক ও মন্তব্য পাঠানোর জন্য এডমিন পাসওয়ার্ড বাধ্যতামূলক নয়
             const publicActions = ['updateLikes', 'updateComments'];
             const requiresAdmin = !publicActions.includes(payload.action);
 
