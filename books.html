@@ -38,7 +38,7 @@
         }
     </script>
     
-    <!-- Google Fonts: Noto Sans Bengali & Hind Siliguri with display=swap for high speed -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
         }
         body {
             font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             letter-spacing: 0.15px;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -82,6 +82,31 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
+        /* Ultra-Modern Glassmorphism & Micro-Interactions */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-hover-fx {
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.28s ease;
+        }
+        .card-hover-fx:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.15);
+        }
+        .dark .card-hover-fx:hover {
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6);
+        }
+
         /* Centered Logo Watermark Overlay */
         .center-logo-watermark {
             position: absolute;
@@ -153,6 +178,22 @@
         }
         .owner-glow {
             animation: pulseGlow 6s ease-in-out infinite;
+        }
+
+        /* Shimmer Loading Animation for 0.001s Instant Skeleton */
+        @keyframes shimmerPulse {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 25%, rgba(203, 213, 225, 0.8) 50%, rgba(226, 232, 240, 0.6) 75%);
+            background-size: 200% 100%;
+            animation: shimmerPulse 1.5s infinite;
+        }
+        .dark .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.6) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(30, 41, 59, 0.6) 75%);
+            background-size: 200% 100%;
+            animation: shimmerPulse 1.5s infinite;
         }
     </style>
 </head>
@@ -325,13 +366,12 @@
             </button>
         </div>
     </div>
-
     <!-- MAIN CONTAINER -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <!-- Global Back Button -->
         <div id="global-back-wrapper" class="hidden mb-4">
-            <button onclick="goBack()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-500 shadow-sm transition-all">
+            <button onclick="goBack()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-500 shadow-sm backdrop-blur-md transition-all">
                 <i class="fa-solid fa-arrow-left"></i> পেছনে ফিরে যান
             </button>
         </div>
@@ -341,11 +381,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                 <!-- Total Books Card with direct click navigation -->
                 <div onclick="switchTab('all-books')" title="সকল বই দেখতে ক্লিক করুন" 
-                     class="cursor-pointer bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 flex items-center space-x-5 shadow-sm dark:shadow-md backdrop-blur-sm relative overflow-hidden group hover:border-sky-500/70 hover:shadow-xl transition-all">
+                     class="cursor-pointer glass-card card-hover-fx rounded-3xl p-6 sm:p-7 flex items-center space-x-5 shadow-sm dark:shadow-md relative overflow-hidden group">
                     <div class="absolute -right-6 -bottom-6 text-sky-500/5 dark:text-sky-400/5 text-8xl pointer-events-none group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-book-bookmark"></i>
                     </div>
-                    <div class="p-4 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-2xl group-hover:bg-sky-500 group-hover:text-white transition-colors shadow-inner">
+                    <div class="p-4 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-2xl group-hover:bg-sky-500 group-hover:text-white transition-all duration-300 shadow-inner shrink-0">
                         <i class="fa-solid fa-books text-3xl"></i>
                     </div>
                     <div>
@@ -358,7 +398,7 @@
                 </div>
 
                 <!-- Welcome Quote Card with Slogan -->
-                <div class="md:col-span-2 relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-700 to-indigo-800 dark:from-slate-900 dark:via-sky-950/60 dark:to-slate-900 border border-transparent dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-md dark:shadow-xl text-white flex flex-col justify-center">
+                <div class="md:col-span-2 relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-700 to-indigo-800 dark:from-slate-900 dark:via-sky-950/60 dark:to-slate-900 border border-transparent dark:border-slate-800/80 rounded-3xl p-6 sm:p-7 shadow-md dark:shadow-xl text-white flex flex-col justify-center">
                     <div class="absolute -right-6 -bottom-8 text-white/10 dark:text-slate-800/30 text-8xl pointer-events-none font-serif">
                         <i class="fa-solid fa-quote-right"></i>
                     </div>
@@ -384,7 +424,13 @@
                         সবগুলো দেখুন <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                 </div>
-                <div id="home-featured-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6"></div>
+                <!-- 0.001s Instant Skeleton Pre-Render Buffer -->
+                <div id="home-featured-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 min-h-[160px]">
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer hidden sm:block"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer hidden sm:block"></div>
+                </div>
             </div>
 
             <!-- Recently Added Books -->
@@ -394,25 +440,30 @@
                         <i class="fa-solid fa-clock-rotate-left text-sky-600 dark:text-sky-400"></i> সাম্প্রতিক যুক্ত করা বই
                     </h2>
                 </div>
-                <div id="home-recent-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6"></div>
+                <div id="home-recent-books" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 min-h-[160px]">
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer hidden sm:block"></div>
+                    <div class="glass-card rounded-2xl h-64 skeleton-shimmer hidden sm:block"></div>
+                </div>
             </div>
         </section>
 
         <!-- TAB: ALL BOOKS -->
         <section id="tab-all-books" class="tab-content hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
+            <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
                 <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
                     <input type="text" id="all-books-search" oninput="filterAllBooks()" placeholder="বইয়ের নাম, সিরিজ, লেখক বা প্রকাশনী..." 
-                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-sky-500">
+                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-sky-500 transition-colors">
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <select id="all-books-cat-filter" onchange="filterAllBooks()" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500">
+                    <select id="all-books-cat-filter" onchange="filterAllBooks()" class="bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500 transition-colors">
                         <option value="ALL">সকল ক্যাটাগরি</option>
                     </select>
 
-                    <select id="all-books-sort" onchange="filterAllBooks()" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500">
+                    <select id="all-books-sort" onchange="filterAllBooks()" class="bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:border-sky-500 transition-colors">
                         <option value="serial-asc">ক্রমিক নম্বর (১ থেকে শেষ)</option>
                         <option value="serial-desc">ক্রমিক নম্বর (শেষ থেকে ১)</option>
                         <option value="price-desc">ক্রয়মূল্য (বেশি থেকে কম)</option>
@@ -432,7 +483,7 @@
 
         <!-- TAB: AUTHORS -->
         <section id="tab-authors" class="tab-content hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex justify-between items-center shadow-sm">
+            <div class="glass-card rounded-2xl p-5 flex justify-between items-center shadow-sm">
                 <div>
                     <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">সম্মানিত লেখকবৃন্দ</h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">লেখকের নামের ওপর চাপ দিয়ে তাঁর পূর্ণ প্রোফাইল ও জীবনী দেখুন</p>
@@ -447,7 +498,7 @@
 
         <!-- TAB: CATEGORIES -->
         <section id="tab-categories" class="tab-content hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+            <div class="glass-card rounded-2xl p-5 shadow-sm">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">ক্যাটাগরি ভিত্তিক বইসমূহ</h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">বিষয় ও প্রকরণ অনুযায়ী সজ্জিত সকল বই</p>
             </div>
@@ -458,8 +509,8 @@
         <!-- TAB: GIFTS -->
         <section id="tab-gifts" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm">
-                    <div class="p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl">
+                <div class="glass-card border-emerald-200/80 dark:border-emerald-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm card-hover-fx">
+                    <div class="p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl shrink-0">
                         <i class="fa-solid fa-hand-holding-heart text-3xl"></i>
                     </div>
                     <div>
@@ -467,8 +518,8 @@
                         <p class="text-sm text-emerald-700 dark:text-emerald-400 font-semibold">উপহার পাওয়া বই (কার থেকে কবে পেয়েছি)</p>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-slate-900/80 border border-rose-200 dark:border-rose-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm">
-                    <div class="p-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-2xl">
+                <div class="glass-card border-rose-200/80 dark:border-rose-900/50 rounded-2xl p-6 flex items-center space-x-4 shadow-sm card-hover-fx">
+                    <div class="p-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-2xl shrink-0">
                         <i class="fa-solid fa-gift text-3xl"></i>
                     </div>
                     <div>
@@ -479,10 +530,10 @@
             </div>
 
             <div class="flex border-b border-slate-200 dark:border-slate-800 space-x-6">
-                <button onclick="toggleGiftView('received')" id="gift-tab-received" class="pb-3 text-sm font-semibold border-b-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400">
+                <button onclick="toggleGiftView('received')" id="gift-tab-received" class="pb-3 text-sm font-semibold border-b-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400 transition-colors">
                     প্রাপ্ত উপহারের তালিকা
                 </button>
-                <button onclick="toggleGiftView('given')" id="gift-tab-given" class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                <button onclick="toggleGiftView('given')" id="gift-tab-given" class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                     প্রদত্ত উপহারের তালিকা
                 </button>
             </div>
@@ -492,7 +543,7 @@
 
         <!-- TAB: SEARCH -->
         <section id="tab-search" class="tab-content hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="glass-card rounded-2xl p-6 space-y-4 shadow-sm">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-sliders text-sky-600 dark:text-sky-400"></i> বিস্তারিত অনুসন্ধান ও ফিল্টার
                 </h2>
@@ -501,16 +552,16 @@
                     <div>
                         <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">কীওয়ার্ড (বই / সিরিজ / লেখক)</label>
                         <input type="text" id="adv-search-keyword" placeholder="যেমন: গীতাঞ্জলি, ফেলুদা, উপন্যাস..." 
-                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none transition-colors">
                     </div>
                     <div>
                         <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">অনুবাদক</label>
                         <input type="text" id="adv-search-translator" placeholder="অনুবাদকের নাম..." 
-                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none transition-colors">
                     </div>
                     <div>
                         <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">সংগ্রহের ধরণ</label>
-                        <select id="adv-search-type" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                        <select id="adv-search-type" class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none transition-colors">
                             <option value="ALL">সকল প্রকার</option>
                             <option value="PURCHASED">নিজের কেনা বই</option>
                             <option value="GIFT_RECEIVED">প্রাপ্ত উপহার</option>
@@ -520,12 +571,12 @@
                     <div>
                         <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">সর্বোচ্চ ক্রয় মূল্য (৳)</label>
                         <input type="text" id="adv-search-max-price" placeholder="যেমন: ৫০০" 
-                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none transition-colors">
                     </div>
                     <div>
                         <label class="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 block">প্রথম প্রকাশকাল (সাল)</label>
                         <input type="text" id="adv-search-pub-year" placeholder="যেমন: ১৯১০" 
-                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none">
+                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:border-sky-500 focus:outline-none transition-colors">
                     </div>
                     <div class="flex items-end">
                         <button onclick="executeAdvancedSearch()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 px-4 rounded-xl transition-all shadow-md shadow-sky-600/20 flex items-center justify-center gap-2">
@@ -591,7 +642,7 @@
                             </span>
                         </div>
 
-                        <div class="bg-white/80 dark:bg-slate-950/60 p-5 sm:p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm relative overflow-hidden">
+                        <div class="glass-card p-5 sm:p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm relative overflow-hidden">
                             <div class="w-1.5 h-full bg-gradient-to-b from-sky-500 to-indigo-600 absolute left-0 top-0"></div>
                             <p id="owner-message-el" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed text-justify pl-2">
                                 "বই হচ্ছে হৃদয়ের নিঃশব্দ আশ্রয়। সাহিত্য, ইতিহাস ও মানবিক অনুভূতির শ্রেষ্ঠ ফসলগুলোকে পরম যত্নে বাঁচিয়ে রাখার এক নিবিড় ডিজিটাল প্রয়াস এই চিলেকোঠা লাইব্রেরি।"
@@ -601,7 +652,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 relative z-10">
-                    <div class="space-y-3 bg-white/80 dark:bg-slate-950/60 p-6 sm:p-7 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-sky-500/40 transition-colors">
+                    <div class="space-y-3 glass-card p-6 sm:p-7 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 shadow-sm card-hover-fx transition-colors">
                         <div class="flex items-center gap-3">
                             <div class="w-11 h-11 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl shadow-sm">
                                 <i class="fa-solid fa-house-chimney"></i>
@@ -613,7 +664,7 @@
                         </p>
                     </div>
 
-                    <div class="space-y-3 bg-white/80 dark:bg-slate-950/60 p-6 sm:p-7 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-emerald-500/40 transition-colors">
+                    <div class="space-y-3 glass-card p-6 sm:p-7 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 shadow-sm card-hover-fx transition-colors">
                         <div class="flex items-center gap-3">
                             <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shadow-sm">
                                 <i class="fa-solid fa-handshake"></i>
@@ -646,10 +697,9 @@
 
             </div>
         </section>
-
         <!-- TAB: ADMIN -->
         <section id="tab-admin" class="tab-content hidden space-y-8">
-            <div id="admin-login-box" class="max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-5">
+            <div id="admin-login-box" class="max-w-md mx-auto glass-card rounded-3xl p-8 shadow-2xl text-center space-y-5">
                 <div class="w-16 h-16 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center mx-auto text-3xl">
                     <i class="fa-solid fa-user-lock"></i>
                 </div>
@@ -659,7 +709,7 @@
                 </div>
                 <div class="space-y-3">
                     <input type="password" id="admin-login-pass" onkeydown="handleAdminPassKeydown(event)" placeholder="এডমিন পাসওয়ার্ড লিখুন..." 
-                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-center text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-center text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                     <button onclick="handleAdminLogin()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition-all shadow-md shadow-sky-600/30 text-sm">
                         লগইন করুন
                     </button>
@@ -667,7 +717,7 @@
             </div>
 
             <div id="admin-auth-panel" class="hidden space-y-8">
-                <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3">
+                <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3 backdrop-blur-sm">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ Vercel ক্লাউড সিঙ্ক সক্রিয়</span>
@@ -684,7 +734,7 @@
                 </div>
 
                 <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <div class="glass-card rounded-2xl p-5 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট মুদ্রিত মূল্য (MRP)</span>
                             <span class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-sm"><i class="fa-solid fa-tags"></i></span>
@@ -693,7 +743,7 @@
                         <p class="text-[10.5px] text-slate-400 mt-1">লাইব্রেরির সর্বমোট মুদ্রিত মূল্য</p>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <div class="glass-card rounded-2xl p-5 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট ক্রয় মূল্য (BuyPrice)</span>
                             <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm"><i class="fa-solid fa-receipt"></i></span>
@@ -702,7 +752,7 @@
                         <p class="text-[10.5px] text-slate-400 mt-1">প্রকৃত কেনায় সর্বমোট খরচ</p>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <div class="glass-card rounded-2xl p-5 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">মোট সাশ্রয় / ছাড়</span>
                             <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-piggy-bank"></i></span>
@@ -713,7 +763,7 @@
                 </div>
 
                 <!-- মন্তব্য অনুমোদন ও মুছে ফেলার প্যানেল -->
-                <div class="bg-white dark:bg-slate-900/90 border border-amber-300 dark:border-amber-500/30 rounded-2xl p-6 max-w-4xl mx-auto shadow-md">
+                <div class="glass-card border-amber-300 dark:border-amber-500/30 rounded-2xl p-6 max-w-4xl mx-auto shadow-md">
                     <h3 class="text-lg font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2 mb-2">
                         <i class="fa-solid fa-comments"></i> পাঠকদের মন্তব্য পরিচালনা ও অনুমোদন প্যানেল
                     </h3>
@@ -741,7 +791,7 @@
 
                 <!-- SUB-SECTION 1: BOOK MANAGEMENT FORM -->
                 <div id="admin-sub-books" class="space-y-6">
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
                             <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2" id="form-title">
                                 <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি ক্লাউড শিটে সেভ হবে)
@@ -756,43 +806,43 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">বইয়ের নাম (BookName) <span class="text-rose-500">*</span></label>
                                     <input type="text" id="form-title-input" required placeholder="যেমন: শেষের কবিতা" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের নাম (Author) <span class="text-rose-500">*</span></label>
                                     <input type="text" id="form-author-input" list="authors-datalist" required placeholder="লেখকের নাম লিখুন বা সিলেক্ট করুন..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">বইয়ের সিরিজ (SeriesName)</label>
                                     <input type="text" id="form-series-input" placeholder="যেমন: ফেলুদা সিরিজ, মিসির আলি..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সিরিজ পর্ব (SeriesOrder)</label>
                                         <input type="text" id="form-series-num-input" placeholder="যেমন: ৩" 
-                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                     </div>
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কপি সংখ্যা / খণ্ড (Quantity) [L কলাম]</label>
                                         <input type="number" id="form-series-total-input" min="1" value="1" placeholder="যেমন: ১ বা ৫" 
-                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ক্যাটাগরি (Category) <span class="text-rose-500">*</span></label>
                                     <input type="text" id="form-category-input" required placeholder="যেমন: উপন্যাস, কবিতা, ইতিহাস..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংগ্রহের ধরণ</label>
-                                    <select id="form-acquisition-input" onchange="handleAcquisitionTypeChange()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                    <select id="form-acquisition-input" onchange="handleAcquisitionTypeChange()" class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                         <option value="PURCHASED">নিজের কেনা বই</option>
                                         <option value="GIFT_RECEIVED">উপহার প্রাপ্ত</option>
                                         <option value="GIFT_GIVEN">উপহার দেওয়া হয়েছে</option>
@@ -802,31 +852,31 @@
                                 <div id="gift-person-wrapper" class="hidden">
                                     <label id="gift-person-label" class="block text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">কার থেকে পেয়েছি (ব্যক্তির নাম)</label>
                                     <input type="text" id="form-gift-person-input" placeholder="ব্যক্তির নাম..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div id="gift-date-wrapper" class="hidden">
                                     <label id="gift-date-label" class="block text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">উপহার পাওয়ার তারিখ</label>
                                     <input type="date" id="form-gift-date-input" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-sky-300 dark:border-sky-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">অনুবাদক (TranslatedBy)</label>
                                     <input type="text" id="form-translator-input" placeholder="অনুবাদকের নাম" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রকাশনী (Publisher)</label>
                                     <input type="text" id="form-publisher-input" placeholder="যেমন: বিশ্বভারতী" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রথম প্রকাশকাল (PublishYear)</label>
                                     <input type="text" id="form-first-pub-input" placeholder="যেমন: ১৯২৯" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <!-- নতুন ফিল্ড: কততম প্রকাশ ও প্রকাশ সাল -->
@@ -834,56 +884,56 @@
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কততম প্রকাশ (Edition)</label>
                                         <input type="text" id="form-edition-input" placeholder="যেমন: ১ম প্রকাশ / ৩য় সংস্করণ" 
-                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                     </div>
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রকাশের সাল (Edition Year)</label>
                                         <input type="text" id="form-edition-year-input" placeholder="যেমন: ২০২৪" 
-                                               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                               class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংযুক্তির তারিখ (EntryDate)</label>
                                     <input type="date" id="form-entry-date-input" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মুদ্রিত মূল্য (MRP ৳)</label>
                                     <input type="text" id="form-printed-price-input" placeholder="যেমন: ৩৫০" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div id="purchase-price-wrapper">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ক্রয় মূল্য (BuyPrice ৳)</label>
                                     <input type="text" id="form-purchase-price-input" placeholder="যেমন: ২৮০" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
                             </div>
 
-                            <!-- Book Photos: একাধিক গুগল ড্রাইভ ফটোর সমর্থন -->
+                            <!-- Book Photos: একাধিক ছবির সমর্থন -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                                         <i class="fa-solid fa-image text-sky-600 dark:text-sky-400"></i> মূল ছবির লিংক (URL / Google Drive Link) <span class="text-rose-500">*</span>
                                     </label>
                                     <input type="url" id="form-main-image-input" placeholder="গুগল ড্রাইভ অথবা ওয়েব ছবির সরাসরি লিংক..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                        <i class="fa-solid fa-images text-indigo-500"></i> অতিরিক্ত ছবির লিংক (কমা দিয়ে একাধিক গুগল ড্রাইভ লিংক)
+                                        <i class="fa-solid fa-images text-indigo-500"></i> অতিরিক্ত ছবির লিংক (কমা দিয়ে একাধিক লিংক)
                                     </label>
                                     <input type="text" id="form-extra-images-input" placeholder="https://drive.google.com/..., https://..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
                             </div>
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সারসংক্ষেপ ও পর্যালোচনা (Review)</label>
                                 <textarea id="form-summary-input" rows="4" placeholder="বইয়ের বিষয়বস্তু, অনুভূতি বা সংক্ষিপ্ত পর্যালোচনা লিখুন..." 
-                                          class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify"></textarea>
+                                          class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify transition-colors"></textarea>
                             </div>
 
                             <div class="flex items-center space-x-4 pt-2">
@@ -900,7 +950,7 @@
 
                 <!-- SUB-SECTION 2: AUTHOR PROFILE MANAGEMENT -->
                 <div id="admin-sub-authors" class="hidden space-y-8">
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4" id="author-form-title">
                             <i class="fa-solid fa-feather-pointed text-amber-500"></i> নতুন লেখক প্রোফাইল তৈরি করুন
                         </h2>
@@ -912,31 +962,31 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের পুরো নাম <span class="text-rose-500">*</span></label>
                                     <input type="text" id="author-profile-name" required placeholder="যেমন: বিভূতিভূষণ বন্দ্যোপাধ্যায়" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">জীবনকাল (জন্ম ও মৃত্যু সাল)</label>
                                     <input type="text" id="author-profile-lifespan" placeholder="যেমন: ১৮৯৪ - ১৯৫০" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">লেখকের ছবির ওয়েব লিংক (URL)</label>
                                     <input type="url" id="author-profile-photo" placeholder="https://..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div class="md:col-span-2 hidden">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">উল্লেখযোগ্য সাহিত্যকর্ম</label>
                                     <input type="text" id="author-profile-notable" placeholder="যেমন: পথের পাঁচালী, অপরাজিত..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সংক্ষিপ্ত পরিচিতি ও জীবনী</label>
                                     <textarea id="author-profile-bio" rows="4" placeholder="লেখকের সাহিত্যজীবন ও শৈলীর বিবরণ লিখুন..." 
-                                              class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify"></textarea>
+                                              class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none text-justify transition-colors"></textarea>
                                 </div>
                             </div>
 
@@ -951,7 +1001,7 @@
                         </form>
                     </div>
 
-                    <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                    <div class="max-w-4xl mx-auto glass-card rounded-3xl p-6 sm:p-8 shadow-xl">
                         <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-users text-sky-600 dark:text-sky-400"></i> তৈরিকৃত লেখক প্রোফাইলসমূহ
                         </h3>
@@ -961,7 +1011,7 @@
 
                 <!-- SUB-SECTION 3: BOOK LENDING REGISTER -->
                 <div id="admin-sub-lending" class="hidden space-y-8">
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <h3 class="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-hand-holding-hand"></i> নতুন বই ধার দেওয়ার এন্ট্রি
                         </h3>
@@ -970,7 +1020,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কোন বইটি ধার দেওয়া হচ্ছে <span class="text-rose-500">*</span></label>
-                                    <select id="lending-book-select" required class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                    <select id="lending-book-select" required class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                         <option value="">বই নির্বাচন করুন...</option>
                                     </select>
                                 </div>
@@ -978,31 +1028,31 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কাকে দেওয়া হলো (গ্রহীতার নাম) <span class="text-rose-500">*</span></label>
                                     <input type="text" id="lending-borrower-name" required placeholder="গ্রহীতার পুরো নাম..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মোবাইল নম্বর / যোগাযোগের মাধ্যম</label>
                                     <input type="text" id="lending-borrower-phone" placeholder="০১XXXXXXXXX" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">কবে দেওয়া হলো (ধারের তারিখ) <span class="text-rose-500">*</span></label>
                                     <input type="date" id="lending-borrow-date" required 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">সম্ভাব্য ফেরত দেওয়ার তারিখ</label>
                                     <input type="date" id="lending-expected-date" 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">মন্তব্য / বিশেষ নোট</label>
                                     <input type="text" id="lending-note" placeholder="যেমন: পড়ার জন্য ২১ দিনের শর্তে দেওয়া..." 
-                                           class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none">
+                                           class="w-full bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-sky-500 focus:outline-none transition-colors">
                                 </div>
                             </div>
 
@@ -1014,7 +1064,7 @@
                         </form>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
                             <i class="fa-solid fa-list-check text-sky-600 dark:text-sky-400"></i> বর্তমানে ধার দেওয়া ও পূর্ববর্তী রেকর্ড
                         </h3>
@@ -1024,7 +1074,7 @@
 
                 <!-- SUB-SECTION 4: MULTI-SHEET EXCEL LIVE IMPORT & BACKUP -->
                 <div id="admin-sub-excel" class="hidden space-y-8">
-                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl space-y-6">
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl space-y-6">
                         <div>
                             <h3 class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
                                 <i class="fa-solid fa-file-excel text-2xl"></i> এক্সেল ফাইল আপলোড
@@ -1069,7 +1119,6 @@
                     লেখক পরিচিতি
                 </span>
                 <div class="flex items-center gap-2">
-                    <!-- শুধুমাত্র এডমিনদের জন্য দৃশ্যমান সরাসরি এডিট বাটন (ভিজিটরদের জন্য সম্পূর্ণ অদৃশ্য) -->
                     <button id="author-modal-edit-btn" onclick="editAuthorFromModal()" title="এই লেখকের প্রোফাইল এডিট করুন" class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 transition-all shadow-sm">
                         <i class="fa-solid fa-pen-to-square"></i> প্রোফাইল এডিট
                     </button>
@@ -1107,7 +1156,7 @@
                     </p>
                 </div>
 
-                <!-- ইন-মডাল সরাসরি লেখক প্রোফাইল সম্পাদনা প্যানেল (একই মডালে এডিট - শুধুমাত্র এডমিন) -->
+                <!-- ইন-মডাল সরাসরি লেখক প্রোফাইল সম্পাদনা প্যানেল -->
                 <div id="author-modal-inline-edit" class="hidden bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 rounded-2xl border border-amber-500/40 space-y-4 shadow-inner">
                     <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
                         <h4 class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -1167,7 +1216,6 @@
                     </span>
                     <span id="modal-series-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-xs px-3 py-1 rounded-full font-bold cursor-pointer hover:bg-indigo-500/20" title="এই সিরিজের সকল বই পর্ব ১ থেকে দেখতে চাপ দিন">
                     </span>
-                    <!-- এডমিন কপি ব্যাজ (শুধুমাত্র এডমিনদের জন্য দৃশ্যমান) -->
                     <span id="modal-copies-badge" class="hidden bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         <i class="fa-solid fa-copy"></i> মজুদ কপি: <strong id="modal-copies-val">১</strong> টি
                     </span>
@@ -1180,7 +1228,6 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-3">
-                        <!-- নিখুঁত ও সম্পূর্ণ ফ্রেমে কভার উপস্থাপনা -->
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center p-2">
                             <img id="modal-backdrop-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 dark:opacity-25 scale-110 pointer-events-none" onerror="this.style.display='none'">
                             <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="handleImageFallback(this, 'book');">
@@ -1188,7 +1235,6 @@
                                 <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
                         </div>
-                        <!-- একাধিক গুগল ড্রাইভ ফটোর থাম্বনেইল গ্যালারি -->
                         <div id="modal-thumbnails" class="flex space-x-2 overflow-x-auto pb-2 scrollbar-thin"></div>
                     </div>
 
@@ -1246,13 +1292,11 @@
                         </div>
 
                         <div class="flex items-center justify-between pt-2">
-                            <!-- টগলযোগ্য সার্বজনীন লাইক বাটন -->
                             <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors font-medium">
                                 <i class="fa-solid fa-heart" id="modal-like-icon"></i>
                                 <span><span id="modal-like-count">০</span> জন পছন্দ করেছেন</span>
                             </button>
 
-                            <!-- সাধারণ ভিজিটরদের কাছে এই সেকশন পুরোপুরি অদৃশ্য থাকবে -->
                             <div id="admin-book-actions" class="hidden space-x-2">
                                 <button onclick="quickLendCurrentBook()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs transition-colors font-medium">
                                     <i class="fa-solid fa-hand-holding"></i> ধার দিন
@@ -1268,7 +1312,7 @@
                     </div>
                 </div>
 
-                <!-- বই সরাসরি একই মডালে সম্পাদনা ফর্ম (চলমান মডাল থেকে অন্য কোথাও যাবে না - এডমিন সুরক্ষিত) -->
+                <!-- বই সরাসরি একই মডালে সম্পাদনা ফর্ম -->
                 <div id="book-modal-inline-edit" class="hidden bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 rounded-3xl border border-sky-500/40 space-y-4 shadow-xl">
                     <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
                         <h4 class="text-sm font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider flex items-center gap-2">
@@ -1416,7 +1460,6 @@
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
     </footer>
-
     <script>
         // Anti-Scraping Listeners
         document.addEventListener('keydown', function(e) {
@@ -1492,7 +1535,6 @@
             imgEl.src = (type === 'author') ? getFallbackAuthorImage() : getFallbackBookImage();
         }
 
-        // গুগল ড্রাইভ ফাইল আইডি নিষ্কাশনকারী (সকল ধরণের ড্রাইভ লিংক সমর্থন করে)
         function extractGoogleDriveId(url) {
             if (!url) return '';
             const cleanUrl = String(url).trim();
@@ -1507,7 +1549,6 @@
             return '';
         }
 
-        // ছবির লিঙ্ক ফরম্যাটার (যেকোনো ডিভাইস থেকে গুগল ড্রাইভ ছবি দেখার জন্য অপ্টিমাইজড)
         function formatImageUrl(url) {
             if (!url) return '';
             let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
@@ -1520,7 +1561,6 @@
             return cleanUrl;
         }
 
-        // যেকোনো বইয়ের একাধিক ছবিকে যথাযথ অ্যারেতে রূপান্তর
         function getBookImages(book) {
             if (!book) return [getFallbackBookImage()];
             let raw = book.images;
@@ -1547,6 +1587,7 @@
 
             return result.length > 0 ? result : [getFallbackBookImage()];
         }
+
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1765,6 +1806,7 @@
             } catch(e) {}
         }
 
+        // ০.০০১ সেকেন্ড ইনস্ট্যান্ট হাইড্রেশন
         window.onload = function() {
             setupPWAFeatures();
 
@@ -1797,6 +1839,7 @@
                 startInactivityWatcher();
             }
 
+            // ০.০০১ সেকেন্ডে ফ্রন্টএন্ড ভিউ প্রদর্শন
             renderOwnerProfile();
             updateStats();
             renderHomePage();
@@ -1815,7 +1858,6 @@
 
             startQuoteCarousel();
 
-            // ব্রাউজার হিস্ট্রি স্টেট ব্যবস্থাপনা
             if (!history.state) {
                 history.replaceState({ tab: 'home', modal: null }, '');
             }
@@ -1833,15 +1875,14 @@
                 setTimeout(() => openAuthorModal(savedOpenModalId, false), 50);
             }
 
-            // প্রথমবার লোড হওয়া মাত্রই ক্লাউড থেকে ফ্রেশ ডাটা আনা
+            // ব্যাকগ্রাউন্ডে সাইড-এফেক্ট বিহীন ফ্রেশ ক্লাউড সিঙ্ক
             syncLiveFromGoogleSheet(true);
 
-            // রানিং ব্রাউজারে স্বয়ংক্রিয় ব্যাকগ্রাউন্ড সিঙ্ক (প্রতি ১২ সেকেন্ড পর পর)
+            // স্বয়ংক্রিয় ব্যাকগ্রাউন্ড সিঙ্ক (প্রতি ১২ সেকেন্ড)
             setInterval(() => {
                 syncLiveFromGoogleSheet(true);
             }, 12000);
 
-            // ব্রাউজার ট্যাবে ফিরে আসা বা ফোন আনলক করা মাত্রই তাৎক্ষণিক আপডেট চেক
             document.addEventListener('visibilitychange', function() {
                 if (document.visibilityState === 'visible') {
                     syncLiveFromGoogleSheet(true);
@@ -1878,7 +1919,6 @@
             document.head.appendChild(link);
         }
 
-        // স্টেপ-বাই-স্টেপ ব্যাক বাটন কন্ট্রোল
         window.addEventListener('popstate', function(event) {
             if (activeBookId) {
                 closeBookModal(false);
@@ -1966,7 +2006,6 @@
                             };
                         });
 
-                        // পরিবর্তনের সত্যতা যাচাই
                         if (JSON.stringify(newBooks) !== JSON.stringify(books)) {
                             books = newBooks;
                             saveToLocalStorage();
@@ -2299,7 +2338,6 @@
                 categories.map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
-        // সিরিজ অনুসারে সকল বই পর্ব ১ থেকে ক্রমানুসারে সাজিয়ে প্রদর্শন
         function filterBySeries(seriesName) {
             if (!seriesName) return;
             if (activeBookId) closeBookModal(false);
@@ -2359,7 +2397,6 @@
             }
         }
 
-        // কার্ড তৈরিকরণ
         function createBookCardHTML(book) {
             const images = getBookImages(book);
             const imgUrl = images[0];
@@ -2404,7 +2441,7 @@
             const publicLikes = getBookLikes(book);
 
             return `
-            <div onclick="openBookModal('${book.id}')" class="bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-sky-500/60 hover:shadow-xl dark:hover:shadow-sky-950/40 transition-all duration-300 flex flex-col group cursor-pointer relative">
+            <div onclick="openBookModal('${book.id}')" class="glass-card card-hover-fx rounded-2xl overflow-hidden hover:border-sky-500/60 flex flex-col group cursor-pointer relative">
                 <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-20 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md text-sky-700 dark:text-sky-400 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
                     #${toBnNum(book.serial)}
                 </div>
@@ -2478,8 +2515,8 @@
             }
 
             authorsGrid.innerHTML = authorList.map(author => `
-                <div onclick="openAuthorModal('${author.name}')" class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex items-center space-x-4 cursor-pointer transition-all hover:shadow-lg group shadow-sm">
-                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative bg-slate-100 dark:bg-slate-950">
+                <div onclick="openAuthorModal('${author.name}')" class="glass-card card-hover-fx rounded-2xl p-5 flex items-center space-x-4 cursor-pointer group shadow-sm">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative bg-slate-100 dark:bg-slate-950 transition-colors">
                         <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="handleImageFallback(this, 'author');">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
@@ -2520,7 +2557,6 @@
             document.getElementById('author-modal-bio').innerText = profile.bio || 'কোনো জীবনী পাওয়া যায়নি।';
             document.getElementById('author-modal-book-count').innerText = toBnNum(authorBooks.length);
 
-            // শুধুমাত্র এডমিন লগইন করা থাকলেই এডিট বাটন প্রদর্শন
             const authorModalEditBtn = document.getElementById('author-modal-edit-btn');
             if (authorModalEditBtn) {
                 if (isAdminLoggedIn) {
@@ -2530,7 +2566,6 @@
                 }
             }
 
-            // নিশ্চিতভাবে এডিট ফর্ম বন্ধ রাখা প্রাথমিক অবস্থায়
             toggleInlineAuthorEdit(false);
 
             const listContainer = document.getElementById('author-modal-books-list');
@@ -2554,19 +2589,14 @@
             document.getElementById('author-modal').classList.remove('hidden');
         }
 
-        /* ==========================================================
-           এডমিন সুরক্ষিত লেখক প্রোফাইল সরাসরি একই মডালে সম্পাদনা
-           ========================================================== */
         function editAuthorFromModal() {
             if (!activeAuthorModalName) return;
 
-            // এডমিন লগইন না থাকলে দ্রুত পাসওয়ার্ড পপ-আপ
             if (!isAdminLoggedIn) {
                 openAuthorAdminAuthModal();
                 return;
             }
 
-            // এডমিন লগইন থাকলে সরাসরি চলতি মডালে এডিট প্যানেল চালু
             openInlineAuthorEdit();
         }
 
@@ -2693,7 +2723,6 @@
             renderAdminAuthorsList();
             populateAuthorSuggestions();
 
-            // মডালের তথ্য লাইভ আপডেট
             document.getElementById('author-modal-name').innerText = profile.name;
             document.getElementById('author-modal-lifespan').innerText = profile.lifespan ? `জীবনকাল: ${toBnNum(profile.lifespan)}` : '';
             if (photo) document.getElementById('author-modal-photo').src = photo;
@@ -2702,7 +2731,6 @@
 
             toggleInlineAuthorEdit(false);
 
-            // ক্লাউড ও গুগল শিট সিঙ্ক
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             fetch('/api/books', {
                 method: 'POST',
@@ -2824,7 +2852,6 @@
             }
         }
 
-        // বইয়ের বিস্তারিত মডাল ওপেনার
         function openBookModal(bookId, pushHistory = true) {
             const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
             if (!book) return;
@@ -2855,7 +2882,6 @@
                 acqBadge.className = 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-2.5 py-1 rounded-full font-bold';
             }
 
-            // সাধারণ ভিজিটরদের জন্য এডমিন অ্যাকশন বাটন পুরোপুরি লুকানো
             if (isAdminLoggedIn) {
                 if (book.acquisitionType !== 'GIFT_RECEIVED') purchaseBox.classList.remove('hidden');
                 adminActions.classList.remove('hidden');
@@ -2871,10 +2897,8 @@
                 if (copiesBadge) copiesBadge.classList.add('hidden');
             }
 
-            // ইন-মডাল এডিট ফর্ম প্রাথমিক অবস্থায় বন্ধ রাখা
             toggleInlineBookEdit(false);
 
-            // সিরিজ ব্যাজ
             const seriesBadge = document.getElementById('modal-series-badge');
             const seriesText = document.getElementById('modal-series-text');
             if (book.series) {
@@ -2906,9 +2930,7 @@
 
             updateModalLikeButton(book);
 
-            // একাধিক ছবির গ্যালারি ও প্রিভিউ নিয়ন্ত্রণ
             const images = getBookImages(book);
-            
             const mainImgEl = document.getElementById('modal-main-image');
             const backdropImgEl = document.getElementById('modal-backdrop-image');
             
@@ -2936,9 +2958,6 @@
             document.getElementById('book-modal').classList.remove('hidden');
         }
 
-        /* ==========================================================
-           বই সরাসরি চলতি মডালে এডিট ও সেভ লজিক (এডমিন সুরক্ষিত)
-           ========================================================== */
         function openInlineBookEdit() {
             if (!isAdminLoggedIn) {
                 showToast("বই সম্পাদনা করতে এডমিন লগইন প্রয়োজন!", "warning");
@@ -3038,11 +3057,9 @@
             populateAuthorSuggestions();
             populateLendingBookDropdown();
 
-            // চলতি মডালের ভিউ লাইভ রিফ্রেশ
             openBookModal(book.id, false);
             toggleInlineBookEdit(false);
 
-            // ক্লাউড ও গুগল শিটে আপডেট পাঠানো
             const adminPass = sessionStorage.getItem('chilekotha_admin_pass_cache') || '';
             fetch('/api/books', {
                 method: 'POST',
@@ -3291,7 +3308,6 @@
             }
         }
 
-        // নতুন বই সংযোজন ফর্ম সাবমিট
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (!isAdminLoggedIn) { showToast("বই সংরক্ষণ করতে অনুগ্রহ করে এডমিন লগইন করুন!", "warning"); return; }
