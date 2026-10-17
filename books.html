@@ -797,7 +797,7 @@
                         <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
                         <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
                         <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
-                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
+                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
                     </div>
                     <div class="mt-4 flex gap-2">
                         <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all">সেভ ও ক্লাউডে পাঠান</button>
@@ -1998,7 +1998,8 @@
         function getBookShareUrl(book) {
             const loc = window.location;
             const bookParam = book.id || book.serial;
-            return `${loc.protocol}//${loc.host}${loc.pathname}?book=${encodeURIComponent(bookParam)}`;
+            // এটি সরাসরি Vercel ডাইনামিক প্রিভিউ লিংকে পাঠাবে যা ফেসবুক ক্রলার সাথে সাথে ছবিসহ পড়তে পারে
+            return `${loc.protocol}//${loc.host}/api/books?action=share&book=${encodeURIComponent(bookParam)}`;
         }
 
         function updateMetaTagsForBook(book) {
