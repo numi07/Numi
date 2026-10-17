@@ -18,6 +18,7 @@
     <meta property="og:title" id="og-title" content="চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে">
     <meta property="og:description" id="og-description" content="চিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালা ও পাঠাগার। বই পড়ুন, জানুন ও শেয়ার করুন।">
     <meta property="og:image" id="og-image" content="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
+    <meta property="og:image:secure_url" id="og-image-secure" content="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
     <meta property="og:url" id="og-url" content="">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" id="tw-title" content="চিলেকোঠা লাইব্রেরি">
@@ -142,7 +143,7 @@
             justify-content: center;
             pointer-events: none;
             user-select: none;
-            z-index: 15;
+            z-index: 10;
         }
         .center-logo-watermark img {
             opacity: 0.07;
@@ -284,7 +285,7 @@
         </div>
     </div>
 
-    <!-- ফেসবুক ও সোশ্যাল শেয়ার অপশন মোডাল (REDESIGNED ULTRA-STYLISH FACEBOOK SHARE MODAL WITH LIVE CARD PREVIEW) -->
+    <!-- ফেসবুক ও সোশ্যাল শেয়ার অপশন মোডাল (DIRECT FACEBOOK FEED DIALOG & PREVIEW) -->
     <div id="share-modal" class="fixed inset-0 z-[180] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white dark:bg-slate-900 border border-blue-500/30 rounded-[2.2rem] p-6 sm:p-7 max-w-md w-full shadow-2xl space-y-5 text-center relative overflow-hidden my-auto">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600"></div>
@@ -296,7 +297,7 @@
                     </div>
                     <div>
                         <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 leading-tight">ফেসবুকে শেয়ার করুন</h3>
-                        <p class="text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold">চিলেকোঠা লাইব্রেরি ডিজিটাল বুক কার্ড</p>
+                        <p class="text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold">বইয়ের ছবিসহ সরাসরি ফেসবুক ফিডে পোস্ট হবে</p>
                     </div>
                 </div>
                 <button onclick="closeShareModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -304,29 +305,29 @@
                 </button>
             </div>
 
-            <!-- লাইভ ফেসবুক প্রিভিউ কার্ড -->
+            <!-- লাইভ ফেসবুক প্রিভিউ কার্ড (কোনো ইউনিক আইডি দৃশ্যমান নয়) -->
             <div class="p-3 bg-gradient-to-b from-slate-50 to-slate-100/90 dark:from-slate-950 dark:to-slate-900/90 rounded-2xl border border-blue-200/60 dark:border-blue-900/40 text-left flex gap-3 shadow-inner items-center">
                 <div class="w-16 h-22 aspect-[3/4] rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shrink-0 relative flex items-center justify-center">
-                    <img id="share-card-preview-img" src="" alt="বই" class="w-full h-full object-contain p-1" onerror="handleImageFallback(this, 'book');">
+                    <img id="share-card-preview-img" src="" alt="বই" class="w-full h-full object-contain p-1 instant-img" onerror="handleImageFallback(this, 'book');">
                 </div>
                 <div class="overflow-hidden flex-grow space-y-1">
-                    <span id="share-card-preview-uid" class="inline-block text-[9px] font-mono font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2 py-0.2 rounded-md">ID: CLK-00</span>
+                    <span class="inline-block text-[9.5px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded-md">চিলেকোঠা ডিজিটাল বুক কার্ড</span>
                     <h4 id="share-card-preview-title" class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate"></h4>
                     <p id="share-card-preview-author" class="text-[11px] font-medium text-slate-600 dark:text-slate-400 truncate"></p>
                     <p class="text-[9.5px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                        <i class="fa-solid fa-circle-check text-[8px]"></i> সরাসরি ওপেনযোগ্য লিঙ্ক তৈরি প্রস্তুত
+                        <i class="fa-solid fa-image text-[8.5px]"></i> বইয়ের আসল প্রচ্ছদ ছবিসহ প্রস্তুত
                     </p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <!-- অপশন ১: শুধু বই শেয়ার (Facebook Direct Dialog) -->
+                <!-- অপশন ১: সরাসরি ফেসবুক ফিডে শেয়ার -->
                 <button onclick="triggerShareAction('book_only')" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-blue-500/10 to-blue-500/5 dark:from-blue-600/20 dark:to-blue-950/40 border border-blue-500/30 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition-all group">
                     <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition-transform shadow-md">
                         <i class="fa-brands fa-facebook-f"></i>
                     </div>
-                    <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">সরাসরি ফেসবুক শেয়ার</span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">বইয়ের নাম, ছবি ও লিঙ্কসহ</span>
+                    <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">সরাসরি ফেসবুক ফিড</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">বইয়ের ছবি, নাম ও লিঙ্কসহ</span>
                 </button>
 
                 <!-- অপশন ২: রিভিউসহ বই শেয়ার -->
@@ -335,7 +336,7 @@
                         <i class="fa-solid fa-quote-left"></i>
                     </div>
                     <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">রিভিউ ও বিবরণসহ</span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">পাঠকের মন্তব্য ও রিভিউসহ</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">পাঠ-প্রতিক্রিয়া ও মতামতসহ</span>
                 </button>
             </div>
 
@@ -1321,7 +1322,8 @@
                     <span id="modal-serial-badge" class="bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         ক্রমিক #১
                     </span>
-                    <span id="modal-uid-badge" class="bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-[11px] font-mono px-2.5 py-0.5 rounded-full font-bold">
+                    <!-- ইউনিক আইডি শুধুমাত্র এডমিনদের জন্য (ডিফল্ট হিডেন) -->
+                    <span id="modal-uid-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-[11px] font-mono px-2.5 py-0.5 rounded-full font-bold">
                         ID: CLK-001
                     </span>
                     <span id="modal-acquisition-badge" class="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold">
@@ -1336,7 +1338,7 @@
                 
                 <div class="flex items-center gap-2">
                     <!-- ফেসবুক শেয়ার বোতাম (মডাল হেডার - হাইলাইটেড প্রিমিয়াম ডিজাইন) -->
-                    <button onclick="openShareModal(activeBookId)" title="বইয়ের ছবিসহ ফেসবুকে শেয়ার করুন" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 fb-glow-button">
+                    <button onclick="directShareToFacebook(activeBookId)" title="বইয়ের ছবিসহ সরাসরি ফেসবুকে শেয়ার করুন" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 fb-glow-button">
                         <i class="fa-brands fa-facebook-f text-sm"></i> <span>ফেসবুকে শেয়ার</span>
                     </button>
                     <button onclick="closeBookModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -1418,7 +1420,7 @@
                                     <span><span id="modal-like-count">০</span> জন পছন্দ করেছেন</span>
                                 </button>
 
-                                <button onclick="openShareModal(activeBookId)" class="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white px-4 py-2 rounded-xl text-xs transition-colors font-bold shadow-md shadow-blue-500/25">
+                                <button onclick="directShareToFacebook(activeBookId)" class="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white px-4 py-2 rounded-xl text-xs transition-colors font-bold shadow-md shadow-blue-500/25">
                                     <i class="fa-brands fa-facebook-f"></i>
                                     <span>শেয়ার</span>
                                 </button>
@@ -1672,6 +1674,20 @@
             return cleanUrl;
         }
 
+        // ফেসবুক স্ক্র্যাপার ফ্রেন্ডলি ডিরেক্ট ইমেজ URL
+        function getDirectFacebookImageUrl(book) {
+            const images = getBookImages(book);
+            const firstImg = images[0] || '';
+            const driveId = extractGoogleDriveId(firstImg);
+            if (driveId) {
+                return `https://lh3.googleusercontent.com/d/${driveId}`;
+            }
+            if (firstImg && firstImg.startsWith('http') && !firstImg.startsWith('data:')) {
+                return firstImg;
+            }
+            return 'https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA';
+        }
+
         function handleImageFallback(imgEl, type = 'book') {
             if (!imgEl) return;
             const currentSrc = imgEl.src || '';
@@ -1694,7 +1710,6 @@
             imgEl.src = (type === 'author') ? getFallbackAuthorImage() : getFallbackBookImage();
         }
 
-        // ছবি ব্যাকগ্রাউন্ডে প্রি-ফেচ করার হেল্পার (যা পেজ ওপেন হওয়ার সাথে সাথেই মেমোরিতে রেডি করে রাখে)
         function preloadImageFast(url) {
             if (!url || imageMemoryCache.has(url)) return;
             const img = new Image();
@@ -1978,31 +1993,31 @@
         }
 
         /* ==========================================================
-           DIRECT FACEBOOK & SOCIAL SHARE CONTROLLER (WITH REVIEW & DEEP LINK)
+           DIRECT FACEBOOK & SOCIAL SHARE CONTROLLER (WITH COVER PHOTO & FEED LINK)
            ========================================================== */
         function getBookShareUrl(book) {
             const loc = window.location;
-            const baseUrl = loc.protocol + '//' + loc.host + loc.pathname;
             const bookParam = book.id || book.serial;
-            return `${baseUrl}?book=${encodeURIComponent(bookParam)}`;
+            return `${loc.protocol}//${loc.host}${loc.pathname}?book=${encodeURIComponent(bookParam)}`;
         }
 
         function updateMetaTagsForBook(book) {
             if (!book) return;
             const shareUrl = getBookShareUrl(book);
-            const images = getBookImages(book);
-            const coverImage = images[0] || 'https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA';
+            const coverImage = getDirectFacebookImageUrl(book);
             const desc = book.summary ? (book.summary.length > 150 ? book.summary.substring(0, 145) + '...' : book.summary) : `চিলেকোঠা লাইব্রেরিতে "${book.title}" বইটি পড়ুন ও সংগ্রহ দেখুন।`;
 
             // Dynamic OG Tags
             const ogTitle = document.getElementById('og-title');
             const ogDesc = document.getElementById('og-description');
             const ogImage = document.getElementById('og-image');
+            const ogImageSecure = document.getElementById('og-image-secure');
             const ogUrl = document.getElementById('og-url');
 
             if (ogTitle) ogTitle.content = `${book.title} — ${book.author} | চিলেকোঠা লাইব্রেরি`;
             if (ogDesc) ogDesc.content = desc;
             if (ogImage) ogImage.content = coverImage;
+            if (ogImageSecure) ogImageSecure.content = coverImage;
             if (ogUrl) ogUrl.content = shareUrl;
 
             // Dynamic Twitter Card Tags
@@ -2012,6 +2027,25 @@
             if (twTitle) twTitle.content = `${book.title} — ${book.author}`;
             if (twDesc) twDesc.content = desc;
             if (twImage) twImage.content = coverImage;
+        }
+
+        // সরাসরি ফেসবুক ফিড শেয়ার ফাংশন (১ ক্লিকেই ফেসবুক ফিড ওপেন হবে)
+        function directShareToFacebook(bookId) {
+            const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
+            if (!book) return;
+
+            updateMetaTagsForBook(book);
+            const shareUrl = getBookShareUrl(book);
+            let shareText = `📚 "${book.title}" - ${book.author} | চিলেকোঠা লাইব্রেরি`;
+            if (book.summary) {
+                const cleanSummary = book.summary.length > 220 ? book.summary.substring(0, 215) + '...' : book.summary;
+                shareText += `\n\n❝ ${cleanSummary} ❞`;
+            }
+            shareText += `\n\nবইটির প্রচ্ছদ ও পূর্ণ বিবরণ দেখতে চিলেকোঠা লাইব্রেরির লিঙ্কে চাপ দিন:`;
+
+            // সরাসরি ফেসবুক ফিড ওপেন
+            const fbFeedUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+            window.open(fbFeedUrl, '_blank', 'noopener,noreferrer,width=650,height=620');
         }
 
         function openShareModal(bookId) {
@@ -2025,11 +2059,9 @@
             const targetTitleEl = document.getElementById('share-card-preview-title');
             const targetAuthorEl = document.getElementById('share-card-preview-author');
             const targetImgEl = document.getElementById('share-card-preview-img');
-            const targetUidEl = document.getElementById('share-card-preview-uid');
 
             if (targetTitleEl) targetTitleEl.innerText = book.title;
             if (targetAuthorEl) targetAuthorEl.innerText = book.author;
-            if (targetUidEl) targetUidEl.innerText = `ID: ${book.id}`;
             if (targetImgEl) {
                 const imgs = getBookImages(book);
                 targetImgEl.src = imgs[0];
@@ -2049,6 +2081,7 @@
             const book = books.find(b => b.id === shareTargetBookId || String(b.serial) === String(shareTargetBookId));
             if (!book) return;
 
+            updateMetaTagsForBook(book);
             const shareUrl = getBookShareUrl(book);
             let shareText = `📚 "${book.title}" - ${book.author} | চিলেকোঠা লাইব্রেরি`;
 
@@ -2059,21 +2092,9 @@
                 shareText += `\n\nচিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালায় এই বইটি দেখতে চাপ দিন:`;
             }
 
-            // ফেসবুক ডিরেক্ট ডায়ালগ কল
+            // সরাসরি ফেসবুক ফিড ডায়ালগ
             const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-            
-            // মোবাইল নেটিভ শেয়ার থাকলে প্রিফারেন্স, অন্যথায় ফেসবুক ডায়ালগ
-            if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
-                navigator.share({
-                    title: `${book.title} - চিলেকোঠা লাইব্রেরি`,
-                    text: shareText,
-                    url: shareUrl
-                }).catch(() => {
-                    window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=620,height=580');
-                });
-            } else {
-                window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=620,height=580');
-            }
+            window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=650,height=620');
 
             closeShareModal();
             showToast("ফেসবুকে শেয়ার উইন্ডো ওপেন হয়েছে!", "success");
@@ -2729,7 +2750,7 @@
         }
 
         /* ==========================================================
-           বই কার্ড টেমপ্লেট (ফেসবুক শেয়ার ও ইউনিক পারমালিঙ্ক বাটনসহ)
+           বই কার্ড টেমপ্লেট (ছবিতে সরাসরি ফেসবুক ফিড বাটন, লেখার উপর ওভারল্যাপ মুক্ত)
            ========================================================== */
         function createBookCardHTML(book) {
             const images = getBookImages(book);
@@ -2782,11 +2803,7 @@
 
                 ${adminCopyHTML}
 
-                <!-- ফেসবুক শেয়ার দ্রুত আইকন বাটন (Ultra-Stylish Badge with Glow) -->
-                <button onclick="event.stopPropagation(); openShareModal('${book.id}');" title="ছবিসহ ফেসবুকে শেয়ার করুন" class="absolute bottom-[4.2rem] right-2 sm:right-3 z-20 w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white flex items-center justify-center text-xs shadow-md shadow-blue-600/30 hover:scale-110 active:scale-95 transition-all">
-                    <i class="fa-brands fa-facebook-f text-sm"></i>
-                </button>
-
+                <!-- ছবি ফ্রেমের ভেতরে সুরক্ষিত সরাসরি ফেসবুক ফিড বাটন (যা কখনোই লেখার ওপর ওভারল্যাপ করবে না) -->
                 <div class="aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative flex items-center justify-center p-1.5">
                     <img loading="lazy" decoding="async" src="${imgUrl}" alt="" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-25 dark:opacity-30 scale-110 pointer-events-none" onerror="this.style.display='none'">
                     
@@ -2795,6 +2812,11 @@
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
                     </div>
+
+                    <!-- সরাসরি ফেসবুক ফিডে ছবিসহ শেয়ার আইকন -->
+                    <button onclick="event.stopPropagation(); directShareToFacebook('${book.id}');" title="ছবিসহ সরাসরি ফেসবুকে শেয়ার করুন" class="absolute bottom-2.5 right-2.5 z-20 w-8 h-8 rounded-full bg-blue-600/90 hover:bg-blue-600 text-white shadow-lg shadow-blue-900/40 flex items-center justify-center text-xs backdrop-blur-md transition-all hover:scale-110 active:scale-95 border border-white/20">
+                        <i class="fa-brands fa-facebook-f text-xs"></i>
+                    </button>
                 </div>
 
                 <div class="p-2.5 sm:p-4 flex-grow flex flex-col justify-between space-y-2 sm:space-y-3">
@@ -3208,7 +3230,16 @@
 
             document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
             const uidBadge = document.getElementById('modal-uid-badge');
-            if (uidBadge) uidBadge.innerText = `ID: ${book.id}`;
+            
+            // ইউনিক আইডি শুধুমাত্র এডমিনের জন্য দৃশ্যমান
+            if (isAdminLoggedIn) {
+                if (uidBadge) {
+                    uidBadge.innerText = `ID: ${book.id}`;
+                    uidBadge.classList.remove('hidden');
+                }
+            } else {
+                if (uidBadge) uidBadge.classList.add('hidden');
+            }
 
             const acqBadge = document.getElementById('modal-acquisition-badge');
             const purchaseBox = document.getElementById('modal-purchase-price-box');
@@ -3743,7 +3774,7 @@
             }).catch(err => console.warn("Background book save sync error:", err));
 
             resetForm();
-            showToast("বই সফলভাবে সংরক্ষিত হয়েছে! আইডি: " + finalId, "success");
+            showToast("বই সফলভাবে সংরক্ষিত হয়েছে!", "success");
             switchTab('admin');
             switchAdminSubTab('books');
             document.getElementById('form-title-input').focus();
