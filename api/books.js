@@ -7,59 +7,52 @@ export default async function handler(req, res) {
     const referer = req.headers.referer || "";
     const origin = req.headers.origin || "";
 
-    // ফেসবুক, টুইটার, হোয়াটসঅ্যাপ ক্রলার বা সোশ্যাল রোবট চেক
-    const isSocialCrawler = /facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|LinkedInBot|Pinterest/i.test(userAgent);
+    // ফেসবুক, মেসেঞ্জার, হোয়াটসঅ্যাপ, টুইটার বা অন্য সোশ্যাল রোবট ক্রলার সনাক্তকরণ
+    const isSocialCrawler = /facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|LinkedInBot|Pinterest|Googlebot/i.test(userAgent);
     
-    // ডোমেইন সিকিউরিটি যাচাই
+    // নিজস্ব অনুমোদিত ডোমেইন যাচাই
     const isAllowedSource = referer.includes(allowedDomain) || origin.includes(allowedDomain) || referer.includes("localhost") || origin.includes("localhost");
 
     if (req.method === 'GET') {
-        const { action, pass, refresh, book } = req.query;
+        const { action, pass, refresh, book, title, author, img } = req.query;
 
         // =========================================================================
-        // ১. ফেসবুক ও সোশ্যাল প্রিভিউ হ্যান্ডলার (বইয়ের আসল ছবি ও নাম দিয়ে কার্ড তৈরি)
+        // ১. ফেসবুক ও সোশ্যাল প্রিভিউ হ্যান্ডলার (সিকিউরিটি চেকের আগে রাখা হয়েছে যাতে ব্লক না হয়)
         // =========================================================================
         if (action === 'share' && book) {
-            try {
-                // গুগল শিট থেকে বইয়ের ডাটা রিড
-                const fetchUrl = `${scriptURL}?action=getData&_t=${Date.now()}`;
-                const response = await fetch(fetchUrl);
-                const data = await response.json();
+            const host = req.headers.host || allowedDomain;
+            const protocol = req.headers['x-forwarded-proto'] || 'https';
+            const targetRedirectUrl = `${protocol}://${host}/?book=${encodeURIComponent(book)}`;
 
-                const targetBook = (data.books || []).find(b => b.id === book || String(b.serial) === book);
+            // সাধারণ কোনো মানুষ ফেসবুকে লিংকে ক্লিক করলে কোনো Forbidden এরর ছাড়া সাথে সাথে ওয়েবসাইটে রিডাইরেক্ট হবে
+            if (!isSocialCrawler) {
+                return res.redirect(302, targetRedirectUrl);
+            }
 
-                if (targetBook) {
-                    // গুগল ড্রাইভ থেকে ডিরেক্ট হাই-রেজোলিউশন CDN ইমেজ তৈরি (ফেসবুক সহজে পড়তে পারে)
-                    let coverImg = (targetBook.images && targetBook.images.length > 0) ? targetBook.images[0] : "";
-                    const driveMatch = coverImg.match(/\/d\/([a-zA-Z0-9_-]+)/) || coverImg.match(/[?&]id=([a-zA-Z0-9_-]+)/) || coverImg.match(/googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
-                    if (driveMatch && driveMatch[1]) {
-                        coverImg = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
-                    }
-                    if (!coverImg) {
-                        coverImg = "https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA";
-                    }
+            // ফেসবুক ক্রলারের জন্য ছবি প্রস্তুতকরণ
+            let coverImg = "https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA";
+            if (img && img.trim()) {
+                coverImg = `https://lh3.googleusercontent.com/d/${img.trim()}`;
+            }
 
-                    const host = req.headers.host || allowedDomain;
-                    const protocol = req.headers['x-forwarded-proto'] || 'https';
-                    const targetRedirectUrl = `${protocol}://${host}/?book=${encodeURIComponent(targetBook.id)}`;
+            const bookTitle = title ? decodeURIComponent(title) : "চিলেকোঠা লাইব্রেরি";
+            const bookAuthor = author ? decodeURIComponent(author) : "";
+            const pageTitle = bookAuthor ? `${bookTitle} — ${bookAuthor} | চিলেকোঠা লাইব্রেরি` : `${bookTitle} | চিলেকোঠা লাইব্রেরি`;
+            const summaryText = `চিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালায় "${bookTitle}" বইটি পড়ুন ও বিস্তারিত জানুন।`;
 
-                    const summaryText = targetBook.summary 
-                        ? (targetBook.summary.length > 180 ? targetBook.summary.substring(0, 175) + '...' : targetBook.summary)
-                        : `চিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালায় "${targetBook.title}" বইটি পড়ুন ও বিস্তারিত জানুন।`;
-
-                    // ফেসবুক রোবটের জন্য সরাসরি ডাইনামিক Open Graph HTML রেসপন্স
-                    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-                    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400');
-                    return res.status(200).send(`<!DOCTYPE html>
+            // ফেসবুক ক্রলারকে ছবি ও তথ্যসহ ডাইনামিক Open Graph HTML রেসপন্স
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400');
+            return res.status(200).send(`<!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>${targetBook.title} — ${targetBook.author} | চিলেকোঠা লাইব্রেরি</title>
+    <title>${pageTitle}</title>
     
     <!-- Facebook & Social Sharing Open Graph Tags -->
     <meta property="og:type" content="book">
     <meta property="og:site_name" content="চিলেকোঠা লাইব্রেরি">
-    <meta property="og:title" content="${targetBook.title} — ${targetBook.author}">
+    <meta property="og:title" content="${bookAuthor ? bookTitle + ' — ' + bookAuthor : bookTitle}">
     <meta property="og:description" content="${summaryText}">
     <meta property="og:image" content="${coverImg}">
     <meta property="og:image:secure_url" content="${coverImg}">
@@ -70,43 +63,38 @@ export default async function handler(req, res) {
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${targetBook.title} — ${targetBook.author}">
+    <meta name="twitter:title" content="${bookTitle}">
     <meta name="twitter:description" content="${summaryText}">
     <meta name="twitter:image" content="${coverImg}">
 
-    <!-- পাঠক লিঙ্কে চাপ দিলে সাথে সাথে আসল ওয়েবসাইটে নিয়ে যাবে -->
     <meta http-equiv="refresh" content="0;url=${targetRedirectUrl}">
     <script>window.location.replace("${targetRedirectUrl}");</script>
 </head>
-<body style="font-family: 'Noto Sans Bengali', sans-serif; text-align: center; padding: 40px; background: #0f172a; color: #f8fafc;">
-    <h2 style="margin-bottom: 6px;">${targetBook.title}</h2>
-    <p style="color: #38bdf8; font-weight: bold; margin-top: 0;">${targetBook.author}</p>
-    <img src="${coverImg}" alt="${targetBook.title}" style="max-width: 260px; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); margin: 20px auto; display: block;">
-    <p style="max-width: 500px; margin: 0 auto 20px; line-height: 1.6; color: #cbd5e1; font-size: 14px;">${summaryText}</p>
-    <p><a href="${targetRedirectUrl}" style="display: inline-block; padding: 10px 22px; background: #0284c7; color: #fff; text-decoration: none; border-radius: 10px; font-weight: bold;">চিলেকোঠা লাইব্রেরিতে বইটি খুলুন</a></p>
+<body style="font-family: sans-serif; text-align: center; padding: 40px; background: #0f172a; color: #fff;">
+    <h2>${bookTitle}</h2>
+    <p>${bookAuthor}</p>
+    <img src="${coverImg}" style="max-width: 260px; border-radius: 12px; margin: 20px auto; display: block;">
+    <p>চিলেকোঠা লাইব্রেরিতে নিয়ে যাওয়া হচ্ছে...</p>
+    <a href="${targetRedirectUrl}" style="color: #38bdf8;">ক্লিক করে সরাসরি খুলুন</a>
 </body>
 </html>`);
-                }
-            } catch (err) {
-                console.error("Share generator error:", err);
-            }
         }
 
-        // ২. এডমিন লগইন যাচাই
+        // ২. এডমিন পাসওয়ার্ড যাচাই
         if (action === 'checkLogin') {
             if (pass === adminPass) return res.status(200).json({ success: true });
             else return res.status(401).json({ error: "Unauthorized" });
         }
 
-        // ৩. সিকিউরিটি চেক (সোশ্যাল ক্রলার ছাড়া সরাসরি অননুমোদিত এক্সেস ব্লক)
-        if (!isAllowedSource && !isSocialCrawler && pass !== adminPass) {
+        // ৩. সরাসরি অননুমোদিত এক্সেস ব্লক (শুধুমাত্র নির্দিষ্ট ডোমেইন ও এডমিনের জন্য)
+        if (!isAllowedSource && pass !== adminPass) {
             return res.status(403).json({ 
                 error: "Forbidden", 
                 message: "সরাসরি এক্সেস নিষিদ্ধ! ডাটা দেখতে আপনার ওয়েবসাইট ভিজিট করুন।" 
             });
         }
 
-        // ৪. মূল ডাটা ফেচ
+        // ৪. গুগল শিট থেকে লাইভ ডাটা ফেচ
         try {
             res.setHeader('Access-Control-Allow-Origin', `https://${allowedDomain}`);
             if (!refresh && !pass) {
