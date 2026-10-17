@@ -792,11 +792,11 @@
                         <i class="fa-solid fa-pen-clip text-sky-600"></i> স্বত্বাধিকারী প্রোফাইল সম্পাদনা
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
+                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
                         <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
                     </div>
                     <div class="mt-4 flex gap-2">
@@ -831,7 +831,7 @@
                 <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3 backdrop-blur-sm">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ Vercel ক্লাউড সিঙ্ক সক্রিয়</span>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ ক্লাউড সিঙ্ক সক্রিয়</span>
                         <span class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full ml-1" id="inactivity-timer-badge">অটো লগআউট: ৫ মিনিট</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1218,7 +1218,6 @@
         </section>
 
     </main>
-
     <!-- AUTHOR PROFILE DETAILS MODAL (WITH IN-MODAL ADMIN ONLY EDIT) -->
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
@@ -1589,6 +1588,7 @@
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
     </footer>
+
     <!-- JAVASCRIPT LOGIC & HIGH-SPEED CLOUD ENGINE -->
     <script>
         // Anti-Scraping Listeners
@@ -1998,8 +1998,11 @@
         function getBookShareUrl(book) {
             const loc = window.location;
             const bookParam = book.id || book.serial;
-            // এটি সরাসরি Vercel ডাইনামিক প্রিভিউ লিংকে পাঠাবে যা ফেসবুক ক্রলার সাথে সাথে ছবিসহ পড়তে পারে
-            return `${loc.protocol}//${loc.host}/api/books?action=share&book=${encodeURIComponent(bookParam)}`;
+            const images = getBookImages(book);
+            const driveId = extractGoogleDriveId(images[0] || '');
+            
+            // বইয়ের নাম, লেখক ও ড্রাইভ আইডি লিংক-এ যুক্ত করে সরাসরি ব্যাকএন্ড ডাইনামিক হ্যান্ডলারে প্রেরণ
+            return `${loc.protocol}//${loc.host}/api/books?action=share&book=${encodeURIComponent(bookParam)}&title=${encodeURIComponent(book.title || '')}&author=${encodeURIComponent(book.author || '')}&img=${encodeURIComponent(driveId || '')}`;
         }
 
         function updateMetaTagsForBook(book) {
