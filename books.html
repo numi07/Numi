@@ -12,19 +12,6 @@
     <meta name="apple-mobile-web-app-title" content="চিলেকোঠা">
     <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
     
-    <!-- Facebook & Social Sharing Dynamic Open Graph Tags -->
-    <meta property="og:type" content="book">
-    <meta property="og:site_name" content="চিলেকোঠা লাইব্রেরি">
-    <meta property="og:title" id="og-title" content="চিলেকোঠা লাইব্রেরি | জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে">
-    <meta property="og:description" id="og-description" content="চিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালা ও পাঠাগার। বই পড়ুন, জানুন ও শেয়ার করুন।">
-    <meta property="og:image" id="og-image" content="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
-    <meta property="og:image:secure_url" id="og-image-secure" content="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
-    <meta property="og:url" id="og-url" content="">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" id="tw-title" content="চিলেকোঠা লাইব্রেরি">
-    <meta name="twitter:description" id="tw-desc" content="জ্ঞানের মশাল জ্বলে উঠুক ঘরে ঘরে।">
-    <meta name="twitter:image" id="tw-image" content="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA">
-    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -36,39 +23,25 @@
                         brand: {
                             50: '#f0f9ff',
                             100: '#e0f2fe',
-                            400: '#38bdf8',
                             500: '#0284c7',
                             600: '#0369a1',
                             700: '#075985',
                             800: '#0c4a6e',
                             900: '#0a3651',
-                        },
-                        fb: {
-                            50: '#e7f0fe',
-                            100: '#c5dcfa',
-                            500: '#1877F2',
-                            600: '#166fe5',
-                            700: '#0e5a9e'
                         }
                     },
                     fontFamily: {
-                        sans: ['Noto Sans Bengali', 'Hind Siliguri', 'system-ui', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'neon': '0 8px 30px -4px rgba(2, 132, 199, 0.35)',
-                        'fb-neon': '0 8px 25px -3px rgba(24, 119, 242, 0.45)',
+                        sans: ['Noto Sans Bengali', 'Hind Siliguri', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     
-    <!-- Google Fonts Preconnect for 0.001s Instant Loading -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
-    <link rel="preconnect" href="https://drive.google.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -86,8 +59,8 @@
         }
         body {
             font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
-            transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: 0.12px;
+            transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.15px;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -101,37 +74,37 @@
         }
 
         /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 7px; height: 7px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.05); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.06); }
         .dark ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .dark ::-webkit-scrollbar-thumb { background: #334155; }
-        ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
         /* Ultra-Modern Glassmorphism & Micro-Interactions */
         .glass-card {
-            background: rgba(255, 255, 255, 0.90);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
         .dark .glass-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .card-hover-fx {
-            transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.25s cubic-bezier(0.34, 1.4, 0.64, 1), border-color 0.25s ease;
-            will-change: transform, box-shadow;
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.28s ease;
         }
         .card-hover-fx:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 35px -8px rgba(2, 132, 199, 0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.15);
         }
         .dark .card-hover-fx:hover {
-            box-shadow: 0 22px 40px -10px rgba(0, 0, 0, 0.75);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6);
         }
 
         /* Centered Logo Watermark Overlay */
@@ -143,18 +116,18 @@
             justify-content: center;
             pointer-events: none;
             user-select: none;
-            z-index: 10;
+            z-index: 25;
         }
         .center-logo-watermark img {
-            opacity: 0.07;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            opacity: 0.08;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
             pointer-events: none;
             user-select: none;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .group:hover .center-logo-watermark img {
-            opacity: 0.14;
-            transform: scale(1.05);
+            opacity: 0.15;
+            transform: scale(1.06);
         }
 
         /* Large background watermark inside modal */
@@ -163,33 +136,17 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-28deg);
+            transform: translate(-50%, -50%) rotate(-30deg);
             font-size: 3.5rem;
             font-weight: 900;
-            color: rgba(2, 132, 199, 0.04);
+            color: rgba(2, 132, 199, 0.05);
             pointer-events: none;
             user-select: none;
             white-space: nowrap;
             z-index: 0;
         }
         .dark .large-watermark::before {
-            color: rgba(255, 255, 255, 0.03);
-        }
-
-        /* 0.001s Ultra Fast Image Acceleration */
-        .instant-img {
-            content-visibility: auto;
-            image-rendering: -webkit-optimize-contrast;
-            transition: opacity 0.2s ease-in, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Facebook Stylized Glow Animation */
-        @keyframes fbGlowPulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(24, 119, 242, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 0 25px rgba(24, 119, 242, 0.7); transform: scale(1.03); }
-        }
-        .fb-glow-button {
-            animation: fbGlowPulse 4s infinite ease-in-out;
+            color: rgba(255, 255, 255, 0.035);
         }
 
         /* Paragraph text justification */
@@ -201,7 +158,7 @@
         /* Responsive padding for Mobile App Bar with Safe Area support */
         @media (max-width: 1024px) {
             body {
-                padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+                padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
             }
         }
 
@@ -211,12 +168,12 @@
             to { transform: translateY(0) scale(1); opacity: 1; }
         }
         .animate-toast {
-            animation: slideInToast 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideInToast 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Ambient Glow animation for owner profile */
         @keyframes pulseGlow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
+            0%, 100% { opacity: 0.45; transform: scale(1); }
             50% { opacity: 0.8; transform: scale(1.04); }
         }
         .owner-glow {
@@ -229,34 +186,34 @@
             100% { background-position: 200% 0; }
         }
         .skeleton-shimmer {
-            background: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 25%, rgba(203, 213, 225, 0.85) 50%, rgba(226, 232, 240, 0.6) 75%);
+            background: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 25%, rgba(203, 213, 225, 0.8) 50%, rgba(226, 232, 240, 0.6) 75%);
             background-size: 200% 100%;
-            animation: shimmerPulse 1.4s infinite;
+            animation: shimmerPulse 1.5s infinite;
         }
         .dark .skeleton-shimmer {
-            background: linear-gradient(90deg, rgba(30, 41, 59, 0.6) 25%, rgba(51, 65, 85, 0.85) 50%, rgba(30, 41, 59, 0.6) 75%);
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.6) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(30, 41, 59, 0.6) 75%);
             background-size: 200% 100%;
-            animation: shimmerPulse 1.4s infinite;
+            animation: shimmerPulse 1.5s infinite;
         }
     </style>
 </head>
 <body class="bg-slate-100/90 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white" oncontextmenu="return false;">
 
     <!-- IN-APP TOAST NOTIFICATION CONTAINER (NO WEBSITE DOMAIN) -->
-    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[150] flex flex-col items-center gap-2 pointer-events-none px-4 w-full max-w-md"></div>
+    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4 w-full max-w-md"></div>
 
     <!-- IN-APP CUSTOM CONFIRM DIALOG MODAL (NO WEBSITE DOMAIN) -->
-    <div id="custom-confirm-modal" class="fixed inset-0 z-[160] hidden bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center mx-auto text-xl shadow-inner">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <p id="custom-confirm-msg" class="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed"></p>
             <div class="flex items-center justify-center gap-3 pt-2">
-                <button id="custom-confirm-cancel-btn" class="px-4 py-2.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">
+                <button id="custom-confirm-cancel-btn" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">
                     বাতিল
                 </button>
-                <button id="custom-confirm-ok-btn" class="px-5 py-2.5 text-xs font-bold rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-md shadow-sky-600/30 transition-all">
+                <button id="custom-confirm-ok-btn" class="px-5 py-2 text-xs font-bold rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-md shadow-sky-600/30 transition-all">
                     নিশ্চিত
                 </button>
             </div>
@@ -264,9 +221,9 @@
     </div>
 
     <!-- লেখক এডিট দ্রুত এডমিন যাচাইকরণ পপ-আপ -->
-    <div id="author-admin-auth-modal" class="fixed inset-0 z-[170] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="author-admin-auth-modal" class="fixed inset-0 z-[120] hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center mx-auto text-xl">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-user-lock"></i>
             </div>
             <div>
@@ -280,72 +237,6 @@
                 </button>
                 <button onclick="verifyAuthorAdminLogin()" class="px-5 py-2 text-xs font-bold rounded-xl bg-amber-600 hover:bg-amber-500 text-white shadow-md transition-all">
                     লগইন ও এডিট
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ফেসবুক ও সোশ্যাল শেয়ার অপশন মোডাল (DIRECT FACEBOOK FEED DIALOG & PREVIEW) -->
-    <div id="share-modal" class="fixed inset-0 z-[180] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-slate-900 border border-blue-500/30 rounded-[2.2rem] p-6 sm:p-7 max-w-md w-full shadow-2xl space-y-5 text-center relative overflow-hidden my-auto">
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600"></div>
-            
-            <div class="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800/80">
-                <div class="flex items-center gap-2.5 text-left">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-sky-500 text-white flex items-center justify-center text-lg shadow-md shadow-blue-500/20">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 leading-tight">ফেসবুকে শেয়ার করুন</h3>
-                        <p class="text-[10.5px] text-sky-600 dark:text-sky-400 font-semibold">বইয়ের ছবিসহ সরাসরি ফেসবুক ফিডে পোস্ট হবে</p>
-                    </div>
-                </div>
-                <button onclick="closeShareModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- লাইভ ফেসবুক প্রিভিউ কার্ড (কোনো ইউনিক আইডি দৃশ্যমান নয়) -->
-            <div class="p-3 bg-gradient-to-b from-slate-50 to-slate-100/90 dark:from-slate-950 dark:to-slate-900/90 rounded-2xl border border-blue-200/60 dark:border-blue-900/40 text-left flex gap-3 shadow-inner items-center">
-                <div class="w-16 h-22 aspect-[3/4] rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shrink-0 relative flex items-center justify-center">
-                    <img id="share-card-preview-img" src="" alt="বই" class="w-full h-full object-contain p-1 instant-img" onerror="handleImageFallback(this, 'book');">
-                </div>
-                <div class="overflow-hidden flex-grow space-y-1">
-                    <span class="inline-block text-[9.5px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded-md">চিলেকোঠা ডিজিটাল বুক কার্ড</span>
-                    <h4 id="share-card-preview-title" class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate"></h4>
-                    <p id="share-card-preview-author" class="text-[11px] font-medium text-slate-600 dark:text-slate-400 truncate"></p>
-                    <p class="text-[9.5px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                        <i class="fa-solid fa-image text-[8.5px]"></i> বইয়ের আসল প্রচ্ছদ ছবিসহ প্রস্তুত
-                    </p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <!-- অপশন ১: সরাসরি ফেসবুক ফিডে শেয়ার -->
-                <button onclick="triggerShareAction('book_only')" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-blue-500/10 to-blue-500/5 dark:from-blue-600/20 dark:to-blue-950/40 border border-blue-500/30 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition-all group">
-                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition-transform shadow-md">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </div>
-                    <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">সরাসরি ফেসবুক ফিড</span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">বইয়ের ছবি, নাম ও লিঙ্কসহ</span>
-                </button>
-
-                <!-- অপশন ২: রিভিউসহ বই শেয়ার -->
-                <button onclick="triggerShareAction('with_review')" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-indigo-500/10 to-indigo-500/5 dark:from-indigo-600/20 dark:to-indigo-950/40 border border-indigo-500/30 hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-500/20 transition-all group">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-500 text-white flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition-transform shadow-md">
-                        <i class="fa-solid fa-quote-left"></i>
-                    </div>
-                    <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">রিভিউ ও বিবরণসহ</span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">পাঠ-প্রতিক্রিয়া ও মতামতসহ</span>
-                </button>
-            </div>
-
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                <button onclick="copyCurrentBookShareLink()" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-link text-sky-500"></i> লিঙ্ক কপি করুন
-                </button>
-                <button onclick="closeShareModal()" class="py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 text-xs font-bold transition-all">
-                    বন্ধ করুন
                 </button>
             </div>
         </div>
@@ -475,7 +366,6 @@
             </button>
         </div>
     </div>
-
     <!-- MAIN CONTAINER -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
@@ -792,12 +682,12 @@
                         <i class="fa-solid fa-pen-clip text-sky-600"></i> স্বত্বাধিকারী প্রোফাইল সম্পাদনা
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
-                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
-                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
+                        <input type="text" id="edit-owner-name" placeholder="নাম" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-role" placeholder="পদবি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-bio" placeholder="সংক্ষিপ্ত পরিচিতি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="text" id="edit-owner-quote" placeholder="উক্তি" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none">
+                        <input type="url" id="edit-owner-photo" placeholder="ছবির লিংক (URL)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2">
+                        <textarea id="edit-owner-message" rows="3" placeholder="বিস্তারিত বার্তা" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm focus:border-sky-500 outline-none col-span-1 sm:col-span-2 text-justify"></textarea>
                     </div>
                     <div class="mt-4 flex gap-2">
                         <button onclick="saveOwnerProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all">সেভ ও ক্লাউডে পাঠান</button>
@@ -807,7 +697,6 @@
 
             </div>
         </section>
-
         <!-- TAB: ADMIN -->
         <section id="tab-admin" class="tab-content hidden space-y-8">
             <div id="admin-login-box" class="max-w-md mx-auto glass-card rounded-3xl p-8 shadow-2xl text-center space-y-5">
@@ -831,7 +720,7 @@
                 <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 rounded-2xl gap-3 backdrop-blur-sm">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ ক্লাউড সিঙ্ক সক্রিয়</span>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">নিরাপদ Vercel ক্লাউড সিঙ্ক সক্রিয়</span>
                         <span class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full ml-1" id="inactivity-timer-badge">অটো লগআউট: ৫ মিনিট</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -905,7 +794,7 @@
                     <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl">
                         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
                             <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2" id="form-title">
-                                <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (স্থায়ী ইউনিক আইডি তৈরি হবে)
+                                <i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি ক্লাউড শিটে সেভ হবে)
                             </h2>
                         </div>
 
@@ -1218,6 +1107,7 @@
         </section>
 
     </main>
+
     <!-- AUTHOR PROFILE DETAILS MODAL (WITH IN-MODAL ADMIN ONLY EDIT) -->
     <div id="author-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
@@ -1241,7 +1131,7 @@
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                     <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shrink-0 shadow-md relative group flex items-center justify-center p-1">
-                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover rounded-xl instant-img" onerror="handleImageFallback(this, 'author');">
+                        <img id="author-modal-photo" src="" alt="Author" class="w-full h-full object-cover rounded-xl" onerror="handleImageFallback(this, 'author');">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-20 h-20 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -1310,7 +1200,7 @@
         </div>
     </div>
 
-    <!-- BOOK DETAILS MODAL (WITH DIRECT FACEBOOK SHARE & IN-MODAL ADMIN ONLY EDIT) -->
+    <!-- BOOK DETAILS MODAL (WITH IN-MODAL ADMIN ONLY EDIT) -->
     <div id="book-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden large-watermark my-auto">
             <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 relative z-10">
@@ -1321,10 +1211,6 @@
                     <span id="modal-serial-badge" class="bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         ক্রমিক #১
                     </span>
-                    <!-- ইউনিক আইডি শুধুমাত্র এডমিনদের জন্য (ডিফল্ট হিডেন) -->
-                    <span id="modal-uid-badge" class="hidden bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 text-[11px] font-mono px-2.5 py-0.5 rounded-full font-bold">
-                        ID: CLK-001
-                    </span>
                     <span id="modal-acquisition-badge" class="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold">
                         ক্রয়কৃত
                     </span>
@@ -1334,16 +1220,9 @@
                         <i class="fa-solid fa-copy"></i> মজুদ কপি: <strong id="modal-copies-val">১</strong> টি
                     </span>
                 </div>
-                
-                <div class="flex items-center gap-2">
-                    <!-- ফেসবুক শেয়ার বোতাম (মডাল হেডার - হাইলাইটেড প্রিমিয়াম ডিজাইন) -->
-                    <button onclick="directShareToFacebook(activeBookId)" title="বইয়ের ছবিসহ সরাসরি ফেসবুকে শেয়ার করুন" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 fb-glow-button">
-                        <i class="fa-brands fa-facebook-f text-sm"></i> <span>ফেসবুকে শেয়ার</span>
-                    </button>
-                    <button onclick="closeBookModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
+                <button onclick="closeBookModal(true)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
 
             <div class="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto relative z-10">
@@ -1351,7 +1230,7 @@
                     <div class="space-y-3">
                         <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group shadow-lg flex items-center justify-center p-2">
                             <img id="modal-backdrop-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 dark:opacity-25 scale-110 pointer-events-none" onerror="this.style.display='none'">
-                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg instant-img" onerror="handleImageFallback(this, 'book');">
+                            <img id="modal-main-image" src="" alt="বইয়ের প্রচ্ছদ" class="relative z-10 max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md rounded-lg" onerror="handleImageFallback(this, 'book');">
                             <div class="center-logo-watermark">
                                 <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-48 h-48 sm:w-64 sm:h-64 object-contain" onerror="this.style.display='none'">
                             </div>
@@ -1412,18 +1291,11 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center justify-between pt-2 flex-wrap gap-2">
-                            <div class="flex items-center gap-2">
-                                <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors font-medium">
-                                    <i class="fa-solid fa-heart" id="modal-like-icon"></i>
-                                    <span><span id="modal-like-count">০</span> জন পছন্দ করেছেন</span>
-                                </button>
-
-                                <button onclick="directShareToFacebook(activeBookId)" class="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white px-4 py-2 rounded-xl text-xs transition-colors font-bold shadow-md shadow-blue-500/25">
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <span>শেয়ার</span>
-                                </button>
-                            </div>
+                        <div class="flex items-center justify-between pt-2">
+                            <button id="modal-like-btn" onclick="toggleLikeCurrentBook()" class="flex items-center space-x-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-4 py-2 rounded-xl text-sm transition-colors font-medium">
+                                <i class="fa-solid fa-heart" id="modal-like-icon"></i>
+                                <span><span id="modal-like-count">০</span> জন পছন্দ করেছেন</span>
+                            </button>
 
                             <div id="admin-book-actions" class="hidden space-x-2">
                                 <button onclick="quickLendCurrentBook()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs transition-colors font-medium">
@@ -1578,7 +1450,7 @@
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 rounded-xl bg-sky-500/10 dark:bg-sky-400/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base shadow-sm">
-                    <img src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="চিলেকোঠা লোগো" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src=getFallbackLogo();">
+                    <i class="fa-solid fa-book-bookmark"></i>
                 </div>
                 <div class="text-left">
                     <p class="text-sm font-black bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-500 dark:from-sky-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent tracking-wide">চিলেকোঠা লাইব্রেরি</p>
@@ -1588,8 +1460,6 @@
             <p>© ২০২৬ চিলেকোঠা লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
     </footer>
-
-    <!-- JAVASCRIPT LOGIC & HIGH-SPEED CLOUD ENGINE -->
     <script>
         // Anti-Scraping Listeners
         document.addEventListener('keydown', function(e) {
@@ -1642,10 +1512,28 @@
             return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
         }
 
-        /* ==========================================================
-           0.001 সেকেন্ড হাই-স্পিড গুগল ড্রাইভ CDN ইমেজ অপ্টিমাইজার
-           ========================================================== */
-        const imageMemoryCache = new Set();
+        // গুগল ড্রাইভ ও অন্যান্য ছবির স্মার্ট লোডিং এবং ডিভাইস অল্টারনেটিভ হ্যান্ডলার
+        function handleImageFallback(imgEl, type = 'book') {
+            if (!imgEl) return;
+            const currentSrc = imgEl.src || '';
+            
+            if (currentSrc.includes('googleusercontent.com/d/')) {
+                const id = currentSrc.split('googleusercontent.com/d/')[1].split('=')[0].split('?')[0];
+                if (id) {
+                    imgEl.src = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+                    return;
+                }
+            } else if (currentSrc.includes('drive.google.com/thumbnail')) {
+                const match = currentSrc.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    imgEl.src = `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                    return;
+                }
+            }
+
+            imgEl.onerror = null;
+            imgEl.src = (type === 'author') ? getFallbackAuthorImage() : getFallbackBookImage();
+        }
 
         function extractGoogleDriveId(url) {
             if (!url) return '';
@@ -1667,54 +1555,10 @@
             if (cleanUrl.includes('drive.google.com') || cleanUrl.includes('googleusercontent.com')) {
                 const id = extractGoogleDriveId(cleanUrl);
                 if (id) {
-                    // আল্ট্রা-ফাস্ট লোডের জন্য গুগলের গ্লোবাল এজ CDN ক্যাশ থাম্বনেইল
-                    return `https://drive.google.com/thumbnail?id=${id}&sz=w500`;
+                    return `https://lh3.googleusercontent.com/d/${id}`;
                 }
             }
             return cleanUrl;
-        }
-
-        // ফেসবুক স্ক্র্যাপার ফ্রেন্ডলি ডিরেক্ট ইমেজ URL
-        function getDirectFacebookImageUrl(book) {
-            const images = getBookImages(book);
-            const firstImg = images[0] || '';
-            const driveId = extractGoogleDriveId(firstImg);
-            if (driveId) {
-                return `https://lh3.googleusercontent.com/d/${driveId}`;
-            }
-            if (firstImg && firstImg.startsWith('http') && !firstImg.startsWith('data:')) {
-                return firstImg;
-            }
-            return 'https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA';
-        }
-
-        function handleImageFallback(imgEl, type = 'book') {
-            if (!imgEl) return;
-            const currentSrc = imgEl.src || '';
-            
-            if (currentSrc.includes('googleusercontent.com/d/')) {
-                const id = currentSrc.split('googleusercontent.com/d/')[1].split('=')[0].split('?')[0];
-                if (id) {
-                    imgEl.src = `https://drive.google.com/thumbnail?id=${id}&sz=w500`;
-                    return;
-                }
-            } else if (currentSrc.includes('drive.google.com/thumbnail')) {
-                const match = currentSrc.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    imgEl.src = `https://drive.google.com/uc?export=view&id=${match[1]}`;
-                    return;
-                }
-            }
-
-            imgEl.onerror = null;
-            imgEl.src = (type === 'author') ? getFallbackAuthorImage() : getFallbackBookImage();
-        }
-
-        function preloadImageFast(url) {
-            if (!url || imageMemoryCache.has(url)) return;
-            const img = new Image();
-            img.src = url;
-            img.onload = () => imageMemoryCache.add(url);
         }
 
         function getBookImages(book) {
@@ -1744,32 +1588,6 @@
             return result.length > 0 ? result : [getFallbackBookImage()];
         }
 
-        /* ==========================================================
-           ইউনিক আইডি এনফোর্সমেন্ট (সকল বইয়ের জন্য পারমালিঙ্ক নিশ্চিতকরণ)
-           ========================================================== */
-        function generateBookUniqueId(bookOrSerial) {
-            const prefix = 'clk_';
-            const randomPart = Math.random().toString(36).substring(2, 8);
-            if (typeof bookOrSerial === 'object' && bookOrSerial !== null) {
-                const serialNum = bookOrSerial.serial || '0';
-                return `${prefix}${serialNum}_${randomPart}`;
-            }
-            return `${prefix}${bookOrSerial || Date.now()}_${randomPart}`;
-        }
-
-        function ensureUniqueBookIds() {
-            let updated = false;
-            if (Array.isArray(books)) {
-                books.forEach((b, index) => {
-                    if (!b.id || b.id.trim() === '' || b.id.startsWith('b_') || !b.id.startsWith('clk_')) {
-                        b.id = `clk_${b.serial || (index + 1)}_${Math.random().toString(36).substring(2, 7)}`;
-                        updated = true;
-                    }
-                });
-            }
-            if (updated) saveToLocalStorage();
-        }
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1789,8 +1607,8 @@
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(-15px) scale(0.95)';
-                setTimeout(() => toast.remove(), 260);
-            }, 3000);
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
         }
 
         function showCustomConfirm(message) {
@@ -1946,7 +1764,6 @@
         let likedBooksSet = new Set(JSON.parse(localStorage.getItem('chilekotha_user_likes') || '[]'));
         let tabHistoryStack = ['home'];
         let isAdminLoggedIn = false;
-        let shareTargetBookId = null;
         
         let ownerProfile = JSON.parse(localStorage.getItem('chilekotha_owner')) || initialOwner;
 
@@ -1978,10 +1795,7 @@
         function loadLocalDataDirect() {
             try {
                 const b = localStorage.getItem('chilekotha_library_books');
-                if (b) {
-                    books = JSON.parse(b);
-                    ensureUniqueBookIds();
-                }
+                if (b) books = JSON.parse(b);
                 const a = localStorage.getItem('chilekotha_library_authors');
                 if (a) authorProfiles = JSON.parse(a);
                 const o = localStorage.getItem('chilekotha_owner');
@@ -1992,143 +1806,7 @@
             } catch(e) {}
         }
 
-        /* ==========================================================
-           DIRECT FACEBOOK & SOCIAL SHARE CONTROLLER (WITH COVER PHOTO & FEED LINK)
-           ========================================================== */
-        function getBookShareUrl(book) {
-            const loc = window.location;
-            const bookParam = book.id || book.serial;
-            const images = getBookImages(book);
-            const driveId = extractGoogleDriveId(images[0] || '');
-            
-            // বইয়ের নাম, লেখক ও ড্রাইভ আইডি লিংক-এ যুক্ত করে সরাসরি ব্যাকএন্ড ডাইনামিক হ্যান্ডলারে প্রেরণ
-            return `${loc.protocol}//${loc.host}/api/books?action=share&book=${encodeURIComponent(bookParam)}&title=${encodeURIComponent(book.title || '')}&author=${encodeURIComponent(book.author || '')}&img=${encodeURIComponent(driveId || '')}`;
-        }
-
-        function updateMetaTagsForBook(book) {
-            if (!book) return;
-            const shareUrl = getBookShareUrl(book);
-            const coverImage = getDirectFacebookImageUrl(book);
-            const desc = book.summary ? (book.summary.length > 150 ? book.summary.substring(0, 145) + '...' : book.summary) : `চিলেকোঠা লাইব্রেরিতে "${book.title}" বইটি পড়ুন ও সংগ্রহ দেখুন।`;
-
-            // Dynamic OG Tags
-            const ogTitle = document.getElementById('og-title');
-            const ogDesc = document.getElementById('og-description');
-            const ogImage = document.getElementById('og-image');
-            const ogImageSecure = document.getElementById('og-image-secure');
-            const ogUrl = document.getElementById('og-url');
-
-            if (ogTitle) ogTitle.content = `${book.title} — ${book.author} | চিলেকোঠা লাইব্রেরি`;
-            if (ogDesc) ogDesc.content = desc;
-            if (ogImage) ogImage.content = coverImage;
-            if (ogImageSecure) ogImageSecure.content = coverImage;
-            if (ogUrl) ogUrl.content = shareUrl;
-
-            // Dynamic Twitter Card Tags
-            const twTitle = document.getElementById('tw-title');
-            const twDesc = document.getElementById('tw-desc');
-            const twImage = document.getElementById('tw-image');
-            if (twTitle) twTitle.content = `${book.title} — ${book.author}`;
-            if (twDesc) twDesc.content = desc;
-            if (twImage) twImage.content = coverImage;
-        }
-
-        // সরাসরি ফেসবুক ফিড শেয়ার ফাংশন (১ ক্লিকেই ফেসবুক ফিড ওপেন হবে)
-        function directShareToFacebook(bookId) {
-            const book = books.find(b => b.id === bookId || String(b.serial) === String(bookId));
-            if (!book) return;
-
-            updateMetaTagsForBook(book);
-            const shareUrl = getBookShareUrl(book);
-            let shareText = `📚 "${book.title}" - ${book.author} | চিলেকোঠা লাইব্রেরি`;
-            if (book.summary) {
-                const cleanSummary = book.summary.length > 220 ? book.summary.substring(0, 215) + '...' : book.summary;
-                shareText += `\n\n❝ ${cleanSummary} ❞`;
-            }
-            shareText += `\n\nবইটির প্রচ্ছদ ও পূর্ণ বিবরণ দেখতে চিলেকোঠা লাইব্রেরির লিঙ্কে চাপ দিন:`;
-
-            // সরাসরি ফেসবুক ফিড ওপেন
-            const fbFeedUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-            window.open(fbFeedUrl, '_blank', 'noopener,noreferrer,width=650,height=620');
-        }
-
-        function openShareModal(bookId) {
-            const targetId = bookId || activeBookId;
-            const book = books.find(b => b.id === targetId || String(b.serial) === String(targetId));
-            if (!book) return;
-
-            shareTargetBookId = book.id;
-            updateMetaTagsForBook(book);
-
-            const targetTitleEl = document.getElementById('share-card-preview-title');
-            const targetAuthorEl = document.getElementById('share-card-preview-author');
-            const targetImgEl = document.getElementById('share-card-preview-img');
-
-            if (targetTitleEl) targetTitleEl.innerText = book.title;
-            if (targetAuthorEl) targetAuthorEl.innerText = book.author;
-            if (targetImgEl) {
-                const imgs = getBookImages(book);
-                targetImgEl.src = imgs[0];
-            }
-
-            const modal = document.getElementById('share-modal');
-            if (modal) modal.classList.remove('hidden');
-        }
-
-        function closeShareModal() {
-            const modal = document.getElementById('share-modal');
-            if (modal) modal.classList.add('hidden');
-            shareTargetBookId = null;
-        }
-
-        function triggerShareAction(mode) {
-            const book = books.find(b => b.id === shareTargetBookId || String(b.serial) === String(shareTargetBookId));
-            if (!book) return;
-
-            updateMetaTagsForBook(book);
-            const shareUrl = getBookShareUrl(book);
-            let shareText = `📚 "${book.title}" - ${book.author} | চিলেকোঠা লাইব্রেরি`;
-
-            if (mode === 'with_review' && book.summary) {
-                const cleanSummary = book.summary.length > 250 ? book.summary.substring(0, 245) + '...' : book.summary;
-                shareText += `\n\n❝ ${cleanSummary} ❞\n\nবইটির প্রচ্ছদ ও পূর্ণ বিবরণ দেখতে নিচের লিংকে যান:`;
-            } else {
-                shareText += `\n\nচিলেকোঠা লাইব্রেরির ডিজিটাল সংগ্রহশালায় এই বইটি দেখতে চাপ দিন:`;
-            }
-
-            // সরাসরি ফেসবুক ফিড ডায়ালগ
-            const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-            window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=650,height=620');
-
-            closeShareModal();
-            showToast("ফেসবুকে শেয়ার উইন্ডো ওপেন হয়েছে!", "success");
-        }
-
-        function copyCurrentBookShareLink() {
-            const book = books.find(b => b.id === shareTargetBookId || String(b.serial) === String(shareTargetBookId));
-            if (!book) return;
-
-            const shareUrl = getBookShareUrl(book);
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                    showToast("বইয়ের সরাসরি লিংক ক্লিপবোর্ডে কপি হয়েছে!", "success");
-                    closeShareModal();
-                });
-            } else {
-                const dummy = document.createElement('input');
-                document.body.appendChild(dummy);
-                dummy.value = shareUrl;
-                dummy.select();
-                document.execCommand('copy');
-                document.body.removeChild(dummy);
-                showToast("বইয়ের সরাসরি লিংক ক্লিপবোর্ডে কপি হয়েছে!", "success");
-                closeShareModal();
-            }
-        }
-
-        /* ==========================================================
-           ০.০০১ সেকেন্ড ইনস্ট্যান্ট হাইড্রেশন ও রেন্ডারিং
-           ========================================================== */
+        // ০.০০১ সেকেন্ড ইনস্ট্যান্ট হাইড্রেশন
         window.onload = function() {
             setupPWAFeatures();
 
@@ -2137,8 +1815,6 @@
 
             const savedBooks = localStorage.getItem('chilekotha_library_books');
             books = savedBooks ? JSON.parse(savedBooks) : (initialBooks.length ? initialBooks : []);
-
-            ensureUniqueBookIds();
 
             if (books && books.length > 0) {
                 let giftFixed = false;
@@ -2149,12 +1825,6 @@
                     }
                 });
                 if (giftFixed) saveToLocalStorage();
-
-                // প্রথম ব্যাচের ছবিগুলো সাথে সাথে মেমোরিতে প্রি-ফেচ
-                books.slice(0, 16).forEach(b => {
-                    const imgs = getBookImages(b);
-                    if (imgs[0]) preloadImageFast(imgs[0]);
-                });
             }
 
             const savedAuthors = localStorage.getItem('chilekotha_library_authors');
@@ -2197,21 +1867,12 @@
                 switchTab(savedActiveTab, false);
             }
 
-            // ফেসবুক লিঙ্ক থেকে সরাসরি বই ওপেন করার ডিপ-লিঙ্ক হ্যান্ডলার (?book=ID)
-            const urlParams = new URLSearchParams(window.location.search);
-            const deepBookParam = urlParams.get('book') || urlParams.get('id');
-            if (deepBookParam) {
-                setTimeout(() => {
-                    openBookModal(deepBookParam, false);
-                }, 40);
-            } else {
-                const savedOpenModalType = sessionStorage.getItem('chilekotha_open_modal_type');
-                const savedOpenModalId = sessionStorage.getItem('chilekotha_open_modal_id');
-                if (savedOpenModalType === 'book' && savedOpenModalId) {
-                    setTimeout(() => openBookModal(savedOpenModalId, false), 40);
-                } else if (savedOpenModalType === 'author' && savedOpenModalId) {
-                    setTimeout(() => openAuthorModal(savedOpenModalId, false), 40);
-                }
+            const savedOpenModalType = sessionStorage.getItem('chilekotha_open_modal_type');
+            const savedOpenModalId = sessionStorage.getItem('chilekotha_open_modal_id');
+            if (savedOpenModalType === 'book' && savedOpenModalId) {
+                setTimeout(() => openBookModal(savedOpenModalId, false), 50);
+            } else if (savedOpenModalType === 'author' && savedOpenModalId) {
+                setTimeout(() => openAuthorModal(savedOpenModalId, false), 50);
             }
 
             // ব্যাকগ্রাউন্ডে সাইড-এফেক্ট বিহীন ফ্রেশ ক্লাউড সিঙ্ক
@@ -2259,10 +1920,6 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            if (document.getElementById('share-modal') && !document.getElementById('share-modal').classList.contains('hidden')) {
-                closeShareModal();
-                return;
-            }
             if (activeBookId) {
                 closeBookModal(false);
                 return;
@@ -2337,21 +1994,13 @@
                     let isChanged = false;
 
                     if (data && data.books && Array.isArray(data.books)) {
-                        const newBooks = data.books.map((remoteBook, idx) => {
+                        const newBooks = data.books.map(remoteBook => {
                             const localBook = books.find(b => b.id === remoteBook.id || String(b.serial) === String(remoteBook.serial));
                             const remoteLikes = getBookLikes(remoteBook);
-                            const persistentId = remoteBook.id && remoteBook.id.startsWith('clk_') 
-                                ? remoteBook.id 
-                                : (localBook && localBook.id ? localBook.id : `clk_${remoteBook.serial || (idx + 1)}_${Math.random().toString(36).substring(2, 7)}`);
-
-                            const imgs = getBookImages(remoteBook);
-                            if (imgs[0]) preloadImageFast(imgs[0]);
-
                             return {
                                 ...remoteBook,
-                                id: persistentId,
                                 entryDate: remoteBook.entryDate || (localBook ? localBook.entryDate : ''),
-                                images: imgs,
+                                images: getBookImages(remoteBook),
                                 likes: remoteLikes > 0 ? remoteLikes : (localBook ? getBookLikes(localBook) : 0),
                                 comments: (remoteBook.comments && remoteBook.comments.length) ? remoteBook.comments : (localBook ? localBook.comments : [])
                             };
@@ -2586,10 +2235,6 @@
         }
 
         function goBack() {
-            if (document.getElementById('share-modal') && !document.getElementById('share-modal').classList.contains('hidden')) {
-                closeShareModal();
-                return;
-            }
             if (activeBookId) {
                 closeBookModal(true);
                 return;
@@ -2623,7 +2268,7 @@
                 setTimeout(() => {
                     tickerEl.innerText = `"${quoteObj.quote}" — ${quoteObj.author}`;
                     tickerEl.style.opacity = '1';
-                }, 350);
+                }, 400);
             }
 
             const heroQuote = document.getElementById('hero-quote');
@@ -2720,8 +2365,7 @@
                                       (book.title || '').toLowerCase().includes(searchText) || 
                                       (book.series && book.series.toLowerCase().includes(searchText)) ||
                                       (book.author || '').toLowerCase().includes(searchText) ||
-                                      (book.publisher && book.publisher.toLowerCase().includes(searchText)) ||
-                                      (book.id && book.id.toLowerCase().includes(searchText));
+                                      (book.publisher && book.publisher.toLowerCase().includes(searchText));
                 const matchesCat = category === 'ALL' || book.category === category;
                 return matchesSearch && matchesCat;
             });
@@ -2753,9 +2397,6 @@
             }
         }
 
-        /* ==========================================================
-           বই কার্ড টেমপ্লেট (ছবিতে সরাসরি ফেসবুক ফিড বাটন, লেখার উপর ওভারল্যাপ মুক্ত)
-           ========================================================== */
         function createBookCardHTML(book) {
             const images = getBookImages(book);
             const imgUrl = images[0];
@@ -2807,20 +2448,14 @@
 
                 ${adminCopyHTML}
 
-                <!-- ছবি ফ্রেমের ভেতরে সুরক্ষিত সরাসরি ফেসবুক ফিড বাটন (যা কখনোই লেখার ওপর ওভারল্যাপ করবে না) -->
                 <div class="aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative flex items-center justify-center p-1.5">
                     <img loading="lazy" decoding="async" src="${imgUrl}" alt="" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-25 dark:opacity-30 scale-110 pointer-events-none" onerror="this.style.display='none'">
                     
-                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm rounded-md instant-img" onerror="handleImageFallback(this, 'book');">
+                    <img loading="lazy" decoding="async" src="${imgUrl}" alt="${book.title}" class="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm rounded-md" onerror="handleImageFallback(this, 'book');">
                     
                     <div class="center-logo-watermark">
                         <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-36 h-36 sm:w-44 sm:h-44 object-contain" onerror="this.style.display='none'">
                     </div>
-
-                    <!-- সরাসরি ফেসবুক ফিডে ছবিসহ শেয়ার আইকন -->
-                    <button onclick="event.stopPropagation(); directShareToFacebook('${book.id}');" title="ছবিসহ সরাসরি ফেসবুকে শেয়ার করুন" class="absolute bottom-2.5 right-2.5 z-20 w-8 h-8 rounded-full bg-blue-600/90 hover:bg-blue-600 text-white shadow-lg shadow-blue-900/40 flex items-center justify-center text-xs backdrop-blur-md transition-all hover:scale-110 active:scale-95 border border-white/20">
-                        <i class="fa-brands fa-facebook-f text-xs"></i>
-                    </button>
                 </div>
 
                 <div class="p-2.5 sm:p-4 flex-grow flex flex-col justify-between space-y-2 sm:space-y-3">
@@ -2882,7 +2517,7 @@
             authorsGrid.innerHTML = authorList.map(author => `
                 <div onclick="openAuthorModal('${author.name}')" class="glass-card card-hover-fx rounded-2xl p-5 flex items-center space-x-4 cursor-pointer group shadow-sm">
                     <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/30 group-hover:border-sky-500 shrink-0 relative bg-slate-100 dark:bg-slate-950 transition-colors">
-                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover instant-img" onerror="handleImageFallback(this, 'author');">
+                        <img loading="lazy" decoding="async" src="${author.photo}" alt="${author.name}" class="w-full h-full object-cover" onerror="handleImageFallback(this, 'author');">
                         <div class="center-logo-watermark">
                             <img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/d/1UV7XGIejCyhjrcdWX5HN2aqP_0oqgRJA" alt="Logo Watermark" class="w-9 h-9 object-contain" onerror="this.style.display='none'">
                         </div>
@@ -2941,7 +2576,7 @@
                     const bImgs = getBookImages(b);
                     return `
                     <div onclick="closeAuthorModal(false); openBookModal('${b.id}')" class="flex items-center gap-3 p-2 bg-slate-100 dark:bg-slate-950 rounded-xl cursor-pointer hover:border-sky-500 border border-transparent transition-all">
-                        <img loading="lazy" decoding="async" src="${bImgs[0]}" class="w-10 h-14 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900 p-0.5 instant-img" onerror="handleImageFallback(this, 'book');">
+                        <img loading="lazy" decoding="async" src="${bImgs[0]}" class="w-10 h-14 object-contain rounded-lg shrink-0 bg-white dark:bg-slate-900 p-0.5" onerror="handleImageFallback(this, 'book');">
                         <div class="overflow-hidden">
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${b.title}</p>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400">সিরিয়াল #${toBnNum(b.serial)}</span>
@@ -3200,8 +2835,7 @@
                 const matchKw = !keyword || (b.title || '').toLowerCase().includes(keyword) || 
                                 (b.series && b.series.toLowerCase().includes(keyword)) ||
                                 (b.author || '').toLowerCase().includes(keyword) || 
-                                (b.category || '').toLowerCase().includes(keyword) ||
-                                (b.id && b.id.toLowerCase().includes(keyword));
+                                (b.category || '').toLowerCase().includes(keyword);
                 const matchTrans = !translator || (b.translator && b.translator.toLowerCase().includes(translator));
                 const matchType = acqType === 'ALL' || b.acquisitionType === acqType;
                 const matchPrice = (b.purchasePrice || 0) <= maxPrice;
@@ -3226,25 +2860,11 @@
             sessionStorage.setItem('chilekotha_open_modal_type', 'book');
             sessionStorage.setItem('chilekotha_open_modal_id', book.id);
 
-            updateMetaTagsForBook(book);
-
             if (pushHistory) {
                 history.pushState({ modal: 'book', id: book.id, tab: sessionStorage.getItem('chilekotha_active_tab') || 'home' }, '');
             }
 
             document.getElementById('modal-serial-badge').innerText = `ক্রমিক #${toBnNum(book.serial)}`;
-            const uidBadge = document.getElementById('modal-uid-badge');
-            
-            // ইউনিক আইডি শুধুমাত্র এডমিনের জন্য দৃশ্যমান
-            if (isAdminLoggedIn) {
-                if (uidBadge) {
-                    uidBadge.innerText = `ID: ${book.id}`;
-                    uidBadge.classList.remove('hidden');
-                }
-            } else {
-                if (uidBadge) uidBadge.classList.add('hidden');
-            }
-
             const acqBadge = document.getElementById('modal-acquisition-badge');
             const purchaseBox = document.getElementById('modal-purchase-price-box');
             const adminActions = document.getElementById('admin-book-actions');
@@ -3325,7 +2945,7 @@
                 thumbsContainer.classList.remove('hidden');
                 thumbsContainer.innerHTML = images.map((img) => `
                     <div class="relative shrink-0 overflow-hidden rounded-lg group p-0.5">
-                        <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900 transition-all instant-img" onerror="handleImageFallback(this, 'book');">
+                        <img loading="lazy" decoding="async" src="${img}" onclick="setModalMainImage('${img}')" class="w-12 h-16 object-contain rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-sky-500 cursor-pointer bg-white dark:bg-slate-900 transition-all" onerror="handleImageFallback(this, 'book');">
                     </div>
                 `).join('');
             } else {
@@ -3741,12 +3361,8 @@
             const summary = document.getElementById('form-summary-input').value.trim();
 
             const nextSerial = books.length > 0 ? Math.max(...books.map(b => b.serial || 0)) + 1 : 1;
-            
-            // স্থায়ী অনন্য আইডি তৈরি (স্থায়ী পারমালিঙ্ক নিশ্চিতকরণ)
-            const finalId = editId || `clk_${nextSerial}_${Math.random().toString(36).substring(2, 7)}`;
-
             const newBook = {
-                id: finalId,
+                id: editId || ('b_' + Date.now()),
                 serial: editId ? (existingBook?.serial || nextSerial) : nextSerial,
                 title, series, seriesNum, quantity, author, category, acquisitionType, 
                 giftPerson, giftDate, translator, publisher, firstPublicationDate, edition, editionYear, entryDate, 
@@ -3778,7 +3394,7 @@
             }).catch(err => console.warn("Background book save sync error:", err));
 
             resetForm();
-            showToast("বই সফলভাবে সংরক্ষিত হয়েছে!", "success");
+            showToast("বই সফলভাবে সংরক্ষিত হয়েছে! পরবর্তী বইয়ের তথ্য দিন।", "success");
             switchTab('admin');
             switchAdminSubTab('books');
             document.getElementById('form-title-input').focus();
@@ -3789,7 +3405,7 @@
             document.getElementById('edit-book-id').value = '';
             document.getElementById('form-series-total-input').value = '1';
             document.getElementById('form-entry-date-input').value = new Date().toISOString().split('T')[0];
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (স্থায়ী ইউনিক আইডি তৈরি হবে)`;
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-sky-600 dark:text-sky-400"></i> নতুন বই সংযুক্তকরণ (সরাসরি ক্লাউড শিটে সেভ হবে)`;
             handleAcquisitionTypeChange();
         }
 
@@ -3803,7 +3419,6 @@
             if (confirmed) {
                 const bookToDeleteSerial = book.serial;
                 const bookToDeleteTitle = book.title;
-                const bookToDeleteId = book.id;
 
                 books = books.filter(b => b.id !== activeBookId);
                 saveToLocalStorage();
@@ -3817,8 +3432,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
                             action: "deleteBook", 
-                            bookId: bookToDeleteId,
-                            serial: bookToDeleteSerial, 
+                            bookId: bookToDeleteSerial, 
                             title: bookToDeleteTitle, 
                             adminPass: adminPass 
                         })
@@ -3978,7 +3592,7 @@
             container.innerHTML = authorProfiles.map(author => `
                 <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div class="flex items-center space-x-3 overflow-hidden">
-                        <img src="${formatImageUrl(author.photo) || getFallbackAuthorImage()}" class="w-10 h-10 rounded-full object-cover shrink-0 instant-img" onerror="handleImageFallback(this, 'author');">
+                        <img src="${formatImageUrl(author.photo) || getFallbackAuthorImage()}" class="w-10 h-10 rounded-full object-cover shrink-0" onerror="handleImageFallback(this, 'author');">
                         <div class="overflow-hidden">
                             <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">${author.name}</h4>
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 truncate">${author.lifespan ? 'জীবনকাল: ' + toBnNum(author.lifespan) : ''}</p>
@@ -4127,10 +3741,8 @@
                                 const imgRaw = (row['Images'] || row['Image'] || row['ছবি'] || '').toString().trim();
                                 const imagesList = imgRaw ? imgRaw.split(/[,;\n]+/).map(s => formatImageUrl(s.trim())).filter(Boolean) : [];
 
-                                const assignedId = `clk_${nextSerial}_${Math.random().toString(36).substring(2, 7)}`;
-
                                 books.push({
-                                    id: assignedId,
+                                    id: 'b_' + Date.now() + Math.random().toString(36).substr(2, 4),
                                     serial: nextSerial,
                                     title, 
                                     author,
@@ -4202,7 +3814,6 @@
             const wb = XLSX.utils.book_new();
             const booksExport = books.map(b => ({
                 'ID': b.serial,
-                'UniqueID': b.id,
                 'BookName': b.title,
                 'Author': b.author,
                 'TranslatedBy': b.translator || '',
