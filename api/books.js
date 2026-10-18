@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    const scriptURL = process.env.BOOKS_GAS_SCRIPT_URLss;
+    const scriptURL = process.env.BOOKS_GAS_SCRIPT_URL;
     const adminPass = process.env.BOOKS_ADMIN_PASSWORD;
     const allowedDomain = "shikdernumi.pro.bd";
 
